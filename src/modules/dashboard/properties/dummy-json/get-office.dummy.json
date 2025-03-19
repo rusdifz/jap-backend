@@ -1,0 +1,34 @@
+{
+  "id": 1,
+  "name": "Kino Tower Alam Sutera",
+  "image": "https://jardineasiapasific.asia/wp-content/uploads/2024/04/2-1.png'",
+  "status": "rent",
+  "address": "",
+  "location": "SCBD",
+  "description": "Kino Office Tower merupakan gedung perkantoran dengan kualifikasi Grade B yang beroperasi sejak tahun 2018 lalu. Sesuai dengan namanya,  gedung perkantoran ini dimiliki dan dikelola oleh PT Kino Indonesia, perusahaan yang bergerak di bidang farmasi, produk perawatan pribadi, hingga makanan dan minuman.",
+  "leasing_terms": {
+    "rate_unit": 39000000,
+    "rate_sqm": 135000,
+    "service_charge": 35000,
+    "service_charge_info": "Electricity for lighting and AC is separately metered",
+    "security_deposit": "3 Months Base Rent + Service Charge",
+    "minimum_lease_term": "3 year minimum",
+    "term_of_payment": "Quaterly in Advance",
+    "parking_charge": {
+      "unreserved": 2500000,
+      "reserved": 3700000,
+      "motorcycle": 200000
+    }
+  },
+  "spesification": {
+    "area_size": "1769 m²",
+    "property_size": "100 m² - 1769 m²",
+    "office_hours": "09.00 AM - 05.00 PM PM WIB",
+    "floors": 20,
+    "created_at": "April 1, 2024",
+    "year_built": 2023,
+    "condition": "bare",
+    "electricity_cost": "Separately Metered"
+  },
+  "features": ["AC & Heating", "Foodcourt", "ATM", "Coffee Shop"]
+}

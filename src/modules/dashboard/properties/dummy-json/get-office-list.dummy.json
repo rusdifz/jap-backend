@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Kino Tower Alam Sutera",
+    "available": true,
+    "location": "SCBD",
+    "created_at": "2025-01-16 11:26:28",
+    "update_at": "2025-01-16 11:26:28"
+  },
+  {
+    "id": 2,
+    "name": "Synergy Building",
+    "available": true,
+    "location": "Ampera",
+    "created_at": "2025-01-16 11:26:28",
+    "update_at": "2025-01-16 11:26:28"
+  },
+  {
+    "id": 3,
+    "name": "The Prominence",
+    "available": true,
+    "location": "jakarta barat",
+    "created_at": "2025-01-16 11:26:28",
+    "update_at": "2025-01-16 11:26:28"
+  },
+  {
+    "id": 4,
+    "name": "Trembesi Tower",
+    "available": true,
+    "location": "kuningan",
+    "created_at": "2025-01-16 11:26:28",
+    "update_at": "2025-01-16 11:26:28"
+  },
+  {
+    "id": 5,
+    "name": "Graha Paramita 2",
+    "available": false,
+    "location": "kunigan",
+    "created_at": "2025-01-16 11:26:28",
+    "update_at": "2025-01-16 11:26:28"
+  }
+]

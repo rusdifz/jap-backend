@@ -1,0 +1,48 @@
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsNotEmpty,
+  IsUrl,
+  IsEnum,
+} from 'class-validator';
+
+import {
+  IsUnique,
+  ArticleDB,
+  StatusPublishEnum,
+  PaginationDTO,
+} from 'src/common';
+
+export class ArticleListDTO extends PaginationDTO {}
+
+export class ReqCreateArticleDTO {
+  @IsNotEmpty()
+  @IsString()
+  @IsUnique(ArticleDB, 'title', {
+    message: 'The title already exists ',
+  })
+  title: string;
+
+  @IsNotEmpty()
+  @IsString()
+  content: string;
+
+  @IsOptional()
+  @IsUrl()
+  thumbnail: string;
+
+  @ApiProperty({ example: StatusPublishEnum.DRAFT })
+  @IsOptional()
+  @IsEnum(StatusPublishEnum, {
+    message: 'Value status must be list in enum',
+  })
+  status_publish: StatusPublishEnum;
+}
+
+export class ReqUpdateArticleDTO extends ReqCreateArticleDTO {
+  @IsNotEmpty()
+  @IsNumber()
+  article_id: number;
+}
