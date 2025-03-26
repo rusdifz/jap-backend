@@ -285,3 +285,9 @@ export class PropertyDetailDTO {
   @IsString()
   slug?: string;
 }
+
+export class GeneratePDFDTO {
+  // @IsNotEmpty()
+  // @IsArray()
+  property_id: string[];
+}

@@ -1,9 +1,15 @@
-// import { Module } from '@nestjs/common';
-// import { ImagesService } from './images.service';
-// import { ImagesController } from './images.controller';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-// @Module({
-//   providers: [ImagesService],
-//   controllers: [ImagesController]
-// })
-// export class ImagesModule {}
+import { MediaDB } from 'src/common';
+
+import { DashboardImageRepository } from './images.repository';
+import { DashboardImagesService } from './images.service';
+import { DashboardImagesController } from './images.controller';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([MediaDB])],
+  providers: [DashboardImageRepository, DashboardImagesService],
+  controllers: [DashboardImagesController],
+})
+export class DashboardImagesModule {}

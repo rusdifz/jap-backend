@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
   Version,
+  Res,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import {
@@ -19,7 +20,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { ReqCreatePropertyDTO, ReqUpdatePropertyDTO } from './dto/request.dto';
+import {
+  GeneratePDFDTO,
+  ReqCreatePropertyDTO,
+  ReqUpdatePropertyDTO,
+} from './dto/request.dto';
 import {
   swgCreateOK,
   swgGetDetailOK,
@@ -42,7 +47,7 @@ import { PropertiesDTO } from './dto/request.dto';
 import { DashboardPropertiesService } from './properties.service';
 
 @Controller('dashboard/properties')
-@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
 export class DashboardPropertiesController {
   constructor(private readonly service: DashboardPropertiesService) {}
 
@@ -126,4 +131,30 @@ export class DashboardPropertiesController {
   async convertFileExcelToDB() {
     return await this.service.convertFromExcelToDb();
   }
+
+  @Get('generate/pdf')
+  async generatePdf(@Res() res: any, @Query() query: GeneratePDFDTO) {
+    // const pdfBuffer = await this.service.generatePDFComparisson(
+    //   query.property_id,
+    // );
+    const pdfBuffer = await this.service.generatePDFComparisson([1,2,3,4,5,6,7,8,9,10])
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; Building-Comparison.pdf',
+    });
+    res.send(pdfBuffer);
+  }
+
+  @Get('generate/pdf/contoh')
+  async generatePdfContoh(@Res() res: any, @Query() query: GeneratePDFDTO) {
+ 
+    const pdfBuffer = await this.service.generateVerticalHeaderPdf()
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; Building-Comparison.pdf',
+    });
+    res.send(pdfBuffer);
+  }
+ 
+
 }

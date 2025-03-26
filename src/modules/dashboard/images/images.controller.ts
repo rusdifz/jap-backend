@@ -1,47 +1,42 @@
-// import { ResponseSuccessInterceptor } from '@libs/middlewares';
-// import {
-//   Body,
-//   Controller,
-//   Get,
-//   Headers,
-//   Param,
-//   Post,
-//   Res,
-//   UploadedFile,
-//   UseInterceptors,
-// } from '@nestjs/common';
-// import { FileInterceptor } from '@nestjs/platform-express';
-// import type { Response } from 'express';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Res,
+  UploadedFiles,
+  UseInterceptors,
+} from '@nestjs/common';
 
-// import { filterImage, storageImage } from 'libs/common/helpers/file-upload';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
 
-// import { ImagesService } from './images.service';
+import { uploadImageInterceptor } from 'src/middlewares/upload-file';
+import { ResponseSuccessInterceptor } from 'src/middlewares';
 
-// @Controller('media')
-// export class ImagesController {
-//   constructor(private readonly service: ImagesService) {}
+import { DashboardImagesService } from './images.service';
 
-//   @Post('/upload_image/:office_id/:unit_id')
-//   @UseInterceptors(
-//     FileInterceptor('thumbnail', {
-//       storage: storageImage,
-//       fileFilter: filterImage,
-//       limits: { fileSize: 1024 * 1024 },
-//     }),
-//     ResponseSuccessInterceptor,
-//   )
-//   async UploadPhotoTemp(
-//     @Body() body: any,
-//     @Param('image_id') officeId: string,
-//     @Param('unit_id') unitId: string,
-//     @UploadedFile() picture: Express.Multer.File,
-//   ) {
-//     return await this.service.uploadSingleImage(picture, officeId, unitId);
-//   }
+@Controller('media')
+export class DashboardImagesController {
+  constructor(private readonly service: DashboardImagesService) {}
 
-//   @Get('/image/:name')
-//   async GetPhoto(@Res() res: Response, @Param(':name') param: string) {
-//     const path = await this.service.getImage(param);
-//     res.sendFile(path);
-//   }
-// }
+  @Post('/upload_image/:slug')
+  @UseInterceptors(
+    FilesInterceptor('property_image', 5, uploadImageInterceptor),
+    ResponseSuccessInterceptor,
+  )
+  async uploadImage(
+    @Body() body: any,
+    @Param('slug') slug: string,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    return await this.service.uploadImage(files, body.property_id);
+  }
+
+  @Get('/image/:name')
+  async getImage(@Res() res: Response, @Param('name') name: string) {
+    const path = await this.service.getImage(name);
+    res.sendFile(path);
+  }
+}

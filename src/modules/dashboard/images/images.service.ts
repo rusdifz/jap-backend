@@ -1,65 +1,71 @@
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { readFileSync, existsSync, unlinkSync } from 'fs';
+
 // import { MediaTypeEnum } from '@libs/common';
-// import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-// // import { readFileSync } from 'fs';
+import { DashboardImageRepository } from './images.repository';
+import { mapInsertDB } from './mappings/upsert.mapping';
 
-// import { ImagesRepository } from './images.repository';
-// import { existsSync } from 'fs';
+@Injectable()
+export class DashboardImagesService {
+  constructor(private readonly repository: DashboardImageRepository) {}
 
-// @Injectable()
-// export class ImagesService {
-//   constructor(private readonly repository: ImagesRepository) {}
+  async uploadImage(files: Express.Multer.File[], property_id: number) {
+    //check data dengan property id tersebut ada atau tidak, jika ada hapus semua
 
-//   async uploadSingleImage(
-//     file: Express.Multer.File,
-//     officeId: string,
-//     unitId: string,
-//   ) {
-//     // const imageData = readFileSync(file.path);
+    const checkDataExist = await this.repository.find({
+      where: { property_id },
+    });
 
-//     const mapData = {
-//       office_id: officeId,
-//       unitId: unitId,
-//       type: MediaTypeEnum.IMAGE,
-//       url: `${process.env.URL_IMAGE}/media/image/${file.filename}`,
-//       created_by: 'admin',
-//     };
+    if (checkDataExist.length > 0) {
+      for (const exist of checkDataExist) {
+        await this.repository.delete({ media_id: exist.media_id });
 
-//     //save data
-//     await this.repository.upsert(mapData);
+        const filePath = exist.path + '/' + exist.name;
 
-//     return mapData.url;
-//   }
+        if (existsSync(filePath)) {
+          console.log('exist', filePath);
+          unlinkSync(filePath);
+        }
+      }
+    }
 
-//   async getImage(imageName: string) {
-//     const whitelist = ['.jpeg', '.jpg', '.png'];
+    if (files.length > 0) {
+      const resp = [];
+      for (const file of files) {
+        const mapData = await mapInsertDB(file, property_id);
+        const saveData = await this.repository.save(mapData);
+        resp.push(saveData);
+      }
 
-//     if (whitelist.includes(imageName)) {
-//       console.log('type wrong');
-//       throw new HttpException('wrong file type', HttpStatus.BAD_REQUEST);
-//     }
+      return resp;
+    }
 
-//     const path = __dirname
-//       .toString()
-//       .replace('apps/dashboard/src/modules/images', 'media/image/' + imageName);
+    return null;
+  }
 
-//     if (existsSync(path)) {
-//       return path;
-//     } else {
-//       return path;
-//     }
+  async getImage(image_name: string): Promise<string> {
+    const whitelist = ['.jpeg', '.jpg', '.png'];
 
-//     // let uniqCode = imageName.replace(/.png|.jpg|.jpeg|.hiec/g, '');
+    if (whitelist.includes(image_name)) {
+      throw new HttpException('wrong file type', HttpStatus.BAD_REQUEST);
+    }
 
-//     // const stream = await this.repoTempImage.findOne({
-//     //   where: {
-//     //     rvwr_unique_code: Like(`%${uniqCode}%`),
-//     //   },
-//     // });
+    const getData = await this.repository.findOneBy({ name: image_name });
 
-//     // if (!stream) {
-//     //   throw new HttpException('Data Not Found', HttpStatus.NOT_FOUND);
-//     // }
+    if (getData) {
+      // const path = __dirname
+      // .toString()
+      // .replace(
+      //   'modules/dashboard/images',
+      //   'public/images/' + property_slug + '/' + image_name,
+      // );
+      const path = getData.path + '/' + image_name;
 
-//     // await writeFileSync(path, stream.img_data);
-//   }
-// }
+      if (existsSync(path)) {
+        return path;
+      }
+    }
+
+    throw new HttpException('Data Not Found', HttpStatus.NOT_FOUND);
+  }
+}

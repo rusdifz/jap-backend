@@ -9,13 +9,12 @@ import {
   Entity,
 } from 'typeorm';
 
-import { MediaTypeEnum } from '../enums';
+import { MediaTypeEnum, MimeTypeEnum } from '../enums';
 
 import { IMedia } from '../interfaces/media.interface';
 import { PropertiesDB } from './property.entity';
 
 @Entity({ name: 'media' })
-// @Entity({ name: 'media_dummy' })
 export class MediaDB implements IMedia {
   @PrimaryGeneratedColumn('uuid')
   media_id: string;
@@ -26,8 +25,11 @@ export class MediaDB implements IMedia {
   @Column({ type: 'varchar', length: 255, nullable: true })
   host: string;
 
-  @Column({ type: 'longtext', nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   path: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  name: string;
 
   @Column({
     type: 'enum',
@@ -35,6 +37,16 @@ export class MediaDB implements IMedia {
     default: MediaTypeEnum.IMAGE,
   })
   type: MediaTypeEnum;
+
+  @Column({
+    type: 'enum',
+    enum: MimeTypeEnum,
+    default: MimeTypeEnum.JPG,
+  })
+  mimetype: MimeTypeEnum | string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  full_url: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
