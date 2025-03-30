@@ -1,10 +1,4 @@
-import {
-  FileTypeValidator,
-  HttpException,
-  HttpStatus,
-  MaxFileSizeValidator,
-  ParseFilePipe,
-} from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import * as multer from 'multer';
 import { existsSync, mkdirSync } from 'fs';
 import { v4 as uuidv4 } from 'uuid';
@@ -72,23 +66,8 @@ export const storageImage = multer.diskStorage({
   },
 });
 
-// const MulterHistoricalDataMedia = multer({
-//     storage: fileStorage,
-//     fileFilter: fileFilter,
-//     limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
-//   });
-
 export const uploadImageInterceptor = {
   storage: storageImage,
   fileFilter: filterImage,
-  limits: { fileSize: 1024 * 1024 },
+  limits: { fileSize: 50 * 1024 * 1024 }, //max 50 mb
 };
-
-// export function uploadedFileParam(maxSize: number, fileType: string | RegExp) {
-//   return new ParseFilePipe({
-//     validators: [
-//       new MaxFileSizeValidator({ maxSize }),
-//       new FileTypeValidator({ fileType }),
-//     ],
-//   });
-// }

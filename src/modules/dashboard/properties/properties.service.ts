@@ -405,9 +405,22 @@ export class DashboardPropertiesService {
       const page = Math.ceil(properties.length / dataPerPage);
       console.log('page', page);
 
-      doc.image(this.rootPath + '/2.png', doc.page.width / 2 - 100, 150, {
-        width: 200,
+      // doc.image(this.rootPath + '/cover.png', doc.page.width / 2 - 100, 150, {
+      //   width: 200,
+      // });
+
+      doc.image(this.rootPath + '/cover.png', {
+        // fit: [500, 200],
+        width: 700,
+        align: 'center',
+        valign: 'center',
       });
+
+      // doc.image('path/to/image.png', doc.page.margins.left, doc.page.margins.top, {
+      //   fit: [availableWidth, availableHeight],
+      //   align: 'center',
+      //   valign: 'center'
+      // });
 
       for (let index = 0; index < page; index++) {
         let data: PropertiesDB[];
@@ -425,12 +438,13 @@ export class DashboardPropertiesService {
           {
             label: 'Building',
             property: 'building',
-            width: 100,
+            width: 120,
             renderer: null,
             headerColor: '#7f7f7f',
             headerOpacity: 2,
             headerAlign: 'center',
-            verticalAlign: 'middle',
+            valign: 'middle',
+            options: { padding: 5 },
           },
         ];
 
@@ -478,12 +492,13 @@ export class DashboardPropertiesService {
           header.push({
             label: dt.name,
             property: dt.name,
-            width: 112,
+            width: 120,
             renderer: null,
             headerColor: '#7f7f7f',
             headerOpacity: 2,
             headerAlign: 'center',
-            verticalAlign: 'middle',
+            valign: 'middle',
+            options: { padding: 5 },
           });
         }
         // console.log('header ' + index, header);
@@ -845,35 +860,34 @@ export class DashboardPropertiesService {
         };
 
         doc.table(table, {
-          x: 100, // posisi x untuk tabel, menyesuaikan dengan lebar header kolom
-          y: 100,
-          divider: {
-            header: { disabled: false, width: 2, opacity: 1 },
-            horizontal: { width: 0.2, opacity: 0.7 },
-            vertical: { width: 1, opacity: 0.7 },
+          x: 50, // posisi x untuk tabel, menyesuaikan dengan lebar header kolom
+          y: 80,
+          // padding: 10,
+          prepareHeader: () => {
+            doc
+              .font('Helvetica-Bold')
+              .fontSize(11)
+              .fillColor('white')
+              .lineGap(5);
+            // .lineGap(10),
           },
-          prepareHeader: () =>
-            doc.font('Helvetica-Bold').fontSize(11).fillColor('white'),
           prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
             if (indexRow === 0 && indexColumn === 0) {
-              doc.addBackground(rectRow, '#bfbfbf', 1.5);
+              doc.addBackground(rectRow, '#bfbfbf', 0.5);
             }
-
             if (indexColumn === 0) {
-              doc.font('Helvetica-Bold').fontSize(10).fillColor('black');
-              doc.addBackground(rectCell, '#bfbfbf', 1.5);
+              doc.font('Times-Roman').fontSize(10).fillColor('black');
+              doc.addBackground(rectCell, '#bfbfbf', 1);
             }
-
-            if (indexRow > 0) {
-              doc.font('Helvetica').fontSize(10).fillColor('black');
-              doc.addBackground(rectCell, '#d2dce4', 1.5);
-              console.log('row', row);
-
-              // row.cells.forEach((index, cell) => {
-              //   console.log('index', index);
-              //   console.log('cell', cell);
-              // });
-            }
+            // if (indexRow > 0) {
+            //   doc.font('Helvetica').fontSize(10).fillColor('black');
+            //   doc.addBackground(rectCell, '#d2dce4', 1.5);
+            //   console.log('row', row);
+            //   // row.cells.forEach((index, cell) => {
+            //   //   console.log('index', index);
+            //   //   console.log('cell', cell);
+            //   // });
+            // }
           },
         });
       }
