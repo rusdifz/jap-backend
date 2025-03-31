@@ -1,0 +1,26 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.mapReqCreateToDB = mapReqCreateToDB;
+exports.mapReqUpdateToDB = mapReqUpdateToDB;
+async function mapReqCreateToDB(payload, username_login) {
+    return {
+        title: payload.title,
+        slug: payload['slug'],
+        content: payload.content,
+        thumbnail: payload.thumbnail,
+        status_publish: payload.status_publish,
+        created_by: username_login ?? 'admin system',
+    };
+}
+async function mapReqUpdateToDB(payload, username_login) {
+    return {
+        article_id: payload.article_id,
+        title: payload.title,
+        slug: payload['slug'],
+        content: payload.content,
+        thumbnail: payload.thumbnail,
+        status_publish: payload.status_publish,
+        updated_by: username_login ?? 'admin system',
+    };
+}
+//# sourceMappingURL=upsert.mapping.js.map
