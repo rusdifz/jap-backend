@@ -11,8 +11,6 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const config_2 = require("./config");
 const db_module_1 = require("./config/db/db.module");
-const serve_static_1 = require("@nestjs/serve-static");
-const path_1 = require("path");
 const article_module_1 = require("./modules/client/article/article.module");
 const feedback_module_1 = require("./modules/client/feedback/feedback.module");
 const properties_module_1 = require("./modules/client/properties/properties.module");
@@ -29,9 +27,6 @@ exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            serve_static_1.ServeStaticModule.forRoot({
-                rootPath: (0, path_1.join)(__dirname, '..', 'public'),
-            }),
             config_1.ConfigModule.forRoot(config_2.configIndex),
             db_module_1.DbModule,
             article_module_1.ClientArticleModule,
