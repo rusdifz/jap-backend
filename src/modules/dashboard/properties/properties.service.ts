@@ -40,7 +40,7 @@ export class DashboardPropertiesService {
 
   private rootPath = __dirname.replace(
     'dist/modules/dashboard/properties',
-    'public/images',
+    'public/image-jap-main',
   );
 
   async get(property_id: number): Promise<ResProperty> {
