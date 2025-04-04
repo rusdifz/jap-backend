@@ -1,3 +1,4 @@
+import 'jspdf-autotable';
 import { IJwtUser } from 'src/common';
 import { PropertiesDTO } from './dto/request.dto';
 import { ReqCreatePropertyDTO, ReqUpdatePropertyDTO } from './dto/request.dto';
@@ -21,10 +22,4 @@ export declare class DashboardPropertiesService {
     decreaseTotalUnit(unit_id: string): Promise<number>;
     convertFromExcelToDb(): Promise<any[]>;
     generatePDFComparisson(property_id: number[]): Promise<Buffer>;
-    generatePdf(): Promise<Buffer>;
-    private generateDummyData;
-    generateVerticalHeaderPdf(): Promise<Buffer>;
-    private generateSampleData;
-    private formatVerticalHeaders;
-    private formatCellValue;
 }

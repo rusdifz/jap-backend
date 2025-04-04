@@ -315,4 +315,9 @@ __decorate([
 class GeneratePDFDTO {
 }
 exports.GeneratePDFDTO = GeneratePDFDTO;
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsArray)(),
+    __metadata("design:type", Array)
+], GeneratePDFDTO.prototype, "property_id", void 0);
 //# sourceMappingURL=request.dto.js.map

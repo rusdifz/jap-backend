@@ -14,6 +14,5 @@ export declare class DashboardPropertiesController {
     update(user: IJwtUser, bodyparam: ReqUpdatePropertyDTO): Promise<ReqUpdatePropertyDTO>;
     deleteOne(id: number, user: IJwtUser): Promise<Object>;
     convertFileExcelToDB(): Promise<any[]>;
-    generatePdf(res: any, query: GeneratePDFDTO): Promise<void>;
-    generatePdfContoh(res: any, query: GeneratePDFDTO): Promise<void>;
+    generatePdf(res: any, location: string, query: GeneratePDFDTO): Promise<void>;
 }

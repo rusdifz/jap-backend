@@ -43,19 +43,12 @@ let DashboardPropertiesController = class DashboardPropertiesController {
     async convertFileExcelToDB() {
         return await this.service.convertFromExcelToDb();
     }
-    async generatePdf(res, query) {
-        const pdfBuffer = await this.service.generatePDFComparisson([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    async generatePdf(res, location, query) {
+        const pdfBuffer = await this.service.generatePDFComparisson(query.property_id);
+        const namePdf = 'Building Comparisson ' + location;
         res.set({
             'Content-Type': 'application/pdf',
-            'Content-Disposition': 'attachment; Building-Comparison.pdf',
-        });
-        res.send(pdfBuffer);
-    }
-    async generatePdfContoh(res, query) {
-        const pdfBuffer = await this.service.generateVerticalHeaderPdf();
-        res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Disposition': 'attachment; Building-Comparison.pdf',
+            'Content-Disposition': `attachment; filename="${namePdf}.pdf"`,
         });
         res.send(pdfBuffer);
     }
@@ -144,21 +137,14 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], DashboardPropertiesController.prototype, "convertFileExcelToDB", null);
 __decorate([
-    (0, common_1.Get)('generate/pdf'),
+    (0, common_1.Get)('pdf/comparisson/:location'),
     __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Query)()),
+    __param(1, (0, common_1.Param)('location')),
+    __param(2, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, request_dto_1.GeneratePDFDTO]),
+    __metadata("design:paramtypes", [Object, String, request_dto_1.GeneratePDFDTO]),
     __metadata("design:returntype", Promise)
 ], DashboardPropertiesController.prototype, "generatePdf", null);
-__decorate([
-    (0, common_1.Get)('generate/pdf/contoh'),
-    __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Query)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, request_dto_1.GeneratePDFDTO]),
-    __metadata("design:returntype", Promise)
-], DashboardPropertiesController.prototype, "generatePdfContoh", null);
 exports.DashboardPropertiesController = DashboardPropertiesController = __decorate([
     (0, common_1.Controller)('dashboard/properties'),
     __metadata("design:paramtypes", [properties_service_1.DashboardPropertiesService])

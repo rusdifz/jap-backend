@@ -13,6 +13,8 @@ exports.DashboardPropertiesService = void 0;
 const common_1 = require("@nestjs/common");
 const XLSX = require("xlsx");
 const PDFDocument = require('pdfkit-table');
+const jsPDF = require('jspdf').jsPDF;
+require("jspdf-autotable");
 const fs_1 = require("fs");
 const typeorm_1 = require("typeorm");
 const common_2 = require("../../../common");
@@ -234,17 +236,6 @@ let DashboardPropertiesService = class DashboardPropertiesService {
     }
     async generatePDFComparisson(property_id) {
         return new Promise(async (resolve) => {
-            const kotakDialog = {
-                date_availability: '',
-                prepared_for: '',
-                commencement_date: '',
-                type: '',
-                area: '',
-                marketing: '',
-                telp: '',
-                mobile: '',
-                email: '',
-            };
             const query = {
                 select: {
                     name: true,
@@ -256,6 +247,10 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                     units: {
                         condition: true,
                     },
+                    images: {
+                        name: true,
+                        path: true,
+                    },
                     price_rent_sqm: true,
                     service_charge: true,
                 },
@@ -264,12 +259,14 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                 },
                 relations: {
                     units: true,
+                    images: true,
                 },
             };
             const getData = await this.repository.find(query);
             const buffers = [];
             const doc = new PDFDocument({
                 margin: 30,
+                width: 300,
                 size: 'A4',
                 layout: 'landscape',
             });
@@ -280,9 +277,9 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                 const costTotal = priceRent > 0 ? size * (priceRent + serviceCharge) : 0;
                 const negoRent = priceRent > 0 ? priceRent - 10000 : 0;
                 const totalCostBargain = negoRent > 0 ? size * (negoRent + serviceCharge) : 0;
-                console.log('cost ');
                 return {
                     name: dt.name,
+                    image: dt.images[0].path + '/' + dt.images[0].name,
                     location: dt.location,
                     property_size: size,
                     total_floor: dt.total_floor ?? 0,
@@ -292,7 +289,7 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                     price_rent_sqm: priceRent,
                     service_charge: serviceCharge,
                     cost_total: costTotal,
-                    cost_total_max: costTotal > 0 ? 0.11 * costTotal + costTotal : 0,
+                    cost_total_tax: costTotal > 0 ? 0.11 * costTotal + costTotal : 0,
                     nego_rent: negoRent,
                     total_cost_bargain: totalCostBargain,
                     bargain_tax: totalCostBargain > 0
@@ -302,664 +299,334 @@ let DashboardPropertiesService = class DashboardPropertiesService {
             });
             const dataPerPage = 5;
             const page = Math.ceil(properties.length / dataPerPage);
-            console.log('page', page);
-            doc.image(this.rootPath + '/cover.png', {
-                width: 700,
-                align: 'center',
-                valign: 'center',
+            const coverImageWidth = 750;
+            const coverImageHeight = 500;
+            const coverImageX = (doc.page.width - coverImageWidth) / 2;
+            const coverImageY = (doc.page.height - coverImageHeight) / 2;
+            doc.image(this.rootPath + '/cover.png', coverImageX, coverImageY, {
+                width: coverImageWidth,
+                height: coverImageHeight,
             });
-            for (let index = 0; index < page; index++) {
-                let data;
-                if (index === 0) {
-                    data = properties.slice(index, dataPerPage);
+            for (let iTable = 0; iTable < page; iTable++) {
+                doc.addPage();
+                const headerImageX = doc.page.width - doc.page.margins.right - 150;
+                const headerImageY = 20;
+                doc.image(this.rootPath + '/logo-new.png', headerImageX, headerImageY, {
+                    width: 80,
+                    height: 40,
+                });
+                let databuilding;
+                if (iTable === 0) {
+                    databuilding = properties.slice(iTable, dataPerPage);
                 }
                 else {
-                    const start = index * dataPerPage;
+                    const start = iTable * dataPerPage;
                     const end = start * dataPerPage;
-                    data = properties.slice(start, end);
+                    databuilding = properties.slice(start, end);
                 }
-                doc.addPage();
-                const header = [
+                const headers = [
                     {
                         label: 'Building',
                         property: 'building',
-                        width: 120,
-                        renderer: null,
+                        width: 110,
                         headerColor: '#7f7f7f',
                         headerOpacity: 2,
                         headerAlign: 'center',
-                        valign: 'middle',
-                        options: { padding: 5 },
+                        valign: 'center',
+                        options: { padding: 50 },
+                        renderer: (value, indexColumn, indexRow, row, rectRow, rectCell) => {
+                            if (indexRow === 0) {
+                                console.log('asas', rectCell.height);
+                                const imgWidth = rectCell.width;
+                                const imgHeight = rectCell.height;
+                                const xPos = rectCell.x + (rectCell.width - imgWidth) / 2;
+                                const yPos = rectCell.y + (rectCell.height - imgHeight) / 2;
+                                doc.image(this.rootPath + '/logo-jap.png', xPos, yPos, {
+                                    width: rectCell.width,
+                                    height: rectCell.height,
+                                });
+                            }
+                            else {
+                                return value;
+                            }
+                        },
                     },
                 ];
-                const row1 = data.map((dt) => {
-                    return dt.location;
-                });
-                const row2 = data.map((dt) => {
-                    return dt.property_size;
-                });
-                const row3 = data.map((dt) => {
-                    return dt.total_floor;
-                });
-                const row4 = data.map((dt) => {
-                    return dt.price_overtime_ac;
-                });
-                const row5 = data.map((dt) => {
-                    return dt.price_overtime_electricity;
-                });
-                const row6 = data.map((dt) => {
-                    return dt['condition'];
-                });
-                const row7 = data.map((dt) => {
-                    return 'Rp. ' + dt.price_rent_sqm;
-                });
-                const row8 = data.map((dt) => {
-                    return 'Rp. ' + dt.service_charge;
-                });
-                const row9 = data.map((dt) => {
-                    return 'Rp. ' + dt['cost_total'];
-                });
-                const row10 = data.map((dt) => {
-                    return 'IDR ' + dt['cost_total_tax'];
-                });
-                const row11 = data.map((dt) => {
-                    return 'Rp. ' + dt['nego_rent'];
-                });
-                const row12 = data.map((dt) => {
-                    return 'Rp. ' + dt['total_cost_bargain'];
-                });
-                const row13 = data.map((dt) => {
-                    return 'Rp. ' + dt['bargain_tax'];
-                });
-                for (const dt of data) {
-                    header.push({
+                for (const dt of databuilding) {
+                    headers.push({
                         label: dt.name,
                         property: dt.name,
                         width: 120,
-                        renderer: null,
                         headerColor: '#7f7f7f',
                         headerOpacity: 2,
                         headerAlign: 'center',
-                        valign: 'middle',
-                        options: { padding: 5 },
+                        valign: 'center',
+                        options: { padding: 50 },
+                        renderer: (value, indexColumn, indexRow, row, rectRow, rectCell) => {
+                            if (indexRow === 0) {
+                                const imgWidth = rectCell.width;
+                                const imgHeight = rectCell.height;
+                                const xPos = rectCell.x + (rectCell.width - imgWidth) / 2;
+                                const yPos = rectCell.y + (rectCell.height - imgHeight) / 2;
+                                doc.image(value, xPos, yPos, {
+                                    width: imgWidth,
+                                    height: imgHeight,
+                                });
+                            }
+                            else {
+                                const cellHeight = rectCell.height;
+                                const textHeight = doc.heightOfString(value, {
+                                    width: rectCell.width,
+                                });
+                                let yOffset = 0;
+                                if (row.valign === 'center') {
+                                    yOffset = (cellHeight - textHeight) / 2;
+                                }
+                                else if (row.valign === 'bottom') {
+                                    yOffset = cellHeight - textHeight;
+                                }
+                                if (indexRow >= 1 && indexRow <= 6) {
+                                    doc.text(value, rectCell.x, rectCell.y + yOffset, {
+                                        width: rectCell.width,
+                                        align: row.align,
+                                    });
+                                }
+                                else {
+                                    if (indexRow !== 12) {
+                                        doc.text(value, rectCell.x, rectCell.y + yOffset, {
+                                            width: rectCell.width - 10,
+                                            align: 'right',
+                                        });
+                                    }
+                                }
+                                return '';
+                            }
+                        },
                     });
                 }
-                const rowAja = [
-                    'Image',
-                    'Location',
-                    'Availablilty ( sqm )',
-                    'Floor',
-                    'AC',
-                    'Electricity',
-                    'Condition',
-                    'Rental Rate',
-                    'Service Charge',
-                    'Cost Per month',
-                    'Cost Per Month After Tax',
+                const rowCell1 = [
+                    'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry,s standard dummy text ever since the 1500s',
+                    'bold:Location',
+                    'bold:Availablilty ( sqm )',
+                    'bold:Floor',
+                    'bold:AC',
+                    'bold:Electricity',
+                    'bold:Condition',
+                    'bold:Rental Rate',
+                    'bold:Service Charge',
+                    'bold:Cost Per month',
+                    'bold:Cost Per Month After Tax',
                     'MERGE CELL',
-                    'Estimation For Negotiation Price',
-                    'Rental',
-                    'Service Charge',
-                    'Total Cost Bargain',
-                    'Bargain After Tax',
+                    'bold:Estimation For Negotiation Price',
+                    'bold:Rental',
+                    'bold:Service Charge',
+                    'bold:Total Cost Bargain',
+                    'bold:Bargain After Tax',
                 ];
                 const datas = [];
-                console.log('hedaer', header.length);
-                for (let index = 0; index < 16; index++) {
+                const row2 = databuilding.map((dt) => {
+                    return dt['image'];
+                });
+                const row3 = databuilding.map((dt) => {
+                    return dt.location;
+                });
+                const row4 = databuilding.map((dt) => {
+                    return dt.property_size;
+                });
+                const row5 = databuilding.map((dt) => {
+                    return dt.total_floor;
+                });
+                const row6 = databuilding.map((dt) => {
+                    return dt.price_overtime_ac;
+                });
+                const row7 = databuilding.map((dt) => {
+                    return dt.price_overtime_electricity;
+                });
+                const row8 = databuilding.map((dt) => {
+                    return dt['condition'];
+                });
+                const row9 = databuilding.map((dt) => {
+                    return 'Rp.   ' + dt.price_rent_sqm;
+                });
+                const row10 = databuilding.map((dt) => {
+                    return 'Rp.   ' + dt.service_charge;
+                });
+                const row11 = databuilding.map((dt) => {
+                    return 'Rp.   ' + dt['cost_total'];
+                });
+                const row12 = databuilding.map((dt) => {
+                    return 'bold:Rp.   ' + dt['cost_total_tax'];
+                });
+                const row13 = 'merge row';
+                const row14 = '';
+                const row15 = databuilding.map((dt) => {
+                    return 'Rp.   ' + dt['nego_rent'];
+                });
+                const row16 = databuilding.map((dt) => {
+                    return 'Rp.   ' + dt.service_charge;
+                });
+                const row17 = databuilding.map((dt) => {
+                    return 'Rp.   ' + dt['total_cost_bargain'];
+                });
+                const row18 = databuilding.map((dt) => {
+                    return 'bold:Rp.   ' + dt['bargain_tax'];
+                });
+                const rows = [
+                    row2,
+                    row3,
+                    row4,
+                    row5,
+                    row6,
+                    row7,
+                    row8,
+                    row9,
+                    row10,
+                    row11,
+                    row12,
+                    row13,
+                    row14,
+                    row15,
+                    row16,
+                    row17,
+                    row18,
+                ];
+                let textPositionYEstimateNego = 390;
+                for (let iRow = 0; iRow < 17; iRow++) {
                     const data = {
-                        building: rowAja[index],
+                        building: {
+                            label: rowCell1[iRow],
+                        },
+                        align: 'center',
+                        valign: 'center',
                     };
-                    if (header.length === 2) {
-                    }
-                    if (header.length === 3) {
-                    }
-                    if (header.length === 4) {
-                        if (index == 1) {
-                            Object.assign(data, {
-                                [header[1].label]: row1[0],
-                                [header[2].label]: row1[1],
-                                [header[3].label]: row1[2],
-                            });
-                        }
-                        else if (index == 2) {
-                            Object.assign(data, {
-                                [header[1].label]: row2[0],
-                                [header[2].label]: row2[1],
-                                [header[3].label]: row2[2],
-                            });
-                        }
-                        else if (index == 3) {
-                            Object.assign(data, {
-                                [header[1].label]: row3[0],
-                                [header[2].label]: row3[1],
-                                [header[3].label]: row3[2],
-                            });
-                        }
-                        else if (index == 4) {
-                            Object.assign(data, {
-                                [header[1].label]: row4[0],
-                                [header[2].label]: row4[1],
-                                [header[3].label]: row4[2],
-                            });
-                        }
-                        else if (index == 5) {
-                            Object.assign(data, {
-                                [header[1].label]: row5[0],
-                                [header[2].label]: row5[1],
-                                [header[3].label]: row5[2],
-                            });
-                        }
-                        else if (index == 6) {
-                            Object.assign(data, {
-                                [header[1].label]: row6[0],
-                                [header[2].label]: row6[1],
-                                [header[3].label]: row6[2],
-                            });
-                        }
-                        else if (index == 7) {
-                            Object.assign(data, {
-                                [header[1].label]: row7[0],
-                                [header[2].label]: row7[1],
-                                [header[3].label]: row7[2],
-                            });
-                        }
-                        else if (index == 8) {
-                            Object.assign(data, {
-                                [header[1].label]: row8[0],
-                                [header[2].label]: row8[1],
-                                [header[3].label]: row8[2],
-                            });
-                        }
-                        else if (index == 9) {
-                            Object.assign(data, {
-                                [header[1].label]: row9[0],
-                                [header[2].label]: row9[1],
-                                [header[3].label]: row9[2],
-                            });
-                        }
-                        else if (index == 10) {
-                            Object.assign(data, {
-                                [header[1].label]: row10[0],
-                                [header[2].label]: row10[1],
-                                [header[3].label]: row10[2],
-                            });
-                        }
-                        else if (index == 11) {
-                            Object.assign(data, {
-                                [header[1].label]: row11[0],
-                                [header[2].label]: row11[1],
-                                [header[3].label]: row11[2],
-                            });
-                        }
-                        else if (index == 12) {
-                            Object.assign(data, {
-                                [header[1].label]: row12[0],
-                                [header[2].label]: row12[1],
-                                [header[3].label]: row12[2],
-                            });
-                        }
-                        else if (index === 13) {
-                            Object.assign(data, {
-                                [header[1].label]: row13[0],
-                                [header[2].label]: row13[1],
-                                [header[3].label]: row13[2],
-                            });
-                        }
-                    }
-                    if (header.length === 5) {
-                        if (index == 1) {
-                            Object.assign(data, {
-                                [header[1].label]: row1[0],
-                                [header[2].label]: row1[1],
-                                [header[3].label]: row1[2],
-                                [header[4].label]: row1[3],
-                            });
-                        }
-                        else if (index == 2) {
-                            Object.assign(data, {
-                                [header[1].label]: row2[0],
-                                [header[2].label]: row2[1],
-                                [header[3].label]: row2[2],
-                                [header[4].label]: row2[3],
-                            });
-                        }
-                        else if (index == 3) {
-                            Object.assign(data, {
-                                [header[1].label]: row3[0],
-                                [header[2].label]: row3[1],
-                                [header[3].label]: row3[2],
-                                [header[4].label]: row3[3],
-                            });
-                        }
-                        else if (index == 4) {
-                            Object.assign(data, {
-                                [header[1].label]: row4[0],
-                                [header[2].label]: row4[1],
-                                [header[3].label]: row4[2],
-                                [header[4].label]: row4[3],
-                            });
-                        }
-                        else if (index == 5) {
-                            Object.assign(data, {
-                                [header[1].label]: row5[0],
-                                [header[2].label]: row5[1],
-                                [header[3].label]: row5[2],
-                                [header[4].label]: row5[3],
-                            });
-                        }
-                        else if (index == 6) {
-                            Object.assign(data, {
-                                [header[1].label]: row6[0],
-                                [header[2].label]: row6[1],
-                                [header[3].label]: row6[2],
-                                [header[4].label]: row6[3],
-                            });
-                        }
-                        else if (index == 7) {
-                            Object.assign(data, {
-                                [header[1].label]: row7[0],
-                                [header[2].label]: row7[1],
-                                [header[3].label]: row7[2],
-                                [header[4].label]: row7[3],
-                            });
-                        }
-                        else if (index == 8) {
-                            Object.assign(data, {
-                                [header[1].label]: row8[0],
-                                [header[2].label]: row8[1],
-                                [header[3].label]: row8[2],
-                                [header[4].label]: row8[3],
-                            });
-                        }
-                        else if (index == 9) {
-                            Object.assign(data, {
-                                [header[1].label]: row9[0],
-                                [header[2].label]: row9[1],
-                                [header[3].label]: row9[2],
-                                [header[4].label]: row9[3],
-                            });
-                        }
-                        else if (index == 10) {
-                            Object.assign(data, {
-                                [header[1].label]: row10[0],
-                                [header[2].label]: row10[1],
-                                [header[3].label]: row10[2],
-                                [header[4].label]: row10[3],
-                            });
-                        }
-                        else if (index == 11) {
-                            Object.assign(data, {
-                                [header[1].label]: row11[0],
-                                [header[2].label]: row11[1],
-                                [header[3].label]: row11[2],
-                                [header[4].label]: row11[3],
-                            });
-                        }
-                        else if (index == 12) {
-                            Object.assign(data, {
-                                [header[1].label]: row12[0],
-                                [header[2].label]: row12[1],
-                                [header[3].label]: row12[2],
-                                [header[4].label]: row12[3],
-                            });
-                        }
-                        else if (index == 13) {
-                            Object.assign(data, {
-                                [header[1].label]: row13[0],
-                                [header[2].label]: row13[1],
-                                [header[3].label]: row13[2],
-                                [header[4].label]: row13[3],
-                            });
-                        }
-                    }
-                    if (header.length === 6) {
-                        if (index == 1) {
-                            Object.assign(data, {
-                                [header[1].label]: row1[0],
-                                [header[2].label]: row1[1],
-                                [header[3].label]: row1[2],
-                                [header[4].label]: row1[3],
-                                [header[5].label]: row1[4],
-                            });
-                        }
-                        else if (index == 2) {
-                            Object.assign(data, {
-                                [header[1].label]: row2[0],
-                                [header[2].label]: row2[1],
-                                [header[3].label]: row2[2],
-                                [header[4].label]: row2[3],
-                                [header[5].label]: row2[4],
-                            });
-                        }
-                        else if (index == 3) {
-                            Object.assign(data, {
-                                [header[1].label]: row3[0],
-                                [header[2].label]: row3[1],
-                                [header[3].label]: row3[2],
-                                [header[4].label]: row3[3],
-                                [header[5].label]: row3[4],
-                            });
-                        }
-                        else if (index == 4) {
-                            Object.assign(data, {
-                                [header[1].label]: row4[0],
-                                [header[2].label]: row4[1],
-                                [header[3].label]: row4[2],
-                                [header[4].label]: row4[3],
-                                [header[5].label]: row4[4],
-                            });
-                        }
-                        else if (index == 5) {
-                            Object.assign(data, {
-                                [header[1].label]: row5[0],
-                                [header[2].label]: row5[1],
-                                [header[3].label]: row5[2],
-                                [header[4].label]: row5[3],
-                                [header[5].label]: row5[4],
-                            });
-                        }
-                        else if (index == 6) {
-                            Object.assign(data, {
-                                [header[1].label]: row6[0],
-                                [header[2].label]: row6[1],
-                                [header[3].label]: row6[2],
-                                [header[4].label]: row6[3],
-                                [header[5].label]: row6[4],
-                            });
-                        }
-                        else if (index == 7) {
-                            Object.assign(data, {
-                                [header[1].label]: row7[0],
-                                [header[2].label]: row7[1],
-                                [header[3].label]: row7[2],
-                                [header[4].label]: row7[3],
-                                [header[5].label]: row7[4],
-                            });
-                        }
-                        else if (index == 8) {
-                            Object.assign(data, {
-                                [header[1].label]: row8[0],
-                                [header[2].label]: row8[1],
-                                [header[3].label]: row8[2],
-                                [header[4].label]: row8[3],
-                                [header[5].label]: row8[4],
-                            });
-                        }
-                        else if (index == 9) {
-                            Object.assign(data, {
-                                [header[1].label]: row9[0],
-                                [header[2].label]: row9[1],
-                                [header[3].label]: row9[2],
-                                [header[4].label]: row9[3],
-                                [header[5].label]: row9[4],
-                            });
-                        }
-                        else if (index == 10) {
-                            Object.assign(data, {
-                                [header[1].label]: row10[0],
-                                [header[2].label]: row10[1],
-                                [header[3].label]: row10[2],
-                                [header[4].label]: row10[3],
-                                [header[5].label]: row10[4],
-                            });
-                        }
-                        else if (index == 11) {
-                            Object.assign(data, {
-                                [header[1].label]: row11[0],
-                                [header[2].label]: row11[1],
-                                [header[3].label]: row11[2],
-                                [header[4].label]: row11[3],
-                                [header[5].label]: row11[4],
-                            });
-                        }
-                        else if (index == 12) {
-                            Object.assign(data, {
-                                [header[1].label]: row12[0],
-                                [header[2].label]: row12[1],
-                                [header[3].label]: row12[2],
-                                [header[4].label]: row12[3],
-                                [header[5].label]: row12[4],
-                            });
-                        }
-                        else if (index == 13) {
-                            Object.assign(data, {
-                                [header[1].label]: row13[0],
-                                [header[2].label]: row13[1],
-                                [header[3].label]: row13[2],
-                                [header[4].label]: row13[3],
-                                [header[5].label]: row13[4],
-                            });
+                    for (const [iHeader, header] of headers.entries()) {
+                        if (iHeader !== 0) {
+                            if (iRow === 4 || iRow === 5) {
+                                console.log('asasas', rows[iRow][iHeader - 1].length);
+                                if (rows[iRow][iHeader - 1].length > 25) {
+                                    textPositionYEstimateNego = 400;
+                                }
+                            }
+                            if (iRow === 10) {
+                                Object.assign(data, {
+                                    [header.property]: rows[iRow][iHeader - 1],
+                                    options: {
+                                        backgroundColor: '#ff0066',
+                                        backgroundOpacity: 1,
+                                    },
+                                });
+                            }
+                            else if (iRow === 16) {
+                                Object.assign(data, {
+                                    [header.property]: rows[iRow][iHeader - 1],
+                                    options: {
+                                        backgroundColor: '#1f497d',
+                                        backgroundOpacity: 1,
+                                    },
+                                });
+                            }
+                            else {
+                                Object.assign(data, {
+                                    [header.property]: rows[iRow][iHeader - 1],
+                                    options: {
+                                        backgroundColor: '#d2dce4',
+                                        backgroundOpacity: 1,
+                                    },
+                                });
+                            }
                         }
                     }
                     datas.push(data);
                 }
-                console.log('data jadi', datas);
                 const table = {
-                    headers: header,
+                    headers: headers,
                     datas: datas,
                 };
                 doc.table(table, {
-                    x: 50,
-                    y: 80,
+                    x: 60,
+                    y: 60,
+                    padding: [20, 5, 20, 5],
                     prepareHeader: () => {
-                        doc
-                            .font('Helvetica-Bold')
-                            .fontSize(11)
-                            .fillColor('white')
-                            .lineGap(5);
+                        doc.font('Helvetica-Bold').fontSize(10).fillColor('white');
                     },
                     prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
-                        if (indexRow === 0 && indexColumn === 0) {
-                            doc.addBackground(rectRow, '#bfbfbf', 0.5);
+                        const startX = 50;
+                        const startY = 56;
+                        let x = startX;
+                        for (let index = 0; index < headers.length - 1; index++) {
+                            x += 120;
+                            doc
+                                .moveTo(x, startY)
+                                .lineTo(x, 380)
+                                .lineWidth(0.8)
+                                .strokeColor('white')
+                                .stroke();
                         }
-                        if (indexColumn === 0) {
-                            doc.font('Times-Roman').fontSize(10).fillColor('black');
-                            doc.addBackground(rectCell, '#bfbfbf', 1);
+                        doc.font('Helvetica').fontSize(9).fillColor('black');
+                        if (indexColumn === 0 &&
+                            indexRow !== 0 &&
+                            indexRow !== 10 &&
+                            indexRow !== 16) {
+                            doc.addBackground(rectCell, 'bfbfbf', 0);
                         }
+                        if (indexRow === 10) {
+                            doc.font('Helvetica').fillColor('white');
+                            if (indexColumn === 0) {
+                                doc.fontSize(8);
+                            }
+                        }
+                        if (indexRow === 11) {
+                            doc.addBackground(rectRow, '#fff', 1);
+                        }
+                        if (indexRow === 12) {
+                            doc.addBackground(rectRow, '#7f7f7f', 1);
+                        }
+                        if (indexRow === 16) {
+                            doc.font('Helvetica').fontSize(9).fillColor('white');
+                        }
+                    },
+                    divider: {
+                        header: { width: 1, opacity: 1, color: 'white' },
+                        horizontal: {
+                            width: 1,
+                            opacity: 1,
+                            color: 'white',
+                        },
                     },
                 });
+                const imageFooterX = (doc.page.width - 720) / 2;
+                const imageFooterY = doc.page.height - doc.page.margins.bottom - 70;
+                doc.image(this.rootPath + '/footer.png', imageFooterX, imageFooterY, {
+                    width: 700,
+                    height: 70,
+                });
+                const lengthHeaders = headers.length;
+                const positionX = lengthHeaders == 6
+                    ? 300
+                    : lengthHeaders == 5
+                        ? 240
+                        : lengthHeaders == 4
+                            ? 170
+                            : 100;
+                doc
+                    .font('Helvetica-Bold')
+                    .fontSize(15)
+                    .fillColor('white')
+                    .text('Estimation For Negotiation Price', positionX, textPositionYEstimateNego);
             }
-            doc.end();
-            doc.on('data', buffers.push.bind(buffers));
-            doc.on('end', () => resolve(Buffer.concat(buffers)));
-        });
-    }
-    async generatePdf() {
-        return new Promise((resolve) => {
-            let doc = new PDFDocument({
-                margin: 30,
-                size: 'A4',
-                layout: 'landscape',
-            });
-            const buffers = [];
-            doc.image(this.rootPath + '/2.png', doc.page.width / 2 - 100, 150, {
-                width: 200,
-            });
             doc.addPage();
-            const table = {
-                title: 'Title',
-                subtitle: 'Subtitle',
-                headers: [
-                    { label: 'Name', property: 'name', width: 60, renderer: null },
-                    {
-                        label: 'Description',
-                        property: 'description',
-                        width: 150,
-                        renderer: null,
-                    },
-                    { label: 'Price 1', property: 'price1', width: 100, renderer: null },
-                    { label: 'Price 2', property: 'price2', width: 100, renderer: null },
-                    { label: 'Price 3', property: 'price3', width: 80, renderer: null },
-                    {
-                        label: 'Price 4',
-                        property: 'price4',
-                        width: 43,
-                        renderer: (value, indexColumn, indexRow, row, rectRow, rectCell) => {
-                            return `U$ ${Number(value).toFixed(2)}`;
-                        },
-                    },
-                ],
-                datas: [
-                    {
-                        name: 'Name 1',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean mattis ante in laoreet egestas. ',
-                        price1: '$1',
-                        price3: '$ 3',
-                        price2: '$2',
-                        price4: '4',
-                    },
-                    {
-                        options: { fontSize: 10, separation: true },
-                        name: 'bold:Name 2',
-                        description: 'bold:Lorem ipsum dolor.',
-                        price1: 'bold:$1',
-                        price3: {
-                            label: 'PRICE $3',
-                            options: { fontSize: 12 },
-                        },
-                        price2: '$2',
-                        price4: '4',
-                    },
-                ],
-                rows: [
-                    [
-                        'Apple',
-                        'Nullam ut facilisis mi. Nunc dignissim ex ac vulputate facilisis.',
-                        '$ 105,99',
-                        '$ 105,99',
-                        '$ 105,99',
-                        '105.99',
-                    ],
-                ],
-            };
-            doc.table(table, {
-                prepareHeader: () => doc.font('Helvetica-Bold').fontSize(8),
-                prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
-                    doc.font('Helvetica').fontSize(8);
-                    indexColumn === 0 && doc.addBackground(rectRow, 'blue', 0.15);
-                },
+            const coverBackImageWidth = 800;
+            const coverBackImageHeight = 600;
+            const coverBackImageX = (doc.page.width - 820) / 2;
+            const coverBackImageY = (doc.page.height - coverBackImageHeight) / 2;
+            doc.image(this.rootPath + '/cover-back.png', coverBackImageX, coverBackImageY, {
+                width: coverBackImageWidth,
+                height: coverBackImageHeight,
             });
             doc.end();
             doc.on('data', buffers.push.bind(buffers));
             doc.on('end', () => resolve(Buffer.concat(buffers)));
         });
-    }
-    generateDummyData(rowCount) {
-        const chunks = [];
-        for (let i = 0; i < rowCount; i++) {
-            const row = {
-                fillColor: i % 2 === 0 ? '#e0e0e0' : '#f5f5f5',
-                cells: Array(24)
-                    .fill(0)
-                    .map((_, idx) => {
-                    if (idx === 3) {
-                        return {
-                            image: this.rootPath + '/1.png',
-                            width: 20,
-                            height: 20,
-                        };
-                    }
-                    return `Baris ${i + 1}-Kolom ${idx + 1}`;
-                }),
-            };
-            chunks.push(row);
-        }
-        return chunks.reduce((result, item, index) => {
-            const chunkIndex = Math.floor(index / 5);
-            if (!result[chunkIndex])
-                result[chunkIndex] = [];
-            result[chunkIndex].push(item);
-            return result;
-        }, []);
-    }
-    async generateVerticalHeaderPdf() {
-        return new Promise((resolve) => {
-            const doc = new PDFDocument({
-                margin: 30,
-                size: 'A4',
-                layout: 'landscape',
-            });
-            const buffers = [];
-            const data = this.generateSampleData();
-            const table = {
-                title: 'Laporan dengan Header Vertikal',
-                subtitle: 'Periode Januari 2024',
-                rows: this.formatVerticalHeaders(data),
-                options: {
-                    columnsSize: [
-                        100,
-                        ...Array(7).fill((doc.page.width - 100 - 60) / 7),
-                    ],
-                    padding: 8,
-                    divider: {
-                        horizontal: { width: 0.5, color: '#E0E0E0' },
-                    },
-                    headerStyles: {
-                        fillColor: 'transparent',
-                    },
-                    rowHeight: 40,
-                },
-            };
-            const startX = (doc.page.width - (doc.page.width - 60)) / 2;
-            doc.y = 100;
-            doc.table(table, {
-                x: startX,
-                prepareRow: (row, rowIndex) => {
-                    row.cells[0].styles = {
-                        fillColor: '#607D8B',
-                        textColor: '#000',
-                        bold: true,
-                        fontSize: 10,
-                        textRotation: 90,
-                        verticalAlign: 'center',
-                    };
-                    row.cells.slice(1).forEach((cell) => {
-                        cell.styles = {
-                            fontSize: 9,
-                            textColor: '#424242',
-                            alignment: 'center',
-                        };
-                    });
-                },
-            });
-            doc.end();
-            doc.on('data', buffers.push.bind(buffers));
-            doc.on('end', () => resolve(Buffer.concat(buffers)));
-        });
-    }
-    generateSampleData() {
-        return [
-            { header: 'Produk A', data: [150, 75, 230, 45, 890, 120, 340] },
-            { header: 'Produk B', data: [95, 230, 145, 670, 320, 510, 210] },
-            { header: 'Produk C', data: [320, 450, 275, 190, 550, 430, 380] },
-            { header: 'Produk D', data: [180, 290, 380, 540, 260, 170, 490] },
-            { header: 'Produk E', data: [410, 130, 590, 280, 370, 240, 520] },
-        ];
-    }
-    formatVerticalHeaders(data) {
-        return data.map((item) => ({
-            cells: [
-                {
-                    text: item.header,
-                    options: {
-                        padding: [5, 10, 5, 10],
-                    },
-                },
-                ...item.data.map((value, index) => ({
-                    text: this.formatCellValue(value, index),
-                    options: {
-                        cellWidth: index === 3 ? 'auto' : undefined,
-                    },
-                })),
-            ],
-        }));
-    }
-    formatCellValue(value, index) {
-        return index === 0
-            ? `Rp ${value.toLocaleString()}`
-            : index === 3
-                ? `${value} unit`
-                : value.toString();
     }
 };
 exports.DashboardPropertiesService = DashboardPropertiesService;

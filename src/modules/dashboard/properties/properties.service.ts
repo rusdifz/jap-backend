@@ -1,8 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import * as XLSX from 'xlsx';
-// import PDFDocument from 'pdfkit-table';
-// const PDFDocument = require('pdfkit');
 const PDFDocument = require('pdfkit-table');
+// const jsPDF = require('jspdf');
+// import jsPDF from 'jspdf';
+// import { jsPDF } from 'jspdf';
+const jsPDF = require('jspdf').jsPDF;
+import 'jspdf-autotable';
+
 import { readFileSync } from 'fs';
 import { FindManyOptions, FindOneOptions, In, Like } from 'typeorm';
 
@@ -323,18 +327,6 @@ export class DashboardPropertiesService {
 
   async generatePDFComparisson(property_id: number[]): Promise<Buffer> {
     return new Promise(async (resolve) => {
-      const kotakDialog = {
-        date_availability: '',
-        prepared_for: '',
-        commencement_date: '',
-        type: '',
-        area: '',
-        marketing: '',
-        telp: '',
-        mobile: '',
-        email: '',
-      };
-
       const query: FindManyOptions<PropertiesDB> = {
         select: {
           name: true,
@@ -346,6 +338,10 @@ export class DashboardPropertiesService {
           units: {
             condition: true,
           },
+          images: {
+            name: true,
+            path: true,
+          },
           price_rent_sqm: true,
           service_charge: true,
         },
@@ -354,15 +350,16 @@ export class DashboardPropertiesService {
         },
         relations: {
           units: true,
+          images: true,
         },
       };
 
       const getData = await this.repository.find(query);
 
       const buffers: any[] = [];
-
       const doc = new PDFDocument({
         margin: 30,
+        width: 300,
         size: 'A4',
         layout: 'landscape',
       });
@@ -378,10 +375,10 @@ export class DashboardPropertiesService {
         const negoRent = priceRent > 0 ? priceRent - 10000 : 0;
         const totalCostBargain =
           negoRent > 0 ? size * (negoRent + serviceCharge) : 0;
-        console.log('cost ');
 
         return {
           name: dt.name,
+          image: dt.images[0].path + '/' + dt.images[0].name,
           location: dt.location,
           property_size: size,
           total_floor: dt.total_floor ?? 0,
@@ -391,7 +388,7 @@ export class DashboardPropertiesService {
           price_rent_sqm: priceRent,
           service_charge: serviceCharge,
           cost_total: costTotal,
-          cost_total_max: costTotal > 0 ? 0.11 * costTotal + costTotal : 0,
+          cost_total_tax: costTotal > 0 ? 0.11 * costTotal + costTotal : 0,
           nego_rent: negoRent,
           total_cost_bargain: totalCostBargain,
           bargain_tax:
@@ -403,595 +400,51 @@ export class DashboardPropertiesService {
 
       const dataPerPage = 5;
       const page = Math.ceil(properties.length / dataPerPage);
-      console.log('page', page);
 
-      // doc.image(this.rootPath + '/cover.png', doc.page.width / 2 - 100, 150, {
-      //   width: 200,
-      // });
+      const coverImageWidth = 750; // lebar gambar yang diinginkan
+      const coverImageHeight = 500; // tinggi gambar yang diinginkan
 
-      doc.image(this.rootPath + '/cover.png', {
-        // fit: [500, 200],
-        width: 700,
-        align: 'center',
-        valign: 'center',
+      const coverImageX = (doc.page.width - coverImageWidth) / 2;
+      const coverImageY = (doc.page.height - coverImageHeight) / 2;
+
+      doc.image(this.rootPath + '/cover.png', coverImageX, coverImageY, {
+        width: coverImageWidth,
+        height: coverImageHeight,
       });
 
-      // doc.image('path/to/image.png', doc.page.margins.left, doc.page.margins.top, {
-      //   fit: [availableWidth, availableHeight],
-      //   align: 'center',
-      //   valign: 'center'
-      // });
-
-      for (let index = 0; index < page; index++) {
-        let data: PropertiesDB[];
-        if (index === 0) {
-          data = properties.slice(index, dataPerPage);
-        } else {
-          const start = index * dataPerPage;
-          const end = start * dataPerPage;
-          data = properties.slice(start, end);
-        }
-
+      //tambah table
+      for (let iTable = 0; iTable < page; iTable++) {
         doc.addPage();
 
-        const header = [
+        const headerImageX = doc.page.width - doc.page.margins.right - 150;
+        const headerImageY = 20;
+        doc.image(this.rootPath + '/logo-new.png', headerImageX, headerImageY, {
+          width: 80,
+          height: 40,
+        });
+
+        let databuilding: PropertiesDB[];
+
+        if (iTable === 0) {
+          databuilding = properties.slice(iTable, dataPerPage);
+        } else {
+          //pagination after page 1
+          const start = iTable * dataPerPage;
+          const end = start * dataPerPage;
+          databuilding = properties.slice(start, end);
+        }
+
+        //row 1 building name
+        const headers = [
           {
             label: 'Building',
             property: 'building',
-            width: 120,
-            renderer: null,
+            width: 110,
             headerColor: '#7f7f7f',
             headerOpacity: 2,
-            headerAlign: 'center',
-            valign: 'middle',
-            options: { padding: 5 },
-          },
-        ];
-
-        const row1 = data.map((dt) => {
-          return dt.location;
-        });
-        const row2 = data.map((dt) => {
-          return dt.property_size;
-        });
-        const row3 = data.map((dt) => {
-          return dt.total_floor;
-        });
-        const row4 = data.map((dt) => {
-          return dt.price_overtime_ac;
-        });
-        const row5 = data.map((dt) => {
-          return dt.price_overtime_electricity;
-        });
-        const row6 = data.map((dt) => {
-          return dt['condition'];
-        });
-        const row7 = data.map((dt) => {
-          return 'Rp. ' + dt.price_rent_sqm;
-        });
-        const row8 = data.map((dt) => {
-          return 'Rp. ' + dt.service_charge;
-        });
-        const row9 = data.map((dt) => {
-          return 'Rp. ' + dt['cost_total'];
-        });
-        const row10 = data.map((dt) => {
-          return 'IDR ' + dt['cost_total_tax'];
-        });
-        const row11 = data.map((dt) => {
-          return 'Rp. ' + dt['nego_rent'];
-        });
-        const row12 = data.map((dt) => {
-          return 'Rp. ' + dt['total_cost_bargain'];
-        });
-        const row13 = data.map((dt) => {
-          return 'Rp. ' + dt['bargain_tax'];
-        });
-
-        for (const dt of data) {
-          header.push({
-            label: dt.name,
-            property: dt.name,
-            width: 120,
-            renderer: null,
-            headerColor: '#7f7f7f',
-            headerOpacity: 2,
-            headerAlign: 'center',
-            valign: 'middle',
-            options: { padding: 5 },
-          });
-        }
-        // console.log('header ' + index, header);
-
-        //  color header : #7f7f7f
-        //color kolom 1 #bfbfbf
-        //color kolom 2 #d2dce4
-        //color kolom tax #ff0066
-        //color kolom bargain tax #1f497d
-
-        const rowAja = [
-          'Image',
-          'Location',
-          'Availablilty ( sqm )',
-          'Floor',
-          'AC',
-          'Electricity',
-          'Condition',
-          'Rental Rate',
-          'Service Charge',
-          'Cost Per month',
-          'Cost Per Month After Tax',
-          'MERGE CELL',
-          'Estimation For Negotiation Price',
-          'Rental',
-          'Service Charge',
-          'Total Cost Bargain',
-          'Bargain After Tax',
-        ];
-
-        const datas = [];
-        console.log('hedaer', header.length);
-
-        for (let index = 0; index < 16; index++) {
-          // const element = array[index];
-
-          const data = {
-            building: rowAja[index],
-          };
-
-          if (header.length === 2) {
-          }
-
-          if (header.length === 3) {
-          }
-
-          if (header.length === 4) {
-            if (index == 1) {
-              Object.assign(data, {
-                [header[1].label]: row1[0],
-                [header[2].label]: row1[1],
-                [header[3].label]: row1[2],
-              });
-            } else if (index == 2) {
-              Object.assign(data, {
-                [header[1].label]: row2[0],
-                [header[2].label]: row2[1],
-                [header[3].label]: row2[2],
-              });
-            } else if (index == 3) {
-              Object.assign(data, {
-                [header[1].label]: row3[0],
-                [header[2].label]: row3[1],
-                [header[3].label]: row3[2],
-              });
-            } else if (index == 4) {
-              Object.assign(data, {
-                [header[1].label]: row4[0],
-                [header[2].label]: row4[1],
-                [header[3].label]: row4[2],
-              });
-            } else if (index == 5) {
-              Object.assign(data, {
-                [header[1].label]: row5[0],
-                [header[2].label]: row5[1],
-                [header[3].label]: row5[2],
-              });
-            } else if (index == 6) {
-              Object.assign(data, {
-                [header[1].label]: row6[0],
-                [header[2].label]: row6[1],
-                [header[3].label]: row6[2],
-              });
-            } else if (index == 7) {
-              Object.assign(data, {
-                [header[1].label]: row7[0],
-                [header[2].label]: row7[1],
-                [header[3].label]: row7[2],
-              });
-            } else if (index == 8) {
-              Object.assign(data, {
-                [header[1].label]: row8[0],
-                [header[2].label]: row8[1],
-                [header[3].label]: row8[2],
-              });
-            } else if (index == 9) {
-              Object.assign(data, {
-                [header[1].label]: row9[0],
-                [header[2].label]: row9[1],
-                [header[3].label]: row9[2],
-              });
-            } else if (index == 10) {
-              Object.assign(data, {
-                [header[1].label]: row10[0],
-                [header[2].label]: row10[1],
-                [header[3].label]: row10[2],
-              });
-            } else if (index == 11) {
-              Object.assign(data, {
-                [header[1].label]: row11[0],
-                [header[2].label]: row11[1],
-                [header[3].label]: row11[2],
-              });
-            } else if (index == 12) {
-              Object.assign(data, {
-                [header[1].label]: row12[0],
-                [header[2].label]: row12[1],
-                [header[3].label]: row12[2],
-              });
-            } else if (index === 13) {
-              Object.assign(data, {
-                [header[1].label]: row13[0],
-                [header[2].label]: row13[1],
-                [header[3].label]: row13[2],
-              });
-            }
-          }
-
-          if (header.length === 5) {
-            if (index == 1) {
-              Object.assign(data, {
-                [header[1].label]: row1[0],
-                [header[2].label]: row1[1],
-                [header[3].label]: row1[2],
-                [header[4].label]: row1[3],
-              });
-            } else if (index == 2) {
-              Object.assign(data, {
-                [header[1].label]: row2[0],
-                [header[2].label]: row2[1],
-                [header[3].label]: row2[2],
-                [header[4].label]: row2[3],
-              });
-            } else if (index == 3) {
-              Object.assign(data, {
-                [header[1].label]: row3[0],
-                [header[2].label]: row3[1],
-                [header[3].label]: row3[2],
-                [header[4].label]: row3[3],
-              });
-            } else if (index == 4) {
-              Object.assign(data, {
-                [header[1].label]: row4[0],
-                [header[2].label]: row4[1],
-                [header[3].label]: row4[2],
-                [header[4].label]: row4[3],
-              });
-            } else if (index == 5) {
-              Object.assign(data, {
-                [header[1].label]: row5[0],
-                [header[2].label]: row5[1],
-                [header[3].label]: row5[2],
-                [header[4].label]: row5[3],
-              });
-            } else if (index == 6) {
-              Object.assign(data, {
-                [header[1].label]: row6[0],
-                [header[2].label]: row6[1],
-                [header[3].label]: row6[2],
-                [header[4].label]: row6[3],
-              });
-            } else if (index == 7) {
-              Object.assign(data, {
-                [header[1].label]: row7[0],
-                [header[2].label]: row7[1],
-                [header[3].label]: row7[2],
-                [header[4].label]: row7[3],
-              });
-            } else if (index == 8) {
-              Object.assign(data, {
-                [header[1].label]: row8[0],
-                [header[2].label]: row8[1],
-                [header[3].label]: row8[2],
-                [header[4].label]: row8[3],
-              });
-            } else if (index == 9) {
-              Object.assign(data, {
-                [header[1].label]: row9[0],
-                [header[2].label]: row9[1],
-                [header[3].label]: row9[2],
-                [header[4].label]: row9[3],
-              });
-            } else if (index == 10) {
-              Object.assign(data, {
-                [header[1].label]: row10[0],
-                [header[2].label]: row10[1],
-                [header[3].label]: row10[2],
-                [header[4].label]: row10[3],
-              });
-            } else if (index == 11) {
-              Object.assign(data, {
-                [header[1].label]: row11[0],
-                [header[2].label]: row11[1],
-                [header[3].label]: row11[2],
-                [header[4].label]: row11[3],
-              });
-            } else if (index == 12) {
-              Object.assign(data, {
-                [header[1].label]: row12[0],
-                [header[2].label]: row12[1],
-                [header[3].label]: row12[2],
-                [header[4].label]: row12[3],
-              });
-            } else if (index == 13) {
-              Object.assign(data, {
-                [header[1].label]: row13[0],
-                [header[2].label]: row13[1],
-                [header[3].label]: row13[2],
-                [header[4].label]: row13[3],
-              });
-            }
-          }
-
-          if (header.length === 6) {
-            if (index == 1) {
-              Object.assign(data, {
-                [header[1].label]: row1[0],
-                [header[2].label]: row1[1],
-                [header[3].label]: row1[2],
-                [header[4].label]: row1[3],
-                [header[5].label]: row1[4],
-              });
-            } else if (index == 2) {
-              Object.assign(data, {
-                [header[1].label]: row2[0],
-                [header[2].label]: row2[1],
-                [header[3].label]: row2[2],
-                [header[4].label]: row2[3],
-                [header[5].label]: row2[4],
-              });
-            } else if (index == 3) {
-              Object.assign(data, {
-                [header[1].label]: row3[0],
-                [header[2].label]: row3[1],
-                [header[3].label]: row3[2],
-                [header[4].label]: row3[3],
-                [header[5].label]: row3[4],
-              });
-            } else if (index == 4) {
-              Object.assign(data, {
-                [header[1].label]: row4[0],
-                [header[2].label]: row4[1],
-                [header[3].label]: row4[2],
-                [header[4].label]: row4[3],
-                [header[5].label]: row4[4],
-              });
-            } else if (index == 5) {
-              Object.assign(data, {
-                [header[1].label]: row5[0],
-                [header[2].label]: row5[1],
-                [header[3].label]: row5[2],
-                [header[4].label]: row5[3],
-                [header[5].label]: row5[4],
-              });
-            } else if (index == 6) {
-              Object.assign(data, {
-                [header[1].label]: row6[0],
-                [header[2].label]: row6[1],
-                [header[3].label]: row6[2],
-                [header[4].label]: row6[3],
-                [header[5].label]: row6[4],
-              });
-            } else if (index == 7) {
-              Object.assign(data, {
-                [header[1].label]: row7[0],
-                [header[2].label]: row7[1],
-                [header[3].label]: row7[2],
-                [header[4].label]: row7[3],
-                [header[5].label]: row7[4],
-              });
-            } else if (index == 8) {
-              Object.assign(data, {
-                [header[1].label]: row8[0],
-                [header[2].label]: row8[1],
-                [header[3].label]: row8[2],
-                [header[4].label]: row8[3],
-                [header[5].label]: row8[4],
-              });
-            } else if (index == 9) {
-              Object.assign(data, {
-                [header[1].label]: row9[0],
-                [header[2].label]: row9[1],
-                [header[3].label]: row9[2],
-                [header[4].label]: row9[3],
-                [header[5].label]: row9[4],
-              });
-            } else if (index == 10) {
-              Object.assign(data, {
-                [header[1].label]: row10[0],
-                [header[2].label]: row10[1],
-                [header[3].label]: row10[2],
-                [header[4].label]: row10[3],
-                [header[5].label]: row10[4],
-              });
-            } else if (index == 11) {
-              Object.assign(data, {
-                [header[1].label]: row11[0],
-                [header[2].label]: row11[1],
-                [header[3].label]: row11[2],
-                [header[4].label]: row11[3],
-                [header[5].label]: row11[4],
-              });
-            } else if (index == 12) {
-              Object.assign(data, {
-                [header[1].label]: row12[0],
-                [header[2].label]: row12[1],
-                [header[3].label]: row12[2],
-                [header[4].label]: row12[3],
-                [header[5].label]: row12[4],
-              });
-            } else if (index == 13) {
-              Object.assign(data, {
-                [header[1].label]: row13[0],
-                [header[2].label]: row13[1],
-                [header[3].label]: row13[2],
-                [header[4].label]: row13[3],
-                [header[5].label]: row13[4],
-              });
-            }
-          }
-
-          datas.push(data);
-        }
-
-        console.log('data jadi', datas);
-
-        const table = {
-          headers: header,
-          datas: datas,
-          // rows: [
-          //   ['Location', ...row1],
-          //   ['Availablilty ( sqm )', ...row2],
-          //   ['Floor', ...row3],
-          //   ['AC', ...row4],
-          //   ['Electricity', ...row5],
-          //   ['Condition', ...row6],
-          //   ['Rental Rate', ...row7],
-          //   ['Service Charge', ...row8],
-          //   ['Cost Per month', ...row9],
-          //   ['Cost Per Month After Tax', ...row10],
-          //   [],
-          //   ['Estimation For Negotiation Price'],
-          //   ['Rental'],
-          //   ['Service Charge', ...row11],
-          //   ['Total Cost Bargain', ...row12],
-          //   ['Bargain After Tax', ...row13],
-          // ],
-          // ],
-        };
-
-        doc.table(table, {
-          x: 50, // posisi x untuk tabel, menyesuaikan dengan lebar header kolom
-          y: 80,
-          // padding: 10,
-          prepareHeader: () => {
-            doc
-              .font('Helvetica-Bold')
-              .fontSize(11)
-              .fillColor('white')
-              .lineGap(5);
-            // .lineGap(10),
-          },
-          prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
-            if (indexRow === 0 && indexColumn === 0) {
-              doc.addBackground(rectRow, '#bfbfbf', 0.5);
-            }
-            if (indexColumn === 0) {
-              doc.font('Times-Roman').fontSize(10).fillColor('black');
-              doc.addBackground(rectCell, '#bfbfbf', 1);
-            }
-            // if (indexRow > 0) {
-            //   doc.font('Helvetica').fontSize(10).fillColor('black');
-            //   doc.addBackground(rectCell, '#d2dce4', 1.5);
-            //   console.log('row', row);
-            //   // row.cells.forEach((index, cell) => {
-            //   //   console.log('index', index);
-            //   //   console.log('cell', cell);
-            //   // });
-            // }
-          },
-        });
-      }
-
-      // Finalisasi PDF
-      doc.end();
-
-      doc.on('data', buffers.push.bind(buffers));
-      doc.on('end', () => resolve(Buffer.concat(buffers)));
-    });
-  }
-
-  async generatePdf(): Promise<Buffer> {
-    return new Promise((resolve) => {
-      // const doc: any = new PDFDocument();
-      let doc = new PDFDocument({
-        margin: 30,
-        size: 'A4',
-        layout: 'landscape',
-      });
-
-      const buffers: any[] = [];
-
-      doc.image(this.rootPath + '/2.png', doc.page.width / 2 - 100, 150, {
-        width: 200,
-      });
-      doc.addPage();
-
-      // // Generate Data Contoh
-      // const dataChunks = this.generateDummyData(15); // 15 rows contoh
-
-      // // // Split data menjadi chunk 5 row per halaman
-      // // for (let i = 0; i < dataChunks.length; i++) {
-      // //   if (i !== 0) doc.addPage(); // Halaman baru untuk setiap chunk
-
-      // //   // Konfigurasi Table
-      // //   const table = {
-      // //     title: 'Tabel dengan Gambar',
-      // //     headers: Array(24)
-      // //       .fill(0)
-      // //       .map((_, idx) => `Kolom ${idx + 1}`),
-      // //     rows: dataChunks[i],
-      // //     options: {
-      // //       columnSpacing: 2,
-      // //       headerAlign: 'center',
-      // //       columnDefaults: {
-      // //         width: (doc.page.width - 60) / 24, // Sesuaikan lebar kolom
-      // //         padding: 2,
-      // //       },
-      // //     },
-      // //   };
-
-      // complex data
-      // datas: properties
-      // datas: [
-      //   {
-      //     name: 'Name 1',
-      //     location:
-      //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean mattis ante in laoreet egestas. ',
-      //     price1: '$1',
-      //     price3: '$ 3',
-      //     price2: '$2',
-      //     price4: '4',
-      //   },
-      // {
-      //   options: { fontSize: 10, separation: true },
-      //   name: 'bold:Name 2',
-      //   description: 'bold:Lorem ipsum dolor.',
-      //   price1: 'bold:$1',
-      //   price3: {
-      //     label: 'PRICE $3',
-      //     options: { fontSize: 12 },
-      //   },
-      //   price2: '$2',
-      //   price4: '4',
-      // },
-      // {...},
-      // ],
-      // simeple data
-      // //   // Generate Table
-      // //   doc.table(table, {
-      // //     prepareHeader: () => doc.fontSize(8).font('Helvetica-Bold'),
-      // //     prepareRow: (row, index) => doc.fontSize(6).font('Helvetica'),
-      // //   });
-      // // }
-
-      const table = {
-        title: 'Title',
-        subtitle: 'Subtitle',
-        headers: [
-          { label: 'Name', property: 'name', width: 60, renderer: null },
-          {
-            label: 'Description',
-            property: 'description',
-            width: 150,
-            renderer: null,
-          },
-          { label: 'Price 1', property: 'price1', width: 100, renderer: null },
-          { label: 'Price 2', property: 'price2', width: 100, renderer: null },
-          { label: 'Price 3', property: 'price3', width: 80, renderer: null },
-          {
-            label: 'Price 4',
-            property: 'price4',
-            width: 43,
+            headerAlign: 'center', // mengatur perataan horizontal header
+            valign: 'center',
+            options: { padding: 50 },
             renderer: (
               value,
               indexColumn,
@@ -1000,204 +453,400 @@ export class DashboardPropertiesService {
               rectRow,
               rectCell,
             ) => {
-              return `U$ ${Number(value).toFixed(2)}`;
-            },
-          },
-        ],
-        // complex data
-        datas: [
-          {
-            name: 'Name 1',
-            description:
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean mattis ante in laoreet egestas. ',
-            price1: '$1',
-            price3: '$ 3',
-            price2: '$2',
-            price4: '4',
-          },
-          {
-            options: { fontSize: 10, separation: true },
-            name: 'bold:Name 2',
-            description: 'bold:Lorem ipsum dolor.',
-            price1: 'bold:$1',
-            price3: {
-              label: 'PRICE $3',
-              options: { fontSize: 12 },
-            },
-            price2: '$2',
-            price4: '4',
-          },
-          // {...},
-        ],
-        // simeple data
-        rows: [
-          [
-            'Apple',
-            'Nullam ut facilisis mi. Nunc dignissim ex ac vulputate facilisis.',
-            '$ 105,99',
-            '$ 105,99',
-            '$ 105,99',
-            '105.99',
-          ],
-          // [...],
-        ],
-      };
-      // the magic
-      doc.table(table, {
-        prepareHeader: () => doc.font('Helvetica-Bold').fontSize(8),
-        prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
-          doc.font('Helvetica').fontSize(8);
-          indexColumn === 0 && doc.addBackground(rectRow, 'blue', 0.15);
-        },
-      });
+              if (indexRow === 0) {
+                console.log('asas', rectCell.height);
 
-      // // done!
-      // doc.end();
+                const imgWidth = rectCell.width; // atur agar sesuai dengan lebar cell
+                const imgHeight = rectCell.height; // atur agar sesuai dengan tinggi cell
+
+                // (Opsional) Hitung posisi agar image berada di tengah cell
+                const xPos = rectCell.x + (rectCell.width - imgWidth) / 2;
+                const yPos = rectCell.y + (rectCell.height - imgHeight) / 2;
+
+                doc.image(this.rootPath + '/logo-jap.png', xPos, yPos, {
+                  width: rectCell.width,
+                  height: rectCell.height,
+                });
+
+                // return value;
+                // return 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry,s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to';
+              } else {
+                return value;
+              }
+            },
+          },
+        ];
+
+        for (const dt of databuilding) {
+          headers.push({
+            label: dt.name,
+            property: dt.name,
+            width: 120,
+            headerColor: '#7f7f7f',
+            headerOpacity: 2,
+            headerAlign: 'center', // mengatur perataan horizontal header
+            valign: 'center',
+            options: { padding: 50 },
+            renderer: (
+              value,
+              indexColumn,
+              indexRow,
+              row,
+              rectRow,
+              rectCell,
+            ) => {
+              if (indexRow === 0) {
+                const imgWidth = rectCell.width; // atur agar sesuai dengan lebar cell
+                const imgHeight = rectCell.height; // atur agar sesuai dengan tinggi cell
+
+                // (Opsional) Hitung posisi agar image berada di tengah cell
+                const xPos = rectCell.x + (rectCell.width - imgWidth) / 2;
+                const yPos = rectCell.y + (rectCell.height - imgHeight) / 2;
+
+                // Gambar image menggunakan instance doc (gunakan variabel global 'doc')
+                doc.image(value, xPos, yPos, {
+                  width: imgWidth,
+                  height: imgHeight,
+                });
+
+                // return 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry,s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic';
+              } else {
+                const cellHeight = rectCell.height;
+                const textHeight = doc.heightOfString(value, {
+                  width: rectCell.width,
+                });
+                let yOffset = 0;
+
+                // Tentukan offset vertikal berdasarkan valign
+                if (row.valign === 'center') {
+                  yOffset = (cellHeight - textHeight) / 2;
+                } else if (row.valign === 'bottom') {
+                  yOffset = cellHeight - textHeight;
+                }
+
+                if (indexRow >= 1 && indexRow <= 6) {
+                  // Tulis teks dengan offset vertikal
+                  doc.text(value, rectCell.x, rectCell.y + yOffset, {
+                    width: rectCell.width,
+                    align: row.align,
+                  });
+                } else {
+                  if (indexRow !== 12) {
+                    // Tulis teks dengan offset vertikal
+                    doc.text(value, rectCell.x, rectCell.y + yOffset, {
+                      width: rectCell.width - 10,
+                      align: 'right',
+                    });
+                  }
+                }
+                return ''; // Mengembalikan string kosong untuk mencegah penulisan teks default
+              }
+            },
+          });
+        }
+
+        //list cell 1
+        const rowCell1 = [
+          'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry,s standard dummy text ever since the 1500s',
+          'bold:Location',
+          'bold:Availablilty ( sqm )',
+          'bold:Floor',
+          'bold:AC',
+          'bold:Electricity',
+          'bold:Condition',
+          'bold:Rental Rate',
+          'bold:Service Charge',
+          'bold:Cost Per month',
+          'bold:Cost Per Month After Tax',
+          'MERGE CELL',
+          'bold:Estimation For Negotiation Price',
+          'bold:Rental',
+          'bold:Service Charge',
+          'bold:Total Cost Bargain',
+          'bold:Bargain After Tax',
+        ];
+
+        const datas = [];
+
+        //row 2 image building
+        const row2 = databuilding.map((dt) => {
+          return dt['image'];
+        });
+
+        //row 3 location
+        const row3 = databuilding.map((dt) => {
+          return dt.location;
+        });
+
+        //row 4 property size
+        const row4 = databuilding.map((dt) => {
+          return dt.property_size;
+        });
+
+        //row 5 total floor
+        const row5 = databuilding.map((dt) => {
+          return dt.total_floor;
+        });
+
+        //row 6 AC
+        const row6 = databuilding.map((dt) => {
+          return dt.price_overtime_ac;
+        });
+
+        //row 7 electricty
+        const row7 = databuilding.map((dt) => {
+          return dt.price_overtime_electricity;
+        });
+
+        //row 8 condition
+        const row8 = databuilding.map((dt) => {
+          return dt['condition'];
+        });
+
+        //row 9 rental rate
+        const row9 = databuilding.map((dt) => {
+          return 'Rp.   ' + dt.price_rent_sqm;
+        });
+
+        //row 10 service charge
+        const row10 = databuilding.map((dt) => {
+          return 'Rp.   ' + dt.service_charge;
+        });
+
+        //row 11 cost per month
+        const row11 = databuilding.map((dt) => {
+          return 'Rp.   ' + dt['cost_total'];
+        });
+
+        //row 12 cost per month after tax
+        const row12 = databuilding.map((dt) => {
+          // return 'bold:IDR ' + dt['cost_total_tax'];
+          return 'bold:Rp.   ' + dt['cost_total_tax'];
+        });
+
+        //row 13 merge row
+        const row13 = 'merge row';
+
+        //row 14 judul estimation
+        const row14 = '';
+
+        //row 15 rental nego
+        const row15 = databuilding.map((dt) => {
+          return 'Rp.   ' + dt['nego_rent'];
+        });
+
+        //row 16 service charge nego
+        const row16 = databuilding.map((dt) => {
+          return 'Rp.   ' + dt.service_charge;
+        });
+
+        //row 17 total cost bargain
+        const row17 = databuilding.map((dt) => {
+          return 'Rp.   ' + dt['total_cost_bargain'];
+        });
+
+        //row 18 bargain after tax
+        const row18 = databuilding.map((dt) => {
+          return 'bold:Rp.   ' + dt['bargain_tax'];
+        });
+
+        const rows = [
+          row2,
+          row3,
+          row4,
+          row5,
+          row6,
+          row7,
+          row8,
+          row9,
+          row10,
+          row11,
+          row12,
+          row13,
+          row14,
+          row15,
+          row16,
+          row17,
+          row18,
+        ];
+
+        let textPositionYEstimateNego: number = 390;
+
+        for (let iRow = 0; iRow < 17; iRow++) {
+          // const element = array[index];
+
+          const data = {
+            building: {
+              label: rowCell1[iRow],
+            },
+            align: 'center',
+            valign: 'center',
+          };
+
+          for (const [iHeader, header] of headers.entries()) {
+            if (iHeader !== 0) {
+              if (iRow === 4 || iRow === 5) {
+                console.log('asasas', rows[iRow][iHeader - 1].length);
+
+                if (rows[iRow][iHeader - 1].length > 25) {
+                  textPositionYEstimateNego = 400;
+                }
+              }
+
+              if (iRow === 10) {
+                Object.assign(data, {
+                  [header.property]: rows[iRow][iHeader - 1],
+                  options: {
+                    backgroundColor: '#ff0066',
+                    backgroundOpacity: 1,
+                  },
+                });
+              } else if (iRow === 16) {
+                Object.assign(data, {
+                  [header.property]: rows[iRow][iHeader - 1],
+                  options: {
+                    backgroundColor: '#1f497d',
+                    backgroundOpacity: 1,
+                  },
+                });
+              } else {
+                Object.assign(data, {
+                  [header.property]: rows[iRow][iHeader - 1],
+                  options: {
+                    backgroundColor: '#d2dce4',
+                    backgroundOpacity: 1,
+                  },
+                });
+              }
+            }
+          }
+
+          datas.push(data);
+        }
+
+        const table = {
+          headers: headers,
+          datas: datas,
+        };
+
+        //color header : #7f7f7f
+        //color kolom 1 #bfbfbf
+        //color kolom 2 #d2dce4
+        //color kolom tax #ff0066
+        //color kolom bargain tax #1f497d
+
+        doc.table(table, {
+          x: 60, // horizontal
+          y: 60, // vertical
+          padding: [20, 5, 20, 5], // [top, right, bottom, left]
+          prepareHeader: () => {
+            doc.font('Helvetica-Bold').fontSize(10).fillColor('white');
+            // .lineGap(5);
+          },
+          prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
+            // Dapatkan posisi awal tabel
+            const startX = 50;
+            const startY = 56;
+
+            let x = startX;
+
+            for (let index = 0; index < headers.length - 1; index++) {
+              x += 120;
+
+              doc
+                .moveTo(x, startY)
+                .lineTo(x, 380)
+                .lineWidth(0.8)
+                .strokeColor('white')
+                .stroke();
+            }
+            doc.font('Helvetica').fontSize(9).fillColor('black');
+
+            if (
+              indexColumn === 0 &&
+              indexRow !== 0 &&
+              indexRow !== 10 &&
+              indexRow !== 16
+            ) {
+              doc.addBackground(rectCell, 'bfbfbf', 0);
+            }
+            if (indexRow === 10) {
+              doc.font('Helvetica').fillColor('white');
+              if (indexColumn === 0) {
+                doc.fontSize(8);
+              }
+            }
+            if (indexRow === 11) {
+              doc.addBackground(rectRow, '#fff', 1);
+            }
+            if (indexRow === 12) {
+              doc.addBackground(rectRow, '#7f7f7f', 1);
+            }
+            if (indexRow === 16) {
+              doc.font('Helvetica').fontSize(9).fillColor('white');
+            }
+          },
+          divider: {
+            header: { width: 1, opacity: 1, color: 'white' },
+            horizontal: {
+              width: 1,
+              opacity: 1,
+              color: 'white',
+            },
+          },
+        });
+
+        const imageFooterX = (doc.page.width - 720) / 2;
+        const imageFooterY = doc.page.height - doc.page.margins.bottom - 70;
+        doc.image(this.rootPath + '/footer.png', imageFooterX, imageFooterY, {
+          width: 700,
+          height: 70,
+        });
+
+        const lengthHeaders = headers.length;
+        const positionX =
+          lengthHeaders == 6
+            ? 300
+            : lengthHeaders == 5
+              ? 240
+              : lengthHeaders == 4
+                ? 170
+                : 100;
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(15)
+          .fillColor('white')
+          .text(
+            'Estimation For Negotiation Price',
+            positionX,
+            textPositionYEstimateNego,
+          );
+      }
+
+      doc.addPage();
+
+      const coverBackImageWidth = 800; // lebar gambar yang diinginkan
+      const coverBackImageHeight = 600; // tinggi gambar yang diinginkan
+
+      const coverBackImageX = (doc.page.width - 820) / 2;
+      const coverBackImageY = (doc.page.height - coverBackImageHeight) / 2;
+
+      doc.image(
+        this.rootPath + '/cover-back.png',
+        coverBackImageX,
+        coverBackImageY,
+        {
+          width: coverBackImageWidth,
+          height: coverBackImageHeight,
+        },
+      );
 
       // Finalisasi PDF
       doc.end();
 
-      // Konversi ke Buffer
       doc.on('data', buffers.push.bind(buffers));
       doc.on('end', () => resolve(Buffer.concat(buffers)));
     });
-  }
-
-  private generateDummyData(rowCount: number): any[] {
-    const chunks = [];
-    for (let i = 0; i < rowCount; i++) {
-      const row = {
-        fillColor: i % 2 === 0 ? '#e0e0e0' : '#f5f5f5', // Warna baris
-        cells: Array(24)
-          .fill(0)
-          .map((_, idx) => {
-            if (idx === 3) {
-              // Contoh kolom dengan gambar
-              return {
-                image: this.rootPath + '/1.png', // Path gambar
-                width: 20,
-                height: 20,
-              };
-            }
-            return `Baris ${i + 1}-Kolom ${idx + 1}`;
-          }),
-      };
-      chunks.push(row);
-    }
-
-    // Split menjadi chunk 5 row per halaman
-    return chunks.reduce((result, item, index) => {
-      const chunkIndex = Math.floor(index / 5);
-      if (!result[chunkIndex]) result[chunkIndex] = [];
-      result[chunkIndex].push(item);
-      return result;
-    }, []);
-  }
-
-  async generateVerticalHeaderPdf(): Promise<Buffer> {
-    return new Promise((resolve) => {
-      const doc = new PDFDocument({
-        margin: 30,
-        size: 'A4',
-        layout: 'landscape',
-      });
-      const buffers: any[] = [];
-
-      // Sample data dengan header vertikal
-      const data = this.generateSampleData();
-
-      // Konfigurasi tabel
-      const table = {
-        title: 'Laporan dengan Header Vertikal',
-        subtitle: 'Periode Januari 2024',
-        rows: this.formatVerticalHeaders(data),
-        options: {
-          columnsSize: [
-            100, // Lebar kolom header
-            ...Array(7).fill((doc.page.width - 100 - 60) / 7), // 7 kolom data
-          ],
-          padding: 8,
-          divider: {
-            horizontal: { width: 0.5, color: '#E0E0E0' },
-          },
-          headerStyles: {
-            fillColor: 'transparent', // Nonaktifkan header horizontal default
-          },
-          rowHeight: 40, // Tinggi baris untuk rotated text
-        },
-      };
-
-      // Hitung posisi tengah
-      const startX = (doc.page.width - (doc.page.width - 60)) / 2;
-      doc.y = 100; // Posisi vertikal awal
-
-      doc.table(table, {
-        x: startX,
-        prepareRow: (row, rowIndex) => {
-          // Style khusus untuk header vertikal
-          row.cells[0].styles = {
-            fillColor: '#607D8B',
-            textColor: '#000',
-            bold: true,
-            fontSize: 10,
-            textRotation: 90, // Rotasi teks 90 derajat
-            verticalAlign: 'center',
-          };
-
-          // Style untuk data cells
-          row.cells.slice(1).forEach((cell) => {
-            cell.styles = {
-              fontSize: 9,
-              textColor: '#424242',
-              alignment: 'center',
-            };
-          });
-        },
-      });
-
-      doc.end();
-      doc.on('data', buffers.push.bind(buffers));
-      doc.on('end', () => resolve(Buffer.concat(buffers)));
-    });
-  }
-
-  private generateSampleData() {
-    return [
-      { header: 'Produk A', data: [150, 75, 230, 45, 890, 120, 340] },
-      { header: 'Produk B', data: [95, 230, 145, 670, 320, 510, 210] },
-      { header: 'Produk C', data: [320, 450, 275, 190, 550, 430, 380] },
-      { header: 'Produk D', data: [180, 290, 380, 540, 260, 170, 490] },
-      { header: 'Produk E', data: [410, 130, 590, 280, 370, 240, 520] },
-    ];
-  }
-
-  private formatVerticalHeaders(data: any[]) {
-    return data.map((item) => ({
-      cells: [
-        // Header Cell
-        {
-          text: item.header,
-          options: {
-            padding: [5, 10, 5, 10], // [top, right, bottom, left]
-          },
-        },
-        // Data Cells
-        ...item.data.map((value, index) => ({
-          text: this.formatCellValue(value, index),
-          options: {
-            cellWidth: index === 3 ? 'auto' : undefined, // Contoh conditional width
-          },
-        })),
-      ],
-    }));
-  }
-
-  private formatCellValue(value: number, index: number) {
-    // Contoh formatting berdasarkan kolom
-    return index === 0
-      ? `Rp ${value.toLocaleString()}`
-      : index === 3
-        ? `${value} unit`
-        : value.toString();
   }
 }

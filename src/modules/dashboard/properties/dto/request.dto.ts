@@ -287,7 +287,7 @@ export class PropertyDetailDTO {
 }
 
 export class GeneratePDFDTO {
-  // @IsNotEmpty()
-  // @IsArray()
-  property_id: string[];
+  @IsNotEmpty()
+  @IsArray()
+  property_id: number[];
 }

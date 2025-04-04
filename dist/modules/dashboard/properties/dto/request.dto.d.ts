@@ -68,6 +68,6 @@ export declare class PropertyDetailDTO {
     slug?: string;
 }
 export declare class GeneratePDFDTO {
-    property_id: string[];
+    property_id: number[];
 }
 export {};

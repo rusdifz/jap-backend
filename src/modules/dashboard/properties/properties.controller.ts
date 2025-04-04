@@ -132,29 +132,21 @@ export class DashboardPropertiesController {
     return await this.service.convertFromExcelToDb();
   }
 
-  @Get('generate/pdf')
-  async generatePdf(@Res() res: any, @Query() query: GeneratePDFDTO) {
-    // const pdfBuffer = await this.service.generatePDFComparisson(
-    //   query.property_id,
-    // );
-    const pdfBuffer = await this.service.generatePDFComparisson([1,2,3,4,5,6,7,8,9,10])
+  @Get('pdf/comparisson/:location')
+  async generatePdf(
+    @Res() res: any,
+    @Param('location') location: string,
+    @Query() query: GeneratePDFDTO,
+  ) {
+    const pdfBuffer = await this.service.generatePDFComparisson(
+      query.property_id,
+    );
+
+    const namePdf = 'Building Comparisson - ' + location;
     res.set({
       'Content-Type': 'application/pdf',
-      'Content-Disposition': 'attachment; Building-Comparison.pdf',
+      'Content-Disposition': `attachment; filename="${namePdf}.pdf"`,
     });
     res.send(pdfBuffer);
   }
-
-  @Get('generate/pdf/contoh')
-  async generatePdfContoh(@Res() res: any, @Query() query: GeneratePDFDTO) {
- 
-    const pdfBuffer = await this.service.generateVerticalHeaderPdf()
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': 'attachment; Building-Comparison.pdf',
-    });
-    res.send(pdfBuffer);
-  }
- 
-
 }
