@@ -20,10 +20,12 @@ const request_dto_1 = require("./dto/request.dto");
 const endpoint_swagger_1 = require("./swaggers/endpoint.swagger");
 const common_2 = require("../../../common");
 const request_dto_2 = require("./dto/request.dto");
-const properties_service_1 = require("./properties.service");
+const properties_service_1 = require("./services/properties.service");
+const properties_generate_file_service_1 = require("./services/properties-generate-file.service");
 let DashboardPropertiesController = class DashboardPropertiesController {
-    constructor(service) {
+    constructor(service, serviceGenerateFile) {
         this.service = service;
+        this.serviceGenerateFile = serviceGenerateFile;
     }
     async getDetail(id) {
         return await this.service.get(id);
@@ -41,14 +43,22 @@ let DashboardPropertiesController = class DashboardPropertiesController {
         return await this.service.delete(id, user);
     }
     async convertFileExcelToDB() {
-        return await this.service.convertFromExcelToDb();
+        return await this.service.inputBulkFromExcel();
     }
-    async generatePdf(res, location, query) {
-        const pdfBuffer = await this.service.generatePDFComparisson(query.property_id);
-        const namePdf = 'Building Comparisson ' + location;
+    async generatePdfComparisson(res, location, query) {
+        const pdfBuffer = await this.serviceGenerateFile.generatePDFComparisson(query.property_id);
+        const namePdf = 'Building Comparisson - ' + location;
         res.set({
             'Content-Type': 'application/pdf',
             'Content-Disposition': `attachment; filename="${namePdf}.pdf"`,
+        });
+        res.send(pdfBuffer);
+    }
+    async generatePdfPropertyDetail(res, slug) {
+        const pdfBuffer = await this.serviceGenerateFile.generatePDFDetailProperty(slug);
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `attachment; filename="${slug}.pdf"`,
         });
         res.send(pdfBuffer);
     }
@@ -144,9 +154,18 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String, request_dto_1.GeneratePDFDTO]),
     __metadata("design:returntype", Promise)
-], DashboardPropertiesController.prototype, "generatePdf", null);
+], DashboardPropertiesController.prototype, "generatePdfComparisson", null);
+__decorate([
+    (0, common_1.Get)('pdf/detail/:slug'),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Param)('slug')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
+], DashboardPropertiesController.prototype, "generatePdfPropertyDetail", null);
 exports.DashboardPropertiesController = DashboardPropertiesController = __decorate([
     (0, common_1.Controller)('dashboard/properties'),
-    __metadata("design:paramtypes", [properties_service_1.DashboardPropertiesService])
+    __metadata("design:paramtypes", [properties_service_1.DashboardPropertiesService,
+        properties_generate_file_service_1.DashboardPropertiesGenerateFileService])
 ], DashboardPropertiesController);
 //# sourceMappingURL=properties.controller.js.map

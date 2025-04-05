@@ -12,7 +12,7 @@ import { mapReqCreateToDB, mapReqUpdateToDB } from './mappings/upsert.mapping';
 
 import { DashboardUnitsRepository } from './units.repository';
 
-import { DashboardPropertiesService } from '../properties/properties.service';
+import { DashboardPropertiesService } from '../properties/services/properties.service';
 
 @Injectable()
 export class DashboardUnitsService {

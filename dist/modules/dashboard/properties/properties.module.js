@@ -10,7 +10,8 @@ exports.DashboardPropertiesModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const properties_repository_1 = require("./properties.repository");
-const properties_service_1 = require("./properties.service");
+const properties_service_1 = require("./services/properties.service");
+const properties_generate_file_service_1 = require("./services/properties-generate-file.service");
 const properties_controller_1 = require("./properties.controller");
 const units_module_1 = require("../units/units.module");
 const common_2 = require("../../../common");
@@ -20,7 +21,11 @@ exports.DashboardPropertiesModule = DashboardPropertiesModule;
 exports.DashboardPropertiesModule = DashboardPropertiesModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([common_2.PropertiesDB]), units_module_1.DashboardUnitsModule],
-        providers: [properties_repository_1.DashboardPropertiesRepository, properties_service_1.DashboardPropertiesService],
+        providers: [
+            properties_repository_1.DashboardPropertiesRepository,
+            properties_service_1.DashboardPropertiesService,
+            properties_generate_file_service_1.DashboardPropertiesGenerateFileService,
+        ],
         controllers: [properties_controller_1.DashboardPropertiesController],
         exports: [properties_service_1.DashboardPropertiesService],
     })

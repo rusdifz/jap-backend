@@ -44,12 +44,16 @@ import { AuthGuard } from '../../../middlewares/guards/auth.guard';
 
 import { PropertiesDTO } from './dto/request.dto';
 
-import { DashboardPropertiesService } from './properties.service';
+import { DashboardPropertiesService } from './services/properties.service';
+import { DashboardPropertiesGenerateFileService } from './services/properties-generate-file.service';
 
 @Controller('dashboard/properties')
 // @UseGuards(AuthGuard)
 export class DashboardPropertiesController {
-  constructor(private readonly service: DashboardPropertiesService) {}
+  constructor(
+    private readonly service: DashboardPropertiesService,
+    private readonly serviceGenerateFile: DashboardPropertiesGenerateFileService,
+  ) {}
 
   @ApiOperation({
     summary: 'endpoint get office detail',
@@ -129,16 +133,16 @@ export class DashboardPropertiesController {
   @Version('1')
   @Get('excel/convert')
   async convertFileExcelToDB() {
-    return await this.service.convertFromExcelToDb();
+    return await this.service.inputBulkFromExcel();
   }
 
   @Get('pdf/comparisson/:location')
-  async generatePdf(
+  async generatePdfComparisson(
     @Res() res: any,
     @Param('location') location: string,
     @Query() query: GeneratePDFDTO,
   ) {
-    const pdfBuffer = await this.service.generatePDFComparisson(
+    const pdfBuffer = await this.serviceGenerateFile.generatePDFComparisson(
       query.property_id,
     );
 
@@ -146,6 +150,21 @@ export class DashboardPropertiesController {
     res.set({
       'Content-Type': 'application/pdf',
       'Content-Disposition': `attachment; filename="${namePdf}.pdf"`,
+    });
+    res.send(pdfBuffer);
+  }
+
+  @Get('pdf/detail/:slug')
+  async generatePdfPropertyDetail(
+    @Res() res: any,
+    @Param('slug') slug: string,
+  ) {
+    const pdfBuffer =
+      await this.serviceGenerateFile.generatePDFDetailProperty(slug);
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="${slug}.pdf"`,
     });
     res.send(pdfBuffer);
   }

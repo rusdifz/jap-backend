@@ -1,10 +1,9 @@
-import 'jspdf-autotable';
 import { IJwtUser } from 'src/common';
-import { PropertiesDTO } from './dto/request.dto';
-import { ReqCreatePropertyDTO, ReqUpdatePropertyDTO } from './dto/request.dto';
-import { ResProperty } from './dto/response.dto';
-import { DashboardUnitsService } from '../units/units.service';
-import { DashboardPropertiesRepository } from './properties.repository';
+import { PropertiesDTO } from '../dto/request.dto';
+import { ReqCreatePropertyDTO, ReqUpdatePropertyDTO } from '../dto/request.dto';
+import { ResProperty } from '../dto/response.dto';
+import { DashboardUnitsService } from '../../units/units.service';
+import { DashboardPropertiesRepository } from '../properties.repository';
 export declare class DashboardPropertiesService {
     private readonly repository;
     private readonly unitService;
@@ -20,6 +19,5 @@ export declare class DashboardPropertiesService {
     delete(property_id: number, admin: IJwtUser): Promise<Object>;
     updateTotalUnit(property_id: number): Promise<number>;
     decreaseTotalUnit(unit_id: string): Promise<number>;
-    convertFromExcelToDb(): Promise<any[]>;
-    generatePDFComparisson(property_id: number[]): Promise<Buffer>;
+    inputBulkFromExcel(): Promise<any[]>;
 }

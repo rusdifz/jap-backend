@@ -93,6 +93,8 @@ export class PropertiesDB implements PropertyAbstract {
   @Column({ type: 'text', nullable: true })
   phone_deposit: string;
 
+  //booking deposit
+  //security deposit
   @Column({
     type: 'enum',
     enum: PropertyTypeEnum,

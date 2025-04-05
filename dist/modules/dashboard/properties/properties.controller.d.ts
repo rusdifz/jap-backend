@@ -1,10 +1,12 @@
 import { GeneratePDFDTO, ReqCreatePropertyDTO, ReqUpdatePropertyDTO } from './dto/request.dto';
 import { IJwtUser } from 'src/common';
 import { PropertiesDTO } from './dto/request.dto';
-import { DashboardPropertiesService } from './properties.service';
+import { DashboardPropertiesService } from './services/properties.service';
+import { DashboardPropertiesGenerateFileService } from './services/properties-generate-file.service';
 export declare class DashboardPropertiesController {
     private readonly service;
-    constructor(service: DashboardPropertiesService);
+    private readonly serviceGenerateFile;
+    constructor(service: DashboardPropertiesService, serviceGenerateFile: DashboardPropertiesGenerateFileService);
     getDetail(id: number): Promise<import("./dto/response.dto").ResProperty>;
     getList(query: PropertiesDTO): Promise<{
         data: import("./dto/response.dto").ResProperty[];
@@ -14,5 +16,6 @@ export declare class DashboardPropertiesController {
     update(user: IJwtUser, bodyparam: ReqUpdatePropertyDTO): Promise<ReqUpdatePropertyDTO>;
     deleteOne(id: number, user: IJwtUser): Promise<Object>;
     convertFileExcelToDB(): Promise<any[]>;
-    generatePdf(res: any, location: string, query: GeneratePDFDTO): Promise<void>;
+    generatePdfComparisson(res: any, location: string, query: GeneratePDFDTO): Promise<void>;
+    generatePdfPropertyDetail(res: any, slug: string): Promise<void>;
 }
