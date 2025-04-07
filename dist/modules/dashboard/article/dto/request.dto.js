@@ -11,11 +11,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReqUpdateArticleDTO = exports.ReqCreateArticleDTO = exports.ArticleListDTO = void 0;
 const swagger_1 = require("@nestjs/swagger");
+const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const common_1 = require("../../../../common");
 class ArticleListDTO extends common_1.PaginationDTO {
 }
 exports.ArticleListDTO = ArticleListDTO;
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Transform)(({ value }) => value?.toLowerCase()),
+    __metadata("design:type", String)
+], ArticleListDTO.prototype, "search_keyword", void 0);
 class ReqCreateArticleDTO {
 }
 exports.ReqCreateArticleDTO = ReqCreateArticleDTO;

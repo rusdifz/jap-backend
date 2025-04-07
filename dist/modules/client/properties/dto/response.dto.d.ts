@@ -11,6 +11,8 @@ export declare class ResProperty implements Partial<IProperty> {
     property_status: PropertyStatusEnum;
     price: {
         phone_deposit: string;
+        booking_deposit: string;
+        security_deposit: string;
         overtime: {
             electricity: string;
             lighting: string;

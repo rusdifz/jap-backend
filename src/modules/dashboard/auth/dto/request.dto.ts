@@ -35,7 +35,7 @@ export class ReqCreateUserDTO {
   @ApiProperty({ example: 'fauzanrusdi20@gmail.com' })
   @IsOptional()
   @IsEmail()
-  @IsUnique(UsersDB, 'email', { message: 'Email already exist' }) //check email exist
+  // @IsUnique(UsersDB, 'email', { message: 'Email already exist' }) //check email exist
   email: string;
 
   @ApiProperty({ example: 'Testpass98_' })
@@ -44,7 +44,7 @@ export class ReqCreateUserDTO {
   @IsStrongPassword()
   password: string;
 
-  @ApiPropertyOptional({ example: RoleEnum.SUPERADMIN })
+  @ApiPropertyOptional({ example: RoleEnum.ADMIN })
   @IsOptional()
   @IsEnum(RoleEnum, {
     message: 'Value status must be list in enum',

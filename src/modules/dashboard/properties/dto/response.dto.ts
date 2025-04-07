@@ -27,6 +27,8 @@ export class ResProperty implements IProperty {
   property_type: PropertyTypeEnum;
   price: {
     phone_deposit: string;
+    booking_deposit: string;
+    security_deposit: string;
     overtime: {
       electricity: string;
       lighting: string;
@@ -64,6 +66,27 @@ export class ResProperty implements IProperty {
     hospital: string;
     police: string;
     mall: string;
+  };
+  telecommunication: {
+    isp: boolean;
+    fiber_optic: boolean;
+    wifi: boolean;
+  };
+  fire_safety: {
+    sprinkle: boolean;
+    heat_detector: boolean;
+    smoke_detector: boolean;
+  };
+  terms: {
+    minium_lease: string;
+    payment: string;
+  };
+  other_info: {
+    loading_capacity: string;
+    ac_system: string;
+    ac_zoning: string;
+    electricity: string;
+    power_unit: string;
   };
   units: Unit[];
   images: IMedia[];

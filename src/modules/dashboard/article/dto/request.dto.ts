@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsNumber,
   IsOptional,
@@ -15,7 +16,11 @@ import {
   PaginationDTO,
 } from 'src/common';
 
-export class ArticleListDTO extends PaginationDTO {}
+export class ArticleListDTO extends PaginationDTO {
+  @IsOptional()
+  @Transform(({ value }) => value?.toLowerCase())
+  search_keyword?: string;
+}
 
 export class ReqCreateArticleDTO {
   @IsNotEmpty()

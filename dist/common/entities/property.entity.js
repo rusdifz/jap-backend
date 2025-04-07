@@ -106,6 +106,46 @@ __decorate([
     __metadata("design:type", String)
 ], PropertiesDB.prototype, "phone_deposit", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], PropertiesDB.prototype, "booking_deposit", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], PropertiesDB.prototype, "security_deposit", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 250, nullable: true }),
+    __metadata("design:type", String)
+], PropertiesDB.prototype, "minimum_lease_term", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 250, nullable: true }),
+    __metadata("design:type", String)
+], PropertiesDB.prototype, "payment_term", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'boolean', default: true }),
+    __metadata("design:type", Boolean)
+], PropertiesDB.prototype, "telecommunication_isp", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'boolean', default: true }),
+    __metadata("design:type", Boolean)
+], PropertiesDB.prototype, "telecommunication_fiber_optic", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'boolean', default: true }),
+    __metadata("design:type", Boolean)
+], PropertiesDB.prototype, "telecommunication_wifi", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'boolean', default: true }),
+    __metadata("design:type", Boolean)
+], PropertiesDB.prototype, "fire_safety_sprinkle", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'boolean', default: true }),
+    __metadata("design:type", Boolean)
+], PropertiesDB.prototype, "fire_safety_heat_detector", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'boolean', default: true }),
+    __metadata("design:type", Boolean)
+], PropertiesDB.prototype, "fire_safety_smoke_detector", void 0);
+__decorate([
     (0, typeorm_1.Column)({
         type: 'enum',
         enum: common_1.PropertyTypeEnum,
@@ -177,6 +217,26 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 100, nullable: true }),
     __metadata("design:type", String)
 ], PropertiesDB.prototype, "provider_internet", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 200, nullable: true }),
+    __metadata("design:type", String)
+], PropertiesDB.prototype, "other_info_loading_capacity", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 200, nullable: true }),
+    __metadata("design:type", String)
+], PropertiesDB.prototype, "other_info_ac_system", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 200, nullable: true }),
+    __metadata("design:type", String)
+], PropertiesDB.prototype, "other_info_ac_zoning", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 200, nullable: true }),
+    __metadata("design:type", String)
+], PropertiesDB.prototype, "other_info_electricity", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 200, nullable: true }),
+    __metadata("design:type", String)
+], PropertiesDB.prototype, "other_info_power_unit", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({ type: 'timestamp' }),
     __metadata("design:type", Date)

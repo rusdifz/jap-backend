@@ -4,6 +4,6 @@ export enum GenderEnum {
 }
 
 export enum RoleEnum {
-  SUPERADMIN = 'super admin',
   ADMIN = 'admin',
+  STAFF = 'staff',
 }

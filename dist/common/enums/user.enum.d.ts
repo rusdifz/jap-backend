@@ -3,6 +3,6 @@ export declare enum GenderEnum {
     FEMALE = "faemale"
 }
 export declare enum RoleEnum {
-    SUPERADMIN = "super admin",
-    ADMIN = "admin"
+    ADMIN = "admin",
+    STAFF = "staff"
 }

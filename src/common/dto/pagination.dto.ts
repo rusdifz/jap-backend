@@ -4,11 +4,11 @@ import { IsOptional } from 'class-validator';
 export class PaginationDTO {
   @ApiPropertyOptional()
   @IsOptional()
-  sort?: string;
+  sort?: string = 'created_at';
 
   @ApiPropertyOptional()
   @IsOptional()
-  order?: string;
+  order?: string = 'desc';
 
   @ApiPropertyOptional()
   @IsOptional()

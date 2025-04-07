@@ -63,7 +63,7 @@ export class DashboardPropertiesController {
   @ApiOkResponse(swgGetDetailOK)
   @Version('1')
   @Get(':id')
-  async getDetail(@Param('id') id: number) {
+  async getDetail(@Param('id') id: number | string) {
     return await this.service.get(id);
   }
 
@@ -131,17 +131,32 @@ export class DashboardPropertiesController {
   // @ApiHeader(AuthorizationHeader(true))
   // @ApiOkResponse(swgGetListOK)
   @Version('1')
+  @Get('older-data/one-month')
+  async checkForStaleDataOlderThanOneMonth() {
+    return await this.service.checkForStaleDataOlderThanOneMonth();
+  }
+
+  // @ApiOperation({
+  //   summary: 'endpoint get office list',
+  //   description: '',
+  // })
+  // @ApiHeader(AuthorizationHeader(true))
+  // @ApiOkResponse(swgGetListOK)
+  @Version('1')
   @Get('excel/convert')
   async convertFileExcelToDB() {
     return await this.service.inputBulkFromExcel();
   }
 
+  @Version('1')
   @Get('pdf/comparisson/:location')
   async generatePdfComparisson(
     @Res() res: any,
     @Param('location') location: string,
     @Query() query: GeneratePDFDTO,
   ) {
+    console.log('query', query);
+
     const pdfBuffer = await this.serviceGenerateFile.generatePDFComparisson(
       query.property_id,
     );
@@ -154,6 +169,7 @@ export class DashboardPropertiesController {
     res.send(pdfBuffer);
   }
 
+  @Version('1')
   @Get('pdf/detail/:slug')
   async generatePdfPropertyDetail(
     @Res() res: any,

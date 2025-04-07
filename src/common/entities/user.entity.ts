@@ -41,7 +41,7 @@ export class UsersDB implements IUser {
   @Column({
     type: 'enum',
     enum: RoleEnum,
-    default: RoleEnum.ADMIN,
+    default: RoleEnum.STAFF,
   })
   role: RoleEnum;
 

@@ -14,7 +14,7 @@ import { mapDbToResDetail, mapDbToResList } from './mappings/view.mapping';
 import { mapReqCreateToDB, mapReqUpdateToDB } from './mappings/upsert.mapping';
 import { ArticleDB, IJwtUser } from 'src/common';
 import { DashboardArticleRepository } from './article.repository';
-import { FindManyOptions } from 'typeorm';
+import { FindManyOptions, Like } from 'typeorm';
 
 @Injectable()
 export class DashboardArticleService {
@@ -38,6 +38,10 @@ export class DashboardArticleService {
 
     // pagination query
     query = await this.repository.paginate(query, props);
+
+    if (props.search_keyword) {
+      Object.assign(query.where, { title: Like(`%${props.search_keyword}%`) });
+    }
 
     const searchData = await this.repository.findAndCount(query);
 

@@ -2,7 +2,13 @@ import { Injectable } from '@nestjs/common';
 import * as XLSX from 'xlsx';
 
 import { readFileSync } from 'fs';
-import { FindManyOptions, FindOneOptions, In, Like } from 'typeorm';
+import {
+  FindManyOptions,
+  FindOneOptions,
+  In,
+  LessThanOrEqual,
+  Like,
+} from 'typeorm';
 
 import {
   ConditionUnitEnum,
@@ -12,6 +18,7 @@ import {
   PropertyTypeEnum,
   StatusPublishEnum,
   PropertiesDB,
+  dayjs,
 } from 'src/common';
 
 import { PropertiesDTO } from '../dto/request.dto';
@@ -32,16 +39,14 @@ export class DashboardPropertiesService {
     private readonly unitService: DashboardUnitsService,
   ) {}
 
-  private rootPath = __dirname.replace(
-    'dist/modules/dashboard/properties',
-    'public/image-jap-main',
-  );
+  // async get(property_id: number | string): Promise<ResProperty> {
+  async get(property_id: number | string): Promise<any> {
+    const queryWhere: any = isNaN(Number(property_id))
+      ? { slug: property_id.toString() }
+      : { property_id };
 
-  async get(property_id: number): Promise<ResProperty> {
     const query: FindOneOptions<PropertiesDB> = {
-      where: {
-        property_id,
-      },
+      where: queryWhere,
       relations: {
         units: true,
         images: true,
@@ -49,18 +54,21 @@ export class DashboardPropertiesService {
     };
 
     const property = await this.repository.findOne(query);
+    // return property;
     return property ? await mapDbToResDetail(property) : null;
   }
 
   async getList(
     props: PropertiesDTO,
   ): Promise<{ data: ResProperty[]; count: number }> {
+    console.log('props get list', props);
+
     // initiate empty where query
     let query: FindManyOptions<PropertiesDB> = {
       where: {},
-      order: {
-        created_at: 'desc',
-      },
+      // order: {
+      //   created_at: 'desc',
+      // },
       relations: { units: true, images: true },
     };
 
@@ -165,6 +173,43 @@ export class DashboardPropertiesService {
     return null;
   }
 
+  //notification ketika data tidak di update sebulan
+  async checkForStaleDataOlderThanOneMonth() {
+    const monthAgo = dayjs().subtract(1, 'month').format('YYYY-MM-DD');
+
+    const properties = await this.repository.find({
+      select: {
+        property_id: true,
+        name: true,
+        slug: true,
+        updated_at: true,
+      },
+      where: {
+        updated_at: LessThanOrEqual(monthAgo),
+      },
+    });
+
+    let message = [];
+
+    if (properties.length > 0) {
+      for (const property of properties) {
+        const formateDay = dayjs(property.updated_at).format(
+          'dddd, D MMMM, YYYY h:mm A',
+        );
+        // message.push(
+        //   `Data Property ${property.name} dengan ID ${property.property_id} terakhir di update ${formateDay}`,
+        // );
+        message.push({
+          id: property.property_id,
+          name: property.name,
+          date: formateDay,
+        });
+      }
+    }
+
+    return message;
+  }
+
   async inputBulkFromExcel() {
     const dirName = __dirname;
 
@@ -216,6 +261,8 @@ export class DashboardPropertiesService {
           ],
           price: {
             phone_deposit: dt.phone_deposit,
+            booking_deposit: '',
+            security_deposit: '',
             ground_floor_sqm: dt.ground_floor,
             rent_sqm: dt.rent
               ? typeof dt.rent === 'string'
@@ -263,6 +310,27 @@ export class DashboardPropertiesService {
             hospital: '',
             police: '',
             mall: '',
+          },
+          telecommunication: {
+            isp: true,
+            fiber_optic: true,
+            wifi: true,
+          },
+          fire_safety: {
+            sprinkle: true,
+            heat_detector: true,
+            smoke_detector: true,
+          },
+          terms: {
+            minium_lease: '',
+            payment: '',
+          },
+          other_info: {
+            loading_capacity: '',
+            ac_system: '',
+            ac_zoning: '',
+            electricity: '',
+            power_unit: '',
           },
         };
 

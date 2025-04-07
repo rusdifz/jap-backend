@@ -8,7 +8,7 @@ var GenderEnum;
 })(GenderEnum || (exports.GenderEnum = GenderEnum = {}));
 var RoleEnum;
 (function (RoleEnum) {
-    RoleEnum["SUPERADMIN"] = "super admin";
     RoleEnum["ADMIN"] = "admin";
+    RoleEnum["STAFF"] = "staff";
 })(RoleEnum || (exports.RoleEnum = RoleEnum = {}));
 //# sourceMappingURL=user.enum.js.map

@@ -50,8 +50,12 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  app.enableCors();
-
+  // app.enableCors();
+  app.enableCors({
+    origin: process.env.FRONTEND_URL, // atau '*'
+    methods: 'GET,POST',
+    allowedHeaders: 'Content-Type,Authorization',
+  });
   app.enableCors({
     origin: 'http://localhost:4000',
   });

@@ -14,6 +14,7 @@ const common_1 = require("@nestjs/common");
 const view_mapping_1 = require("./mappings/view.mapping");
 const upsert_mapping_1 = require("./mappings/upsert.mapping");
 const article_repository_1 = require("./article.repository");
+const typeorm_1 = require("typeorm");
 let DashboardArticleService = class DashboardArticleService {
     constructor(repository) {
         this.repository = repository;
@@ -28,6 +29,9 @@ let DashboardArticleService = class DashboardArticleService {
         };
         query = await this.repository.sort(query, props);
         query = await this.repository.paginate(query, props);
+        if (props.search_keyword) {
+            Object.assign(query.where, { title: (0, typeorm_1.Like)(`%${props.search_keyword}%`) });
+        }
         const searchData = await this.repository.findAndCount(query);
         const mapRes = searchData[0].length > 0 ? await (0, view_mapping_1.mapDbToResList)(searchData[0]) : [];
         return {

@@ -17,7 +17,8 @@ export const dbConfig = (): DbConfigInterface => ({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     autoLoadEntities: true,
-    synchronize: true, // disabled for auto migration syncronize
+    // synchronize: true, // disabled for auto migration syncronize
+    synchronize: false, // disabled for auto migration syncronize
     logging: false,
     entities: [ArticleDB, MediaDB, PropertiesDB, UnitsDB, UsersDB],
     ssl: {

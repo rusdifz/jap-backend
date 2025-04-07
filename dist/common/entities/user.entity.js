@@ -55,7 +55,7 @@ __decorate([
     (0, typeorm_1.Column)({
         type: 'enum',
         enum: enums_1.RoleEnum,
-        default: enums_1.RoleEnum.ADMIN,
+        default: enums_1.RoleEnum.STAFF,
     }),
     __metadata("design:type", String)
 ], UsersDB.prototype, "role", void 0);

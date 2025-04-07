@@ -21,7 +21,11 @@ async function bootstrap() {
     app.useGlobalInterceptors(new middlewares_1.ResponseSuccessInterceptor());
     app.useGlobalFilters(new middlewares_1.ResponseErrorInterceptor());
     app.setGlobalPrefix('api');
-    app.enableCors();
+    app.enableCors({
+        origin: process.env.FRONTEND_URL,
+        methods: 'GET,POST',
+        allowedHeaders: 'Content-Type,Authorization',
+    });
     app.enableCors({
         origin: 'http://localhost:4000',
     });

@@ -93,6 +93,8 @@ export async function mapDbToResDetail(db: PropertiesDB): Promise<ResProperty> {
     property_type: db.property_type,
     price: {
       phone_deposit: db.phone_deposit,
+      booking_deposit: db.booking_deposit,
+      security_deposit: db.security_deposit,
       overtime: {
         electricity: db.price_overtime_electricity,
         lighting: db.price_overtime_lighting,

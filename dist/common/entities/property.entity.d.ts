@@ -23,6 +23,16 @@ export declare class PropertiesDB implements PropertyAbstract {
     parking_charge_unreserved_car: string;
     parking_charge_unreserved_motorcycle: string;
     phone_deposit: string;
+    booking_deposit: string;
+    security_deposit: string;
+    minimum_lease_term: string;
+    payment_term: string;
+    telecommunication_isp: boolean;
+    telecommunication_fiber_optic: boolean;
+    telecommunication_wifi: boolean;
+    fire_safety_sprinkle: boolean;
+    fire_safety_heat_detector: boolean;
+    fire_safety_smoke_detector: boolean;
     property_type: PropertyTypeEnum;
     property_size: number;
     completion: string;
@@ -39,6 +49,11 @@ export declare class PropertiesDB implements PropertyAbstract {
     nearby_police: string;
     nearby_mall: string;
     provider_internet: string;
+    other_info_loading_capacity: string;
+    other_info_ac_system: string;
+    other_info_ac_zoning: string;
+    other_info_electricity: string;
+    other_info_power_unit: string;
     created_at: Date;
     updated_at: Date;
     deleted_at: Date;

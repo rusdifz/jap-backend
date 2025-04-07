@@ -14,6 +14,8 @@ const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class PaginationDTO {
     constructor() {
+        this.sort = 'created_at';
+        this.order = 'desc';
         this.page = 1;
         this.limit = 5;
     }

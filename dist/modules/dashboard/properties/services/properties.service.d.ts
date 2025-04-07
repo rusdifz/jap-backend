@@ -8,8 +8,7 @@ export declare class DashboardPropertiesService {
     private readonly repository;
     private readonly unitService;
     constructor(repository: DashboardPropertiesRepository, unitService: DashboardUnitsService);
-    private rootPath;
-    get(property_id: number): Promise<ResProperty>;
+    get(property_id: number | string): Promise<any>;
     getList(props: PropertiesDTO): Promise<{
         data: ResProperty[];
         count: number;
@@ -19,5 +18,6 @@ export declare class DashboardPropertiesService {
     delete(property_id: number, admin: IJwtUser): Promise<Object>;
     updateTotalUnit(property_id: number): Promise<number>;
     decreaseTotalUnit(unit_id: string): Promise<number>;
+    checkForStaleDataOlderThanOneMonth(): Promise<any[]>;
     inputBulkFromExcel(): Promise<any[]>;
 }

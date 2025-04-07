@@ -7,7 +7,7 @@ export declare class DashboardPropertiesController {
     private readonly service;
     private readonly serviceGenerateFile;
     constructor(service: DashboardPropertiesService, serviceGenerateFile: DashboardPropertiesGenerateFileService);
-    getDetail(id: number): Promise<import("./dto/response.dto").ResProperty>;
+    getDetail(id: number | string): Promise<any>;
     getList(query: PropertiesDTO): Promise<{
         data: import("./dto/response.dto").ResProperty[];
         count: number;
@@ -15,6 +15,7 @@ export declare class DashboardPropertiesController {
     create(user: IJwtUser, body: ReqCreatePropertyDTO): Promise<ReqCreatePropertyDTO>;
     update(user: IJwtUser, bodyparam: ReqUpdatePropertyDTO): Promise<ReqUpdatePropertyDTO>;
     deleteOne(id: number, user: IJwtUser): Promise<Object>;
+    checkForStaleDataOlderThanOneMonth(): Promise<any[]>;
     convertFileExcelToDB(): Promise<any[]>;
     generatePdfComparisson(res: any, location: string, query: GeneratePDFDTO): Promise<void>;
     generatePdfPropertyDetail(res: any, slug: string): Promise<void>;

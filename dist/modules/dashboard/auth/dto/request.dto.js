@@ -44,7 +44,6 @@ __decorate([
     (0, swagger_1.ApiProperty)({ example: 'fauzanrusdi20@gmail.com' }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsEmail)(),
-    (0, common_1.IsUnique)(common_1.UsersDB, 'email', { message: 'Email already exist' }),
     __metadata("design:type", String)
 ], ReqCreateUserDTO.prototype, "email", void 0);
 __decorate([
@@ -55,7 +54,7 @@ __decorate([
     __metadata("design:type", String)
 ], ReqCreateUserDTO.prototype, "password", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ example: common_1.RoleEnum.SUPERADMIN }),
+    (0, swagger_1.ApiPropertyOptional)({ example: common_1.RoleEnum.ADMIN }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsEnum)(common_1.RoleEnum, {
         message: 'Value status must be list in enum',

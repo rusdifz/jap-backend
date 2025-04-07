@@ -65,11 +65,23 @@ __decorate([
 class Price {
 }
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ example: 1000000 }),
+    (0, swagger_1.ApiPropertyOptional)({ example: '1000000' }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], Price.prototype, "phone_deposit", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: '1000000' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], Price.prototype, "booking_deposit", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: '1000000' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], Price.prototype, "security_deposit", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)(),
     (0, class_validator_1.IsOptional)(),
@@ -165,6 +177,92 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], Nearby.prototype, "mall", void 0);
+class Terms {
+}
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], Terms.prototype, "minium_lease", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], Terms.prototype, "payment", void 0);
+class Telecommunication {
+}
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], Telecommunication.prototype, "isp", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], Telecommunication.prototype, "fiber_optic", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], Telecommunication.prototype, "wifi", void 0);
+class FireSafety {
+}
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], FireSafety.prototype, "sprinkle", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], FireSafety.prototype, "heat_detector", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], FireSafety.prototype, "smoke_detector", void 0);
+class OtherInfo {
+}
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], OtherInfo.prototype, "loading_capacity", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], OtherInfo.prototype, "ac_system", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], OtherInfo.prototype, "ac_zoning", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], OtherInfo.prototype, "electricity", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], OtherInfo.prototype, "power_unit", void 0);
 class ReqCreatePropertyDTO {
 }
 exports.ReqCreatePropertyDTO = ReqCreatePropertyDTO;
@@ -264,6 +362,34 @@ __decorate([
     (0, class_transformer_1.Type)(() => Nearby),
     __metadata("design:type", Nearby)
 ], ReqCreatePropertyDTO.prototype, "nearby", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.ValidateNested)({ each: true }),
+    (0, class_transformer_1.Type)(() => Terms),
+    __metadata("design:type", Terms)
+], ReqCreatePropertyDTO.prototype, "terms", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.ValidateNested)({ each: true }),
+    (0, class_transformer_1.Type)(() => Telecommunication),
+    __metadata("design:type", Telecommunication)
+], ReqCreatePropertyDTO.prototype, "telecommunication", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.ValidateNested)({ each: true }),
+    (0, class_transformer_1.Type)(() => FireSafety),
+    __metadata("design:type", FireSafety)
+], ReqCreatePropertyDTO.prototype, "fire_safety", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.ValidateNested)({ each: true }),
+    (0, class_transformer_1.Type)(() => OtherInfo),
+    __metadata("design:type", OtherInfo)
+], ReqCreatePropertyDTO.prototype, "other_info", void 0);
 class ReqUpdatePropertyDTO extends (0, swagger_1.PartialType)(ReqCreatePropertyDTO) {
 }
 exports.ReqUpdatePropertyDTO = ReqUpdatePropertyDTO;

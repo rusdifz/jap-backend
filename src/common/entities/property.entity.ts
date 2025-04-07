@@ -93,8 +93,36 @@ export class PropertiesDB implements PropertyAbstract {
   @Column({ type: 'text', nullable: true })
   phone_deposit: string;
 
-  //booking deposit
-  //security deposit
+  @Column({ type: 'text', nullable: true })
+  booking_deposit: string;
+
+  @Column({ type: 'text', nullable: true })
+  security_deposit: string;
+
+  @Column({ type: 'varchar', length: 250, nullable: true })
+  minimum_lease_term: string;
+
+  @Column({ type: 'varchar', length: 250, nullable: true })
+  payment_term: string;
+
+  @Column({ type: 'boolean', default: true })
+  telecommunication_isp: boolean;
+
+  @Column({ type: 'boolean', default: true })
+  telecommunication_fiber_optic: boolean;
+
+  @Column({ type: 'boolean', default: true })
+  telecommunication_wifi: boolean;
+
+  @Column({ type: 'boolean', default: true })
+  fire_safety_sprinkle: boolean;
+
+  @Column({ type: 'boolean', default: true })
+  fire_safety_heat_detector: boolean;
+
+  @Column({ type: 'boolean', default: true })
+  fire_safety_smoke_detector: boolean;
+
   @Column({
     type: 'enum',
     enum: PropertyTypeEnum,
@@ -150,6 +178,21 @@ export class PropertiesDB implements PropertyAbstract {
 
   @Column({ type: 'varchar', length: 100, nullable: true })
   provider_internet: string;
+
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  other_info_loading_capacity: string;
+
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  other_info_ac_system: string;
+
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  other_info_ac_zoning: string;
+
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  other_info_electricity: string;
+
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  other_info_power_unit: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;

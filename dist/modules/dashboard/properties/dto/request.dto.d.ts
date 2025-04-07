@@ -14,6 +14,8 @@ declare class ParkingCharge {
 }
 declare class Price {
     phone_deposit: string;
+    booking_deposit: string;
+    security_deposit: string;
     overtime: OvertimePrice;
     ground_floor_sqm: number;
     rent_sqm: number;
@@ -37,6 +39,27 @@ declare class Nearby {
     police: string;
     mall: string;
 }
+declare class Terms {
+    minium_lease: string;
+    payment: string;
+}
+declare class Telecommunication {
+    isp: boolean;
+    fiber_optic: boolean;
+    wifi: boolean;
+}
+declare class FireSafety {
+    sprinkle: boolean;
+    heat_detector: boolean;
+    smoke_detector: boolean;
+}
+declare class OtherInfo {
+    loading_capacity: string;
+    ac_system: string;
+    ac_zoning: string;
+    electricity: string;
+    power_unit: string;
+}
 export declare class ReqCreatePropertyDTO implements Partial<IProperty> {
     name: string;
     popular: number;
@@ -51,6 +74,10 @@ export declare class ReqCreatePropertyDTO implements Partial<IProperty> {
     price: Price;
     spesification: Spesification;
     nearby: Nearby;
+    terms: Terms;
+    telecommunication: Telecommunication;
+    fire_safety: FireSafety;
+    other_info: OtherInfo;
 }
 declare const ReqUpdatePropertyDTO_base: import("@nestjs/common").Type<Partial<ReqCreatePropertyDTO>>;
 export declare class ReqUpdatePropertyDTO extends ReqUpdatePropertyDTO_base {

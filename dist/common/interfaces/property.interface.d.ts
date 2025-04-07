@@ -11,6 +11,8 @@ export interface PropertyAbstract {
     property_status: PropertyStatusEnum;
     total_unit: number;
     phone_deposit: string;
+    booking_deposit: string;
+    security_deposit: string;
     price_overtime_electricity: string;
     price_overtime_lighting: string;
     price_overtime_ac: string;
@@ -31,6 +33,19 @@ export interface PropertyAbstract {
     total_floor: number;
     size_floor: number;
     provider_internet: string;
+    minimum_lease_term: string;
+    payment_term: string;
+    telecommunication_isp: boolean;
+    telecommunication_fiber_optic: boolean;
+    telecommunication_wifi: boolean;
+    fire_safety_sprinkle: boolean;
+    fire_safety_heat_detector: boolean;
+    fire_safety_smoke_detector: boolean;
+    other_info_loading_capacity: string;
+    other_info_ac_system: string;
+    other_info_ac_zoning: string;
+    other_info_electricity: string;
+    other_info_power_unit: string;
     address: string;
     location: LocationEnum;
     koordinat_map: string;
@@ -61,6 +76,8 @@ export interface IProperty {
     property_type: PropertyTypeEnum;
     price: {
         phone_deposit: string;
+        booking_deposit: string;
+        security_deposit: string;
         overtime: {
             electricity: string;
             lighting: string;
@@ -98,6 +115,27 @@ export interface IProperty {
         hospital: string;
         police: string;
         mall: string;
+    };
+    telecommunication: {
+        isp: boolean;
+        fiber_optic: boolean;
+        wifi: boolean;
+    };
+    fire_safety: {
+        sprinkle: boolean;
+        heat_detector: boolean;
+        smoke_detector: boolean;
+    };
+    terms: {
+        minium_lease: string;
+        payment: string;
+    };
+    other_info: {
+        loading_capacity: string;
+        ac_system: string;
+        ac_zoning: string;
+        electricity: string;
+        power_unit: string;
     };
     property_feature?: any[];
     units: Unit[];

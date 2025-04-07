@@ -5,7 +5,7 @@ exports.mapDbToResList = mapDbToResList;
 const common_1 = require("../../../../common");
 async function mapDbToResDetail(db) {
     return {
-        property_id: db.property_id,
+        property_id: Number(db.property_id),
         property_status: db.property_status,
         popular: db.popular,
         name: db.name,
@@ -18,6 +18,8 @@ async function mapDbToResDetail(db) {
         status_publish: db.status_publish,
         price: {
             phone_deposit: db.phone_deposit,
+            booking_deposit: db.booking_deposit,
+            security_deposit: db.security_deposit,
             overtime: {
                 electricity: db.price_overtime_electricity,
                 lighting: db.price_overtime_lighting,
@@ -56,6 +58,27 @@ async function mapDbToResDetail(db) {
             police: db.nearby_police,
             mall: db.nearby_mall,
         },
+        telecommunication: {
+            isp: db.telecommunication_isp,
+            fiber_optic: db.telecommunication_fiber_optic,
+            wifi: db.telecommunication_wifi,
+        },
+        fire_safety: {
+            sprinkle: db.fire_safety_sprinkle,
+            heat_detector: db.fire_safety_heat_detector,
+            smoke_detector: db.fire_safety_smoke_detector,
+        },
+        terms: {
+            minium_lease: db.minimum_lease_term,
+            payment: db.payment_term,
+        },
+        other_info: {
+            loading_capacity: db.other_info_loading_capacity,
+            ac_system: db.other_info_ac_system,
+            ac_zoning: db.other_info_ac_zoning,
+            electricity: db.other_info_electricity,
+            power_unit: db.other_info_power_unit,
+        },
         units: db.units,
         images: db.images,
         created_at: (0, common_1.dayjs)(db.created_at).format('MMMM D, YYYY'),
@@ -65,7 +88,7 @@ async function mapDbToResDetail(db) {
 async function mapDbToResList(dbs) {
     const resp = dbs.map((db) => {
         return {
-            property_id: db.property_id,
+            property_id: Number(db.property_id),
             property_status: db.property_status,
             popular: db.popular,
             name: db.name,
@@ -78,6 +101,8 @@ async function mapDbToResList(dbs) {
             status_publish: db.status_publish,
             price: {
                 phone_deposit: db.phone_deposit,
+                booking_deposit: db.booking_deposit,
+                security_deposit: db.security_deposit,
                 overtime: {
                     electricity: db.price_overtime_electricity,
                     lighting: db.price_overtime_lighting,
@@ -115,6 +140,27 @@ async function mapDbToResList(dbs) {
                 hospital: db.nearby_hospital,
                 police: db.nearby_police,
                 mall: db.nearby_mall,
+            },
+            telecommunication: {
+                isp: db.telecommunication_isp,
+                fiber_optic: db.telecommunication_fiber_optic,
+                wifi: db.telecommunication_wifi,
+            },
+            fire_safety: {
+                sprinkle: db.fire_safety_sprinkle,
+                heat_detector: db.fire_safety_heat_detector,
+                smoke_detector: db.fire_safety_smoke_detector,
+            },
+            terms: {
+                minium_lease: db.minimum_lease_term,
+                payment: db.payment_term,
+            },
+            other_info: {
+                loading_capacity: db.other_info_loading_capacity,
+                ac_system: db.other_info_ac_system,
+                ac_zoning: db.other_info_ac_zoning,
+                electricity: db.other_info_electricity,
+                power_unit: db.other_info_power_unit,
             },
             units: db.units,
             images: db.images,

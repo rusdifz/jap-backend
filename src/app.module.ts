@@ -17,6 +17,7 @@ import { DashboardPropertiesModule } from './modules/dashboard/properties/proper
 import { DashboardUnitsModule } from './modules/dashboard/units/units.module';
 import { DashboardFeedbackModule } from './modules/dashboard/feedback/feedback.module';
 import { DashboardImagesModule } from './modules/dashboard/images/images.module';
+import { IsUniqueConstraint } from './common';
 @Module({
   imports: [
     // ServeStaticModule.forRoot({
@@ -37,5 +38,6 @@ import { DashboardImagesModule } from './modules/dashboard/images/images.module'
     DashboardFeedbackModule,
     DashboardImagesModule,
   ],
+  providers: [IsUniqueConstraint],
 })
 export class AppModule {}

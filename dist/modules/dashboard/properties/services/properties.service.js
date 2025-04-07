@@ -23,13 +23,13 @@ let DashboardPropertiesService = class DashboardPropertiesService {
     constructor(repository, unitService) {
         this.repository = repository;
         this.unitService = unitService;
-        this.rootPath = __dirname.replace('dist/modules/dashboard/properties', 'public/image-jap-main');
     }
     async get(property_id) {
+        const queryWhere = isNaN(Number(property_id))
+            ? { slug: property_id.toString() }
+            : { property_id };
         const query = {
-            where: {
-                property_id,
-            },
+            where: queryWhere,
             relations: {
                 units: true,
                 images: true,
@@ -39,11 +39,9 @@ let DashboardPropertiesService = class DashboardPropertiesService {
         return property ? await (0, view_mapping_1.mapDbToResDetail)(property) : null;
     }
     async getList(props) {
+        console.log('props get list', props);
         let query = {
             where: {},
-            order: {
-                created_at: 'desc',
-            },
             relations: { units: true, images: true },
         };
         query = await this.repository.sort(query, props);
@@ -98,6 +96,32 @@ let DashboardPropertiesService = class DashboardPropertiesService {
         }
         return null;
     }
+    async checkForStaleDataOlderThanOneMonth() {
+        const monthAgo = (0, common_2.dayjs)().subtract(1, 'month').format('YYYY-MM-DD');
+        const properties = await this.repository.find({
+            select: {
+                property_id: true,
+                name: true,
+                slug: true,
+                updated_at: true,
+            },
+            where: {
+                updated_at: (0, typeorm_1.LessThanOrEqual)(monthAgo),
+            },
+        });
+        let message = [];
+        if (properties.length > 0) {
+            for (const property of properties) {
+                const formateDay = (0, common_2.dayjs)(property.updated_at).format('dddd, D MMMM, YYYY h:mm A');
+                message.push({
+                    id: property.property_id,
+                    name: property.name,
+                    date: formateDay,
+                });
+            }
+        }
+        return message;
+    }
     async inputBulkFromExcel() {
         const dirName = __dirname;
         const dirExcel = dirName.replace('/dist/modules/dashboard', '/spread.xlsx');
@@ -135,6 +159,8 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                     ],
                     price: {
                         phone_deposit: dt.phone_deposit,
+                        booking_deposit: '',
+                        security_deposit: '',
                         ground_floor_sqm: dt.ground_floor,
                         rent_sqm: dt.rent
                             ? typeof dt.rent === 'string'
@@ -182,6 +208,27 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                         hospital: '',
                         police: '',
                         mall: '',
+                    },
+                    telecommunication: {
+                        isp: true,
+                        fiber_optic: true,
+                        wifi: true,
+                    },
+                    fire_safety: {
+                        sprinkle: true,
+                        heat_detector: true,
+                        smoke_detector: true,
+                    },
+                    terms: {
+                        minium_lease: '',
+                        payment: '',
+                    },
+                    other_info: {
+                        loading_capacity: '',
+                        ac_system: '',
+                        ac_zoning: '',
+                        electricity: '',
+                        power_unit: '',
                     },
                 };
                 const insertProperty = await this.create(property, null);

@@ -42,10 +42,14 @@ let DashboardPropertiesController = class DashboardPropertiesController {
     async deleteOne(id, user) {
         return await this.service.delete(id, user);
     }
+    async checkForStaleDataOlderThanOneMonth() {
+        return await this.service.checkForStaleDataOlderThanOneMonth();
+    }
     async convertFileExcelToDB() {
         return await this.service.inputBulkFromExcel();
     }
     async generatePdfComparisson(res, location, query) {
+        console.log('query', query);
         const pdfBuffer = await this.serviceGenerateFile.generatePDFComparisson(query.property_id);
         const namePdf = 'Building Comparisson - ' + location;
         res.set({
@@ -75,7 +79,7 @@ __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], DashboardPropertiesController.prototype, "getDetail", null);
 __decorate([
@@ -141,12 +145,20 @@ __decorate([
 ], DashboardPropertiesController.prototype, "deleteOne", null);
 __decorate([
     (0, common_1.Version)('1'),
+    (0, common_1.Get)('older-data/one-month'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], DashboardPropertiesController.prototype, "checkForStaleDataOlderThanOneMonth", null);
+__decorate([
+    (0, common_1.Version)('1'),
     (0, common_1.Get)('excel/convert'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], DashboardPropertiesController.prototype, "convertFileExcelToDB", null);
 __decorate([
+    (0, common_1.Version)('1'),
     (0, common_1.Get)('pdf/comparisson/:location'),
     __param(0, (0, common_1.Res)()),
     __param(1, (0, common_1.Param)('location')),
@@ -156,6 +168,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], DashboardPropertiesController.prototype, "generatePdfComparisson", null);
 __decorate([
+    (0, common_1.Version)('1'),
     (0, common_1.Get)('pdf/detail/:slug'),
     __param(0, (0, common_1.Res)()),
     __param(1, (0, common_1.Param)('slug')),

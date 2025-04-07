@@ -21,6 +21,7 @@ const properties_module_2 = require("./modules/dashboard/properties/properties.m
 const units_module_1 = require("./modules/dashboard/units/units.module");
 const feedback_module_2 = require("./modules/dashboard/feedback/feedback.module");
 const images_module_1 = require("./modules/dashboard/images/images.module");
+const common_2 = require("./common");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -40,6 +41,7 @@ exports.AppModule = AppModule = __decorate([
             feedback_module_2.DashboardFeedbackModule,
             images_module_1.DashboardImagesModule,
         ],
+        providers: [common_2.IsUniqueConstraint],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

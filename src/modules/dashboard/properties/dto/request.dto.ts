@@ -8,6 +8,7 @@ import {
   IsObject,
   ValidateNested,
   ValidateIf,
+  IsBoolean,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import {
@@ -72,10 +73,20 @@ class ParkingCharge {
 }
 
 class Price {
-  @ApiPropertyOptional({ example: 1000000 })
+  @ApiPropertyOptional({ example: '1000000' })
   @IsOptional()
   @IsString()
   phone_deposit: string;
+
+  @ApiPropertyOptional({ example: '1000000' })
+  @IsOptional()
+  @IsString()
+  booking_deposit: string;
+
+  @ApiPropertyOptional({ example: '1000000' })
+  @IsOptional()
+  @IsString()
+  security_deposit: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -164,6 +175,79 @@ class Nearby {
   mall: string;
 }
 
+class Terms {
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @IsString()
+  minium_lease: string;
+
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @IsString()
+  payment: string;
+}
+
+class Telecommunication {
+  @ApiProperty({ example: false })
+  @IsOptional()
+  @IsBoolean()
+  isp: boolean;
+
+  @ApiProperty({ example: false })
+  @IsOptional()
+  @IsBoolean()
+  fiber_optic: boolean;
+
+  @ApiProperty({ example: false })
+  @IsOptional()
+  @IsBoolean()
+  wifi: boolean;
+}
+
+class FireSafety {
+  @ApiProperty({ example: false })
+  @IsOptional()
+  @IsBoolean()
+  sprinkle: boolean;
+
+  @ApiProperty({ example: false })
+  @IsOptional()
+  @IsBoolean()
+  heat_detector: boolean;
+
+  @ApiProperty({ example: false })
+  @IsOptional()
+  @IsBoolean()
+  smoke_detector: boolean;
+}
+
+class OtherInfo {
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @IsString()
+  loading_capacity: string;
+
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @IsString()
+  ac_system: string;
+
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @IsString()
+  ac_zoning: string;
+
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @IsString()
+  electricity: string;
+
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @IsString()
+  power_unit: string;
+}
+
 export class ReqCreatePropertyDTO implements Partial<IProperty> {
   @ApiProperty({ example: 'Thamrin Building' })
   @IsNotEmpty()
@@ -247,6 +331,30 @@ export class ReqCreatePropertyDTO implements Partial<IProperty> {
   @ValidateNested({ each: true })
   @Type(() => Nearby)
   nearby: Nearby;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => Terms)
+  terms: Terms;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => Telecommunication)
+  telecommunication: Telecommunication;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => FireSafety)
+  fire_safety: FireSafety;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => OtherInfo)
+  other_info: OtherInfo;
 }
 
 export class ReqUpdatePropertyDTO extends PartialType(ReqCreatePropertyDTO) {
