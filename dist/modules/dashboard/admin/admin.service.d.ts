@@ -13,4 +13,5 @@ export declare class AdminService {
     }>;
     update(payload: ReqUpdateUserDTO, admin: IJwtUser): Promise<ReqUpdateUserDTO>;
     delete(username: string): Promise<Object>;
+    updateImage(id: number, profile_picture: string): Promise<import("typeorm").UpdateResult>;
 }

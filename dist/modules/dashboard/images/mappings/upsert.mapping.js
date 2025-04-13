@@ -2,10 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.mapInsertDB = mapInsertDB;
 const common_1 = require("../../../../common");
-async function mapInsertDB(file, property_id) {
+async function mapInsertDB(file, reference_id, reference_type) {
     const host = process.env.URL_MEDIA;
     return {
-        property_id: Number(property_id),
+        reference_id: Number(reference_id),
+        reference_type,
         host: host,
         path: file.destination,
         name: file.filename,

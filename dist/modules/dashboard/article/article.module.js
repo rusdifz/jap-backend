@@ -21,6 +21,7 @@ exports.DashboardArticleModule = DashboardArticleModule = __decorate([
         imports: [typeorm_1.TypeOrmModule.forFeature([common_2.ArticleDB])],
         providers: [article_repository_1.DashboardArticleRepository, article_service_1.DashboardArticleService],
         controllers: [article_controller_1.DashboardArticleController],
+        exports: [article_service_1.DashboardArticleService],
     })
 ], DashboardArticleModule);
 //# sourceMappingURL=article.module.js.map

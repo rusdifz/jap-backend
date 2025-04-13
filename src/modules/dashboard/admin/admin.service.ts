@@ -36,6 +36,10 @@ export class AdminService {
     // pagination query
     query = await this.repository.paginate(query, props);
 
+    if (props.role) {
+      Object.assign(query.where, { role: props.role });
+    }
+
     const search = await this.repository.findAndCount(query);
 
     let users = [];
@@ -72,5 +76,9 @@ export class AdminService {
     ]);
 
     return remove.affected > 0 ? {} : null;
+  }
+
+  async updateImage(id: number, profile_picture: string) {
+    return await this.repository.update({ id }, { profile_picture });
   }
 }

@@ -20,6 +20,13 @@ export class ArticleListDTO extends PaginationDTO {
   @IsOptional()
   @Transform(({ value }) => value?.toLowerCase())
   search_keyword?: string;
+
+  @ApiProperty({ example: StatusPublishEnum.DRAFT })
+  @IsOptional()
+  @IsEnum(StatusPublishEnum, {
+    message: 'Value status must be list in enum',
+  })
+  status_publish: StatusPublishEnum;
 }
 
 export class ReqCreateArticleDTO {
@@ -48,6 +55,6 @@ export class ReqCreateArticleDTO {
 
 export class ReqUpdateArticleDTO extends ReqCreateArticleDTO {
   @IsNotEmpty()
-  @IsNumber()
+  // @IsNumber()
   article_id: number;
 }

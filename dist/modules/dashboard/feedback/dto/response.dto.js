@@ -34,6 +34,10 @@ __decorate([
 ], ResFeedback.prototype, "comment", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], ResFeedback.prototype, "status_publish", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
     (0, class_transformer_1.Transform)(({ value }) => (0, common_1.dayjs)(value).format('MMMM D, YYYY')),
     __metadata("design:type", Date)
 ], ResFeedback.prototype, "created_at", void 0);

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IFeedback, dayjs } from 'src/common';
+import { IFeedback, StatusPublishEnum, dayjs } from 'src/common';
 import { Transform } from 'class-transformer';
 
 export class ResFeedback implements Partial<IFeedback> {
@@ -14,6 +14,9 @@ export class ResFeedback implements Partial<IFeedback> {
 
   @ApiProperty()
   comment: string;
+
+  @ApiProperty()
+  status_publish?: StatusPublishEnum;
 
   @ApiProperty()
   @Transform(({ value }) => dayjs(value).format('MMMM D, YYYY'))

@@ -1,7 +1,10 @@
-import { dayjs, PropertiesDB } from 'src/common';
+import { dayjs, MediaDB, PropertiesDB } from 'src/common';
 import { ResProperty } from '../dto/response.dto';
 
-export async function mapDbToResDetail(db: PropertiesDB): Promise<ResProperty> {
+export async function mapDbToResDetail(
+  db: PropertiesDB,
+  images: MediaDB[],
+): Promise<ResProperty> {
   return {
     property_id: Number(db.property_id),
     property_status: db.property_status,
@@ -79,7 +82,7 @@ export async function mapDbToResDetail(db: PropertiesDB): Promise<ResProperty> {
       power_unit: db.other_info_power_unit,
     },
     units: db.units,
-    images: db.images,
+    images: images ?? [],
     created_at: dayjs(db.created_at).format('MMMM D, YYYY'),
     updated_at: dayjs(db.updated_at).format('MMMM D, YYYY'),
   };
@@ -165,7 +168,7 @@ export async function mapDbToResList(
         power_unit: db.other_info_power_unit,
       },
       units: db.units,
-      images: db.images,
+      images: db.images ?? [],
       created_at: dayjs(db.created_at).format('MMMM D, YYYY'),
       updated_at: db.updated_at
         ? dayjs(db.updated_at).format('MMMM D, YYYY')

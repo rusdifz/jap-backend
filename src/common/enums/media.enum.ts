@@ -11,3 +11,10 @@ export enum MimeTypeEnum {
   MPEG = 'video/mpeg',
   WEBM = 'video/webm',
 }
+
+export enum MediaReferenceType {
+  ARTICLE = 'article',
+  PROPERTY = 'property',
+  FEEDBACK = 'feedback',
+  USER = 'user',
+}

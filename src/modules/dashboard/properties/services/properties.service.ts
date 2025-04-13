@@ -19,6 +19,7 @@ import {
   StatusPublishEnum,
   PropertiesDB,
   dayjs,
+  MediaReferenceType,
 } from 'src/common';
 
 import { PropertiesDTO } from '../dto/request.dto';
@@ -31,12 +32,14 @@ import { mapReqCreateToDb, mapReqUpdateToDB } from '../mappings/upsert.mapping';
 import { ReqCreateUnitDTO } from '../../units/dto/request.dto';
 import { DashboardUnitsService } from '../../units/units.service';
 import { DashboardPropertiesRepository } from '../properties.repository';
+import { DashboardImagesService } from '../../images/images.service';
 
 @Injectable()
 export class DashboardPropertiesService {
   constructor(
     private readonly repository: DashboardPropertiesRepository,
     private readonly unitService: DashboardUnitsService,
+    private readonly imageService: DashboardImagesService,
   ) {}
 
   // async get(property_id: number | string): Promise<ResProperty> {
@@ -49,27 +52,29 @@ export class DashboardPropertiesService {
       where: queryWhere,
       relations: {
         units: true,
-        images: true,
+        // images: true,
       },
     };
 
     const property = await this.repository.findOne(query);
-    // return property;
-    return property ? await mapDbToResDetail(property) : null;
+    const images = await this.imageService.findImageJoin(
+      property.property_id,
+      MediaReferenceType.PROPERTY,
+    );
+
+    return property ? await mapDbToResDetail(property, images) : null;
   }
 
   async getList(
     props: PropertiesDTO,
   ): Promise<{ data: ResProperty[]; count: number }> {
-    console.log('props get list', props);
-
     // initiate empty where query
     let query: FindManyOptions<PropertiesDB> = {
       where: {},
       // order: {
       //   created_at: 'desc',
       // },
-      relations: { units: true, images: true },
+      relations: { units: true },
     };
 
     // sort & order query
@@ -123,6 +128,8 @@ export class DashboardPropertiesService {
     body: ReqUpdatePropertyDTO,
     admin: IJwtUser,
   ): Promise<ReqUpdatePropertyDTO> {
+    console.log('update', body);
+
     const mapProperty = await mapReqUpdateToDB(body, admin);
     await this.repository.update(
       { property_id: mapProperty.property_id },

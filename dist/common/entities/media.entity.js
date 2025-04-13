@@ -23,7 +23,15 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ type: 'bigint' }),
     __metadata("design:type", Number)
-], MediaDB.prototype, "property_id", void 0);
+], MediaDB.prototype, "reference_id", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: 'enum',
+        enum: enums_1.MediaReferenceType,
+        default: enums_1.MediaReferenceType.PROPERTY,
+    }),
+    __metadata("design:type", String)
+], MediaDB.prototype, "reference_type", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: true }),
     __metadata("design:type", String)
@@ -72,7 +80,7 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => property_entity_1.PropertiesDB, (property) => property.images, {
         createForeignKeyConstraints: true,
     }),
-    (0, typeorm_1.JoinColumn)({ name: 'property_id', referencedColumnName: 'property_id' }),
+    (0, typeorm_1.JoinColumn)({ name: 'reference_id', referencedColumnName: 'property_id' }),
     __metadata("design:type", property_entity_1.PropertiesDB)
 ], MediaDB.prototype, "property", void 0);
 exports.MediaDB = MediaDB = __decorate([

@@ -48,7 +48,7 @@ import { DashboardPropertiesService } from './services/properties.service';
 import { DashboardPropertiesGenerateFileService } from './services/properties-generate-file.service';
 
 @Controller('dashboard/properties')
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 export class DashboardPropertiesController {
   constructor(
     private readonly service: DashboardPropertiesService,
@@ -154,11 +154,14 @@ export class DashboardPropertiesController {
     @Res() res: any,
     @Param('location') location: string,
     @Query() query: GeneratePDFDTO,
+    @UserAuth() user: IJwtUser,
   ) {
-    console.log('query', query);
+    console.log('query comparisson', query);
+    console.log('user', user);
 
     const pdfBuffer = await this.serviceGenerateFile.generatePDFComparisson(
       query.property_id,
+      user,
     );
 
     const namePdf = 'Building Comparisson - ' + location;

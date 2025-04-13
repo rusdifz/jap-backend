@@ -26,23 +26,23 @@ const filterImage = (req, file, cb) => {
 exports.filterImage = filterImage;
 exports.storageImage = multer.diskStorage({
     destination: (req, file, callback) => {
-        const propertyName = req.params.slug;
-        console.log('sini', propertyName);
+        const folderName = req.params.reference_type + '/' + req.params.slug;
         const directory = file.mimetype.includes('image')
-            ? 'public/images/' + propertyName
-            : 'public/videos/' + propertyName;
-        console.log('dir', directory);
-        console.log('asas', __dirname);
+            ? 'public/images/' + folderName
+            : 'public/videos/' + folderName;
+        console.log('direc', directory);
         const dirname = __dirname
             .toString()
             .replace('dist/middlewares/upload-file', directory);
         console.log('driname', dirname);
         if (!(0, fs_1.existsSync)(dirname)) {
             console.log('Directory Image Not Exist.');
-            (0, fs_1.mkdirSync)(dirname);
+            (0, fs_1.mkdirSync)(dirname, { recursive: true });
             callback(null, dirname);
         }
-        console.log('Directory Image Exists.');
+        else {
+            console.log('Directory Image Exists.');
+        }
         callback(null, dirname);
     },
     filename: (req, file, callback) => {

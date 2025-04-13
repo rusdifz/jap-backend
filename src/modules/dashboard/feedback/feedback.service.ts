@@ -33,6 +33,10 @@ export class DashboardFeedbackService {
     // pagination query
     query = await this.repository.paginate(query, props);
 
+    if (props.status_publish) {
+      Object.assign(query.where, { status_publish: props.status_publish });
+    }
+
     const searchData = await this.repository.findAndCount(query);
 
     const feedback =
@@ -82,5 +86,9 @@ export class DashboardFeedbackService {
       );
     }
     return del;
+  }
+
+  async updateImage(feedback_id: number, profile_image: string) {
+    return await this.repository.update({ feedback_id }, { profile_image });
   }
 }

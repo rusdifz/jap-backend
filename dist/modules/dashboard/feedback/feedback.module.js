@@ -21,6 +21,7 @@ exports.DashboardFeedbackModule = DashboardFeedbackModule = __decorate([
         imports: [typeorm_1.TypeOrmModule.forFeature([common_2.FeedbackDB])],
         providers: [feedback_service_1.DashboardFeedbackService, feedback_repository_1.DashboardFeedbackRepository],
         controllers: [feedback_controller_1.DashboardFeedbackController],
+        exports: [feedback_service_1.DashboardFeedbackService],
     })
 ], DashboardFeedbackModule);
 //# sourceMappingURL=feedback.module.js.map

@@ -10,3 +10,9 @@ export declare enum MimeTypeEnum {
     MPEG = "video/mpeg",
     WEBM = "video/webm"
 }
+export declare enum MediaReferenceType {
+    ARTICLE = "article",
+    PROPERTY = "property",
+    FEEDBACK = "feedback",
+    USER = "user"
+}

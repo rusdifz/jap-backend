@@ -13,14 +13,23 @@ const common_2 = require("../../../common");
 const images_repository_1 = require("./images.repository");
 const images_service_1 = require("./images.service");
 const images_controller_1 = require("./images.controller");
+const feedback_module_1 = require("../feedback/feedback.module");
+const article_module_1 = require("../article/article.module");
+const admin_module_1 = require("../admin/admin.module");
 let DashboardImagesModule = class DashboardImagesModule {
 };
 exports.DashboardImagesModule = DashboardImagesModule;
 exports.DashboardImagesModule = DashboardImagesModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([common_2.MediaDB])],
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([common_2.MediaDB]),
+            feedback_module_1.DashboardFeedbackModule,
+            article_module_1.DashboardArticleModule,
+            admin_module_1.AdminModule,
+        ],
         providers: [images_repository_1.DashboardImageRepository, images_service_1.DashboardImagesService],
         controllers: [images_controller_1.DashboardImagesController],
+        exports: [images_service_1.DashboardImagesService],
     })
 ], DashboardImagesModule);
 //# sourceMappingURL=images.module.js.map

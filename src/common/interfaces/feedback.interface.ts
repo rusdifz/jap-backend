@@ -1,8 +1,11 @@
+import { StatusPublishEnum } from '../enums';
+
 export interface IFeedback {
   feedback_id: number;
   profile_image: string;
   profile_name: string;
   comment: string;
+  status_publish: StatusPublishEnum;
   created_at: Date;
   updated_at: Date;
   deleted_at: Date;

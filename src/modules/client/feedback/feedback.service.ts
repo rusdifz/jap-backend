@@ -5,7 +5,7 @@ import { GetListFeedbackDTO } from './dto/request.dto';
 
 import { ResFeedback } from './dto/response.dto';
 import { ClientFeedbackRepository } from './feedback.repository';
-import { FeedbackDB } from 'src/common';
+import { FeedbackDB, StatusPublishEnum } from 'src/common';
 import { FindManyOptions } from 'typeorm';
 
 @Injectable()
@@ -17,7 +17,9 @@ export class ClientFeedbackService {
   ): Promise<{ data: ResFeedback[]; count: number }> {
     // initiate empty where query
     let query: FindManyOptions<FeedbackDB> = {
-      where: {},
+      where: {
+        status_publish: StatusPublishEnum.PUBLISH,
+      },
     };
 
     // sort & order query

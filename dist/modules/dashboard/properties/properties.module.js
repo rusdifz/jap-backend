@@ -15,12 +15,17 @@ const properties_generate_file_service_1 = require("./services/properties-genera
 const properties_controller_1 = require("./properties.controller");
 const units_module_1 = require("../units/units.module");
 const common_2 = require("../../../common");
+const images_module_1 = require("../images/images.module");
 let DashboardPropertiesModule = class DashboardPropertiesModule {
 };
 exports.DashboardPropertiesModule = DashboardPropertiesModule;
 exports.DashboardPropertiesModule = DashboardPropertiesModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([common_2.PropertiesDB]), units_module_1.DashboardUnitsModule],
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([common_2.PropertiesDB]),
+            units_module_1.DashboardUnitsModule,
+            images_module_1.DashboardImagesModule,
+        ],
         providers: [
             properties_repository_1.DashboardPropertiesRepository,
             properties_service_1.DashboardPropertiesService,

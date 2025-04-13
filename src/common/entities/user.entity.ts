@@ -5,9 +5,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { RoleEnum } from '../enums';
 import { IUser } from '../interfaces/user.interface';
+import { MediaDB } from './media.entity';
 
 @Entity({ name: 'users' })
 export class UsersDB implements IUser {
@@ -65,4 +68,10 @@ export class UsersDB implements IUser {
 
   @Column({ type: 'varchar', length: 100, nullable: true })
   deleted_by: string;
+
+  // @OneToOne(() => MediaDB, (media) => media.user, {
+  //   createForeignKeyConstraints: false,
+  // })
+  // @JoinColumn({ name: 'id', referencedColumnName: 'reference_id' })
+  // image?: MediaDB;
 }

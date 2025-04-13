@@ -23,6 +23,8 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
       where: { [entityProperty]: value },
     };
 
+    console.log('art', args.object);
+
     if (args.object['property_id']) {
       where.where['property_id'] = Not(args.object['property_id']);
     }

@@ -9,6 +9,7 @@ export async function mapReqCreateToDB(
     profile_image: body.profile_image,
     profile_name: body.profile_name,
     comment: body.comment,
+    status_publish: body.status_publish,
     created_by: admin?.user?.username ?? 'admin system',
   };
 }
@@ -22,6 +23,7 @@ export async function mapReqUpdateToDB(
     profile_image: body.profile_image,
     profile_name: body.profile_name,
     comment: body.comment,
+    status_publish: body.status_publish,
     updated_by: admin?.user?.username ?? 'admin system',
   };
 }

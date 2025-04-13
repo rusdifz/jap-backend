@@ -21,6 +21,7 @@ exports.AdminModule = AdminModule = __decorate([
         imports: [typeorm_1.TypeOrmModule.forFeature([common_2.UsersDB])],
         providers: [admin_service_1.AdminService, admin_repository_1.AdminRepository],
         controllers: [admin_controller_1.AdminController],
+        exports: [admin_service_1.AdminService],
     })
 ], AdminModule);
 //# sourceMappingURL=admin.module.js.map

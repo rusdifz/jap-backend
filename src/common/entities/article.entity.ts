@@ -6,7 +6,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
+import { MediaDB } from './media.entity';
 
 @Entity({ name: 'article' })
 export class ArticleDB {
@@ -46,4 +49,10 @@ export class ArticleDB {
 
   @Column({ type: 'varchar', length: 250, nullable: true })
   updated_by?: string;
+
+  // @OneToOne(() => MediaDB, (media) => media.article, {
+  //   createForeignKeyConstraints: false,
+  // })
+  // @JoinColumn({ name: 'article_id', referencedColumnName: 'reference_id' })
+  // image?: MediaDB;
 }

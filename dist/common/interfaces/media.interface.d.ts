@@ -1,11 +1,16 @@
+import { MediaReferenceType, MediaTypeEnum } from '../enums';
 import { PropertyAbstract } from './property.interface';
 export interface IMedia {
     media_id: string;
-    property_id: number;
+    reference_id?: string | number;
+    reference_type: MediaReferenceType;
     host: string;
     path: string;
+    name: string;
+    type: MediaTypeEnum;
+    full_url: string;
     property?: PropertyAbstract;
-    created_at: Date;
-    updated_at: Date;
-    deleted_at: Date;
+    created_at?: Date;
+    updated_at?: Date;
+    deleted_at?: Date;
 }

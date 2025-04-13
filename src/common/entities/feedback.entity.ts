@@ -5,8 +5,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { IFeedback } from '../interfaces/feedback.interface';
+import { MediaDB } from './media.entity';
+import { StatusPublishEnum } from '../enums';
 
 @Entity({ name: 'feedback' })
 export class FeedbackDB implements IFeedback {
@@ -21,6 +25,13 @@ export class FeedbackDB implements IFeedback {
 
   @Column({ type: 'text' })
   comment: string;
+
+  @Column({
+    type: 'enum',
+    enum: StatusPublishEnum,
+    default: StatusPublishEnum.DRAFT,
+  })
+  status_publish: StatusPublishEnum;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
@@ -39,4 +50,10 @@ export class FeedbackDB implements IFeedback {
 
   @Column({ type: 'varchar', length: 200, nullable: true })
   deleted_by: string;
+
+  // @OneToOne(() => MediaDB, (media) => media.feedback, {
+  //   createForeignKeyConstraints: false,
+  // })
+  // @JoinColumn({ name: 'feedback_id', referencedColumnName: 'reference_id' })
+  // image?: MediaDB;
 }

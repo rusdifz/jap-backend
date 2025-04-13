@@ -19,10 +19,12 @@ const view_mapping_1 = require("../mappings/view.mapping");
 const upsert_mapping_1 = require("../mappings/upsert.mapping");
 const units_service_1 = require("../../units/units.service");
 const properties_repository_1 = require("../properties.repository");
+const images_service_1 = require("../../images/images.service");
 let DashboardPropertiesService = class DashboardPropertiesService {
-    constructor(repository, unitService) {
+    constructor(repository, unitService, imageService) {
         this.repository = repository;
         this.unitService = unitService;
+        this.imageService = imageService;
     }
     async get(property_id) {
         const queryWhere = isNaN(Number(property_id))
@@ -32,17 +34,16 @@ let DashboardPropertiesService = class DashboardPropertiesService {
             where: queryWhere,
             relations: {
                 units: true,
-                images: true,
             },
         };
         const property = await this.repository.findOne(query);
-        return property ? await (0, view_mapping_1.mapDbToResDetail)(property) : null;
+        const images = await this.imageService.findImageJoin(property.property_id, common_2.MediaReferenceType.PROPERTY);
+        return property ? await (0, view_mapping_1.mapDbToResDetail)(property, images) : null;
     }
     async getList(props) {
-        console.log('props get list', props);
         let query = {
             where: {},
-            relations: { units: true, images: true },
+            relations: { units: true },
         };
         query = await this.repository.sort(query, props);
         query = await this.repository.paginate(query, props);
@@ -71,6 +72,7 @@ let DashboardPropertiesService = class DashboardPropertiesService {
         return body;
     }
     async update(body, admin) {
+        console.log('update', body);
         const mapProperty = await (0, upsert_mapping_1.mapReqUpdateToDB)(body, admin);
         await this.repository.update({ property_id: mapProperty.property_id }, mapProperty);
         return body;
@@ -283,6 +285,7 @@ exports.DashboardPropertiesService = DashboardPropertiesService;
 exports.DashboardPropertiesService = DashboardPropertiesService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [properties_repository_1.DashboardPropertiesRepository,
-        units_service_1.DashboardUnitsService])
+        units_service_1.DashboardUnitsService,
+        images_service_1.DashboardImagesService])
 ], DashboardPropertiesService);
 //# sourceMappingURL=properties.service.js.map

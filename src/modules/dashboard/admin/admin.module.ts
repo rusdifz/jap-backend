@@ -10,5 +10,6 @@ import { UsersDB } from 'src/common';
   imports: [TypeOrmModule.forFeature([UsersDB])],
   providers: [AdminService, AdminRepository],
   controllers: [AdminController],
+  exports: [AdminService],
 })
 export class AdminModule {}

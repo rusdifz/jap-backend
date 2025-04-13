@@ -41,8 +41,6 @@ let DashboardUnitsService = class DashboardUnitsService {
         if (searchData[0].length) {
             units = searchData[0].map((unit) => {
                 const mapData = (0, class_transformer_1.plainToInstance)(response_dto_1.ResUnit, unit, {});
-                console.log('unit', unit);
-                console.log('map', mapData);
                 return mapData;
             });
         }

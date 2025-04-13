@@ -65,6 +65,10 @@ export class UsersDTO extends PaginationDTO {
   @ApiPropertyOptional({ example: 'rusdifz' })
   @IsOptional()
   username?: string;
+
+  @ApiPropertyOptional({ example: 'rusdifz' })
+  @IsOptional()
+  role?: RoleEnum;
 }
 
 export class UserDetailDTO {

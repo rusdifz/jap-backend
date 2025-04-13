@@ -14,6 +14,7 @@ export declare class ReqUpdateUserDTO implements Partial<IUser> {
 }
 export declare class UsersDTO extends PaginationDTO {
     username?: string;
+    role?: RoleEnum;
 }
 export declare class UserDetailDTO {
     username?: string;

@@ -1,15 +1,17 @@
 // import { ArticleDB } from 'src/common/entities';
 // import { ReqCreateArticleDTO, ReqUpdateArticleDTO } from '../dto/request.dto';
 
-import { MediaDB, MediaTypeEnum } from 'src/common';
+import { MediaDB, MediaReferenceType, MediaTypeEnum } from 'src/common';
 
 export async function mapInsertDB(
   file: Express.Multer.File,
-  property_id: number,
+  reference_id: number,
+  reference_type: MediaReferenceType,
 ): Promise<Partial<MediaDB>> {
   const host = process.env.URL_MEDIA;
   return {
-    property_id: Number(property_id),
+    reference_id: Number(reference_id),
+    reference_type,
     host: host,
     path: file.destination,
     name: file.filename,

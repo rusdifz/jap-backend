@@ -16,8 +16,10 @@ export class ResProperty implements IProperty {
 
   popular: number;
   property_status: PropertyStatusEnum;
+
   @ApiProperty({ example: 'nana' })
   name: string;
+
   slug: string;
   description: string;
   address: string;

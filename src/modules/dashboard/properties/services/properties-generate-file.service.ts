@@ -3,9 +3,10 @@ const PDFDocument = require('pdfkit-table');
 // import PDFDocument from 'pdfkit';
 const PDFDocumentHolland = require('@hollandjake/pdfkit-table');
 
+import { existsSync, mkdirSync } from 'fs';
 import { FindManyOptions, FindOneOptions, In } from 'typeorm';
 
-import { PropertiesDB } from 'src/common';
+import { IJwtUser, PropertiesDB } from 'src/common';
 
 import { DashboardPropertiesRepository } from '../properties.repository';
 import { formatCurrency } from 'src/common/helpers/currency.helper';
@@ -22,7 +23,10 @@ export class DashboardPropertiesGenerateFileService {
     'public/image-jap-main',
   );
 
-  async generatePDFComparisson(property_id: number[]): Promise<Buffer> {
+  async generatePDFComparisson(
+    property_id: number[],
+    admin: IJwtUser,
+  ): Promise<Buffer> {
     return new Promise(async (resolve, reject) => {
       try {
         const query: FindManyOptions<PropertiesDB> = {
@@ -53,6 +57,7 @@ export class DashboardPropertiesGenerateFileService {
         };
 
         const getData = await this.repository.find(query);
+        console.log('data', getData);
 
         const buffers: any[] = [];
         const doc = new PDFDocument({
@@ -76,7 +81,10 @@ export class DashboardPropertiesGenerateFileService {
 
           return {
             name: dt.name,
-            image: dt.images[0].path + '/' + dt.images[0].name,
+            image:
+              dt.images.length > 0
+                ? dt.images[0].path + '/' + dt.images[0].name
+                : '',
             location: dt.location,
             property_size: size,
             total_floor: dt.total_floor ?? 0,
@@ -121,6 +129,78 @@ export class DashboardPropertiesGenerateFileService {
             height: coverImageHeight,
           },
         );
+
+        doc.image(this.rootPathImageJAP + '/white.jpg', 575, 450, {
+          width: 200,
+          height: 150,
+        });
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(6)
+          .fillColor('#000000')
+          .text('PT. Jardine Asia Pasific', 580, 450, {
+            align: 'left',
+            width: 150, // Lebar maksimum teks
+          });
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(6)
+          .fillColor('#000000')
+          .text('World Trade Centre, WTC 5, Lt. 11,', 580, 460, {
+            align: 'left',
+            width: 150, // Lebar maksimum teks
+          });
+
+        doc
+          .text(
+            'Jl. Jend Sudirman Kav. 29-31, Kel. Karet, Setiabudi, Jakarta Selatan -',
+            580,
+            470,
+            {
+              align: 'left',
+              width: 300, // Lebar maksimum teks
+            },
+          )
+          .font('Helvetica-Bold')
+          .fontSize(6)
+          .fillColor('#000000');
+        doc
+          .text('DKl Jakarta, 12920', 580, 480, {
+            align: 'left',
+            width: 300, // Lebar maksimum teks
+          })
+          .font('Helvetica-Bold')
+          .fontSize(6)
+          .fillColor('#000000');
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(6)
+          .fillColor('#000000')
+          .text('T    : 021-50106277', 580, 490, {
+            align: 'left',
+            width: 300, // Lebar maksimum teks
+          });
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(6)
+          .fillColor('#000000')
+          .text('E    : info@jardineasiapasific.asia', 580, 500, {
+            align: 'left',
+            width: 300, // Lebar maksimum teks
+          });
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(6)
+          .fillColor('#000000')
+          .text('W    : jardineasiapasific.asia', 580, 510, {
+            align: 'left',
+            width: 300, // Lebar maksimum teks
+          });
 
         //tambah table
         for (let iTable = 0; iTable < page; iTable++) {
@@ -221,11 +301,28 @@ export class DashboardPropertiesGenerateFileService {
                   const xPos = rectCell.x + (rectCell.width - imgWidth) / 2;
                   const yPos = rectCell.y + (rectCell.height - imgHeight) / 2;
 
-                  // Gambar image menggunakan instance doc (gunakan variabel global 'doc')
-                  doc.image(value, xPos, yPos, {
-                    width: imgWidth,
-                    height: imgHeight,
-                  });
+                  //pengecekan image exist or not
+                  if (existsSync(value)) {
+                    // console.log('Directory Image Not Exist.');
+                    // mkdirSync(dirname, { recursive: true });
+                    // callback(null, dirname);
+                    // Gambar image menggunakan instance doc (gunakan variabel global 'doc')
+                    doc.image(value, xPos, yPos, {
+                      width: imgWidth,
+                      height: imgHeight,
+                    });
+                  } else {
+                    //
+                    doc.image(
+                      this.rootPathImageJAP + '/no-image.jpg',
+                      xPos,
+                      yPos,
+                      {
+                        width: imgWidth,
+                        height: imgHeight,
+                      },
+                    );
+                  }
 
                   // return 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry,s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic';
                 } else {
@@ -588,6 +685,111 @@ export class DashboardPropertiesGenerateFileService {
             height: coverBackImageHeight,
           },
         );
+
+        doc.image(this.rootPathImageJAP + '/white.jpg', 85, 180, {
+          width: 250,
+          height: 200,
+        });
+
+        const adminName = admin.user.first_name + ' ' + admin.user.last_name;
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(10)
+          .fillColor('#000000')
+          .text(adminName !== '' ? adminName : admin.user.username, 89, 200, {
+            align: 'left',
+            width: 150, // Lebar maksimum teks
+          });
+
+        doc
+          .font('Helvetica')
+          .fontSize(10)
+          .fillColor('#000000')
+          .text(admin.user.phone_number ?? '+62 87870702538', 89, 230, {
+            align: 'left',
+            width: 150, // Lebar maksimum teks
+          });
+
+        doc
+          .font('Helvetica')
+          .fontSize(10)
+          .fillColor('#000000')
+          .text('fauzanrusdi20@gmail.com', 89, 245, {
+            align: 'left',
+            width: 150, // Lebar maksimum teks
+          });
+
+        doc.image(this.rootPathImageJAP + '/white.jpg', 500, 250, {
+          width: 250,
+          height: 200,
+        });
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(7)
+          .fillColor('#000000')
+          .text('PT. Jardine Asia Pasific', 500, 260, {
+            align: 'left',
+            width: 150, // Lebar maksimum teks
+          });
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(7)
+          .fillColor('#000000')
+          .text('World Trade Centre, WTC 5, Lt. 11,', 500, 273, {
+            align: 'left',
+            width: 150, // Lebar maksimum teks
+          });
+
+        doc
+          .text(
+            'Jl. Jend Sudirman Kav. 29-31, Kel. Karet, Setiabudi, Jakarta Selatan -',
+            500,
+            286,
+            {
+              align: 'left',
+              width: 300, // Lebar maksimum teks
+            },
+          )
+          .font('Helvetica-Bold')
+          .fontSize(7)
+          .fillColor('#000000');
+        doc
+          .text('DKl Jakarta, 12920', 500, 299, {
+            align: 'left',
+            width: 300, // Lebar maksimum teks
+          })
+          .font('Helvetica-Bold')
+          .fontSize(7)
+          .fillColor('#000000');
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(7)
+          .fillColor('#000000')
+          .text('T    : 021-50106277', 500, 312, {
+            align: 'left',
+            width: 300, // Lebar maksimum teks
+          });
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(7)
+          .fillColor('#000000')
+          .text('E    : info@jardineasiapasific.asia', 500, 325, {
+            align: 'left',
+            width: 300, // Lebar maksimum teks
+          });
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(7)
+          .fillColor('#000000')
+          .text('W    : jardineasiapasific.asia', 500, 338, {
+            align: 'left',
+            width: 300, // Lebar maksimum teks
+          });
 
         // Finalisasi PDF
         doc.end();

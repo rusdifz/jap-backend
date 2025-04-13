@@ -6,9 +6,10 @@ import {
   IsBoolean,
   IsOptional,
 } from 'class-validator';
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+// import { PartialType } from '@nestjs/mapped-types';
+import { ApiHideProperty, ApiProperty, PartialType } from '@nestjs/swagger';
 
-import { IFeedback, PaginationDTO } from 'src/common';
+import { IFeedback, PaginationDTO, StatusPublishEnum } from 'src/common';
 
 export class ReqCreateFeedbackDTO implements Partial<IFeedback> {
   @ApiProperty({ example: 'https://url' })
@@ -25,13 +26,27 @@ export class ReqCreateFeedbackDTO implements Partial<IFeedback> {
   @IsNotEmpty()
   @IsString()
   comment: string;
+
+  @ApiProperty({ example: StatusPublishEnum.PUBLISH })
+  @IsNotEmpty()
+  @IsEnum(StatusPublishEnum, {
+    message: 'Value status must be list in enum',
+  })
+  status_publish: StatusPublishEnum;
 }
 
-export class ReqUpdateFeedbackDTO extends ReqCreateFeedbackDTO {
+export class ReqUpdateFeedbackDTO extends PartialType(ReqCreateFeedbackDTO) {
   @ApiHideProperty()
   @IsNotEmpty()
   @IsNumber()
   feedback_id: number;
 }
 
-export class GetListFeedbackDTO extends PaginationDTO {}
+export class GetListFeedbackDTO extends PaginationDTO {
+  @ApiProperty({ example: StatusPublishEnum.DRAFT })
+  @IsOptional()
+  @IsEnum(StatusPublishEnum, {
+    message: 'Value status must be list in enum',
+  })
+  status_publish: StatusPublishEnum;
+}

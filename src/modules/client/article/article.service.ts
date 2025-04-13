@@ -8,14 +8,17 @@ import { mapDbToResDetail, mapDbToResList } from './mappings/view.mapping';
 
 import { ClientArticleRepository } from './article.repository';
 import { FindManyOptions } from 'typeorm';
-import { ArticleDB } from 'src/common';
+import { ArticleDB, StatusPublishEnum } from 'src/common';
 
 @Injectable()
 export class ClientArticleService {
   constructor(private readonly repository: ClientArticleRepository) {}
 
   async getDetail(article_id: number): Promise<ResDetail> {
-    const searchData = await this.repository.findOneBy({ article_id });
+    const searchData = await this.repository.findOneBy({
+      article_id,
+      status_publish: StatusPublishEnum.PUBLISH,
+    });
     return searchData ? await mapDbToResDetail(searchData) : null;
   }
 
@@ -24,7 +27,9 @@ export class ClientArticleService {
   ): Promise<{ data: ResList[]; count: number }> {
     // initiate empty where query
     let query: FindManyOptions<ArticleDB> = {
-      where: {},
+      where: {
+        status_publish: StatusPublishEnum.PUBLISH,
+      },
     };
 
     // sort & order query

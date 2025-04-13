@@ -55,8 +55,6 @@ export class DashboardUnitsService {
     if (searchData[0].length) {
       units = searchData[0].map((unit) => {
         const mapData = plainToInstance(ResUnit, unit, {});
-        console.log('unit', unit);
-        console.log('map', mapData);
 
         return mapData;
       });

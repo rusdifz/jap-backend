@@ -13,4 +13,5 @@ export declare class DashboardArticleService {
     create(body: ReqCreateArticleDTO, user: IJwtUser): Promise<ReqCreateArticleDTO>;
     update(body: ReqUpdateArticleDTO, user: IJwtUser): Promise<ReqUpdateArticleDTO>;
     delete(article_id: number, admin: IJwtUser): Promise<Object>;
+    updateImage(article_id: number, thumbnail: string): Promise<import("typeorm").UpdateResult>;
 }

@@ -14,13 +14,16 @@ const common_1 = require("@nestjs/common");
 const class_transformer_1 = require("class-transformer");
 const response_dto_1 = require("./dto/response.dto");
 const feedback_repository_1 = require("./feedback.repository");
+const common_2 = require("../../../common");
 let ClientFeedbackService = class ClientFeedbackService {
     constructor(repository) {
         this.repository = repository;
     }
     async getList(props) {
         let query = {
-            where: {},
+            where: {
+                status_publish: common_2.StatusPublishEnum.PUBLISH,
+            },
         };
         query = await this.repository.sort(query, props);
         query = await this.repository.paginate(query, props);

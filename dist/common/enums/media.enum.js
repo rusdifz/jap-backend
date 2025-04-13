@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MimeTypeEnum = exports.MediaTypeEnum = void 0;
+exports.MediaReferenceType = exports.MimeTypeEnum = exports.MediaTypeEnum = void 0;
 var MediaTypeEnum;
 (function (MediaTypeEnum) {
     MediaTypeEnum["IMAGE"] = "image";
@@ -15,4 +15,11 @@ var MimeTypeEnum;
     MimeTypeEnum["MPEG"] = "video/mpeg";
     MimeTypeEnum["WEBM"] = "video/webm";
 })(MimeTypeEnum || (exports.MimeTypeEnum = MimeTypeEnum = {}));
+var MediaReferenceType;
+(function (MediaReferenceType) {
+    MediaReferenceType["ARTICLE"] = "article";
+    MediaReferenceType["PROPERTY"] = "property";
+    MediaReferenceType["FEEDBACK"] = "feedback";
+    MediaReferenceType["USER"] = "user";
+})(MediaReferenceType || (exports.MediaReferenceType = MediaReferenceType = {}));
 //# sourceMappingURL=media.enum.js.map

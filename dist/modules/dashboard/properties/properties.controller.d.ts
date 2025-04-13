@@ -17,6 +17,6 @@ export declare class DashboardPropertiesController {
     deleteOne(id: number, user: IJwtUser): Promise<Object>;
     checkForStaleDataOlderThanOneMonth(): Promise<any[]>;
     convertFileExcelToDB(): Promise<any[]>;
-    generatePdfComparisson(res: any, location: string, query: GeneratePDFDTO): Promise<void>;
+    generatePdfComparisson(res: any, location: string, query: GeneratePDFDTO, user: IJwtUser): Promise<void>;
     generatePdfPropertyDetail(res: any, slug: string): Promise<void>;
 }

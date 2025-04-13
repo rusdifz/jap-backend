@@ -320,6 +320,14 @@ __decorate([
     __metadata("design:type", String)
 ], ReqCreatePropertyDTO.prototype, "status_publish", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: common_1.PropertyStatusEnum.LEASE }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(common_1.PropertyStatusEnum, {
+        message: 'Value status must be list in enum',
+    }),
+    __metadata("design:type", String)
+], ReqCreatePropertyDTO.prototype, "property_status", void 0);
+__decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: common_1.PropertyTypeEnum.OFFICE }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsEnum)(common_1.PropertyTypeEnum, {

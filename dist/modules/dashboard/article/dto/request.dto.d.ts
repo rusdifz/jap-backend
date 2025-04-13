@@ -1,6 +1,7 @@
 import { StatusPublishEnum, PaginationDTO } from 'src/common';
 export declare class ArticleListDTO extends PaginationDTO {
     search_keyword?: string;
+    status_publish: StatusPublishEnum;
 }
 export declare class ReqCreateArticleDTO {
     title: string;

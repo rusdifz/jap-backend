@@ -18,12 +18,14 @@ const platform_express_1 = require("@nestjs/platform-express");
 const upload_file_1 = require("../../../middlewares/upload-file");
 const middlewares_1 = require("../../../middlewares");
 const images_service_1 = require("./images.service");
+const common_2 = require("../../../common");
 let DashboardImagesController = class DashboardImagesController {
     constructor(service) {
         this.service = service;
     }
-    async uploadImage(body, slug, files) {
-        return await this.service.uploadImage(files, body.property_id);
+    async uploadImages(body, referenceType, files) {
+        console.log('Received files:', files.length);
+        return await this.service.uploadImages(files, body.reference_id, referenceType);
     }
     async getImage(res, name) {
         const path = await this.service.getImage(name);
@@ -32,15 +34,15 @@ let DashboardImagesController = class DashboardImagesController {
 };
 exports.DashboardImagesController = DashboardImagesController;
 __decorate([
-    (0, common_1.Post)('/upload_image/:slug'),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('property_image', 5, upload_file_1.uploadImageInterceptor), middlewares_1.ResponseSuccessInterceptor),
+    (0, common_1.Post)('/upload_image/:reference_type/:slug'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('media_image', 5, upload_file_1.uploadImageInterceptor), middlewares_1.ResponseSuccessInterceptor),
     __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Param)('slug')),
+    __param(1, (0, common_1.Param)('reference_type')),
     __param(2, (0, common_1.UploadedFiles)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String, Array]),
     __metadata("design:returntype", Promise)
-], DashboardImagesController.prototype, "uploadImage", null);
+], DashboardImagesController.prototype, "uploadImages", null);
 __decorate([
     (0, common_1.Get)('/image/:name'),
     __param(0, (0, common_1.Res)()),

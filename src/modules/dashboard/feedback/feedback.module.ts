@@ -10,5 +10,6 @@ import { DashboardFeedbackRepository } from './feedback.repository';
   imports: [TypeOrmModule.forFeature([FeedbackDB])],
   providers: [DashboardFeedbackService, DashboardFeedbackRepository],
   controllers: [DashboardFeedbackController],
+  exports: [DashboardFeedbackService],
 })
 export class DashboardFeedbackModule {}

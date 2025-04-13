@@ -8,9 +8,14 @@ import { DashboardPropertiesController } from './properties.controller';
 
 import { DashboardUnitsModule } from '../units/units.module';
 import { PropertiesDB } from 'src/common';
+import { DashboardImagesModule } from '../images/images.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PropertiesDB]), DashboardUnitsModule],
+  imports: [
+    TypeOrmModule.forFeature([PropertiesDB]),
+    DashboardUnitsModule,
+    DashboardImagesModule,
+  ],
   providers: [
     DashboardPropertiesRepository,
     DashboardPropertiesService,

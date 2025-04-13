@@ -4,10 +4,12 @@ import { ReqCreatePropertyDTO, ReqUpdatePropertyDTO } from '../dto/request.dto';
 import { ResProperty } from '../dto/response.dto';
 import { DashboardUnitsService } from '../../units/units.service';
 import { DashboardPropertiesRepository } from '../properties.repository';
+import { DashboardImagesService } from '../../images/images.service';
 export declare class DashboardPropertiesService {
     private readonly repository;
     private readonly unitService;
-    constructor(repository: DashboardPropertiesRepository, unitService: DashboardUnitsService);
+    private readonly imageService;
+    constructor(repository: DashboardPropertiesRepository, unitService: DashboardUnitsService, imageService: DashboardImagesService);
     get(property_id: number | string): Promise<any>;
     getList(props: PropertiesDTO): Promise<{
         data: ResProperty[];

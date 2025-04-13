@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FeedbackDB = void 0;
 const typeorm_1 = require("typeorm");
+const enums_1 = require("../enums");
 let FeedbackDB = class FeedbackDB {
 };
 exports.FeedbackDB = FeedbackDB;
@@ -30,6 +31,14 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'text' }),
     __metadata("design:type", String)
 ], FeedbackDB.prototype, "comment", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: 'enum',
+        enum: enums_1.StatusPublishEnum,
+        default: enums_1.StatusPublishEnum.DRAFT,
+    }),
+    __metadata("design:type", String)
+], FeedbackDB.prototype, "status_publish", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({ type: 'timestamp' }),
     __metadata("design:type", Date)

@@ -12,22 +12,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DashboardImagesService = void 0;
 const common_1 = require("@nestjs/common");
 const fs_1 = require("fs");
+const article_service_1 = require("../article/article.service");
+const admin_service_1 = require("../admin/admin.service");
+const feedback_service_1 = require("../feedback/feedback.service");
 const images_repository_1 = require("./images.repository");
 const upsert_mapping_1 = require("./mappings/upsert.mapping");
+const common_2 = require("../../../common");
 let DashboardImagesService = class DashboardImagesService {
-    constructor(repository) {
+    constructor(repository, articleService, adminService, feedbackService) {
         this.repository = repository;
+        this.articleService = articleService;
+        this.adminService = adminService;
+        this.feedbackService = feedbackService;
     }
-    async uploadImage(files, property_id) {
+    async uploadImages(files, reference_id, reference_type) {
+        console.log('befiore check');
         const checkDataExist = await this.repository.find({
-            where: { property_id },
+            where: { reference_id, reference_type },
         });
+        console.log('after check');
         if (checkDataExist.length > 0) {
             for (const exist of checkDataExist) {
                 await this.repository.delete({ media_id: exist.media_id });
                 const filePath = exist.path + '/' + exist.name;
                 if ((0, fs_1.existsSync)(filePath)) {
-                    console.log('exist', filePath);
+                    console.log('exist lalu unlink', filePath);
                     (0, fs_1.unlinkSync)(filePath);
                 }
             }
@@ -35,13 +44,28 @@ let DashboardImagesService = class DashboardImagesService {
         if (files.length > 0) {
             const resp = [];
             for (const file of files) {
-                const mapData = await (0, upsert_mapping_1.mapInsertDB)(file, property_id);
+                console.log('file ', file);
+                const mapData = await (0, upsert_mapping_1.mapInsertDB)(file, reference_id, reference_type);
+                console.log('map data', mapData);
                 const saveData = await this.repository.save(mapData);
+                if (reference_type !== common_2.MediaReferenceType.PROPERTY) {
+                    if (reference_type === common_2.MediaReferenceType.ARTICLE) {
+                        await this.articleService.updateImage(reference_id, mapData.full_url);
+                    }
+                    else if (reference_type === common_2.MediaReferenceType.FEEDBACK) {
+                        await this.feedbackService.updateImage(reference_id, mapData.full_url);
+                    }
+                    else {
+                        await this.adminService.updateImage(reference_id, mapData.full_url);
+                    }
+                }
                 resp.push(saveData);
             }
             return resp;
         }
         return null;
+    }
+    async uploaSingleImage(files, property_id) {
     }
     async getImage(image_name) {
         const whitelist = ['.jpeg', '.jpg', '.png'];
@@ -57,10 +81,18 @@ let DashboardImagesService = class DashboardImagesService {
         }
         throw new common_1.HttpException('Data Not Found', common_1.HttpStatus.NOT_FOUND);
     }
+    async findImageJoin(reference_id, reference_type) {
+        return await this.repository.find({
+            where: { reference_id, reference_type },
+        });
+    }
 };
 exports.DashboardImagesService = DashboardImagesService;
 exports.DashboardImagesService = DashboardImagesService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [images_repository_1.DashboardImageRepository])
+    __metadata("design:paramtypes", [images_repository_1.DashboardImageRepository,
+        article_service_1.DashboardArticleService,
+        admin_service_1.AdminService,
+        feedback_service_1.DashboardFeedbackService])
 ], DashboardImagesService);
 //# sourceMappingURL=images.service.js.map

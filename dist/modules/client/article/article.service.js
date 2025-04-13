@@ -13,17 +13,23 @@ exports.ClientArticleService = void 0;
 const common_1 = require("@nestjs/common");
 const view_mapping_1 = require("./mappings/view.mapping");
 const article_repository_1 = require("./article.repository");
+const common_2 = require("../../../common");
 let ClientArticleService = class ClientArticleService {
     constructor(repository) {
         this.repository = repository;
     }
     async getDetail(article_id) {
-        const searchData = await this.repository.findOneBy({ article_id });
+        const searchData = await this.repository.findOneBy({
+            article_id,
+            status_publish: common_2.StatusPublishEnum.PUBLISH,
+        });
         return searchData ? await (0, view_mapping_1.mapDbToResDetail)(searchData) : null;
     }
     async getList(props) {
         let query = {
-            where: {},
+            where: {
+                status_publish: common_2.StatusPublishEnum.PUBLISH,
+            },
         };
         query = await this.repository.sort(query, props);
         query = await this.repository.paginate(query, props);

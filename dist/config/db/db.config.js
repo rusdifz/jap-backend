@@ -10,10 +10,9 @@ const dbConfig = () => ({
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
-        autoLoadEntities: true,
+        autoLoadEntities: false,
         synchronize: false,
-        logging: false,
-        entities: [common_1.ArticleDB, common_1.MediaDB, common_1.PropertiesDB, common_1.UnitsDB, common_1.UsersDB],
+        entities: [common_1.ArticleDB, common_1.FeedbackDB, common_1.MediaDB, common_1.PropertiesDB, common_1.UnitsDB, common_1.UsersDB],
         ssl: {
             rejectUnauthorized: false,
         },

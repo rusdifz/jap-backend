@@ -10,5 +10,6 @@ import { DashboardArticleRepository } from './article.repository';
   imports: [TypeOrmModule.forFeature([ArticleDB])],
   providers: [DashboardArticleRepository, DashboardArticleService],
   controllers: [DashboardArticleController],
+  exports: [DashboardArticleService],
 })
 export class DashboardArticleModule {}

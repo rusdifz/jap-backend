@@ -19,6 +19,7 @@ const swagger_1 = require("@nestjs/swagger");
 const request_dto_1 = require("./dto/request.dto");
 const endpoint_swagger_1 = require("./swaggers/endpoint.swagger");
 const common_2 = require("../../../common");
+const auth_guard_1 = require("../../../middlewares/guards/auth.guard");
 const request_dto_2 = require("./dto/request.dto");
 const properties_service_1 = require("./services/properties.service");
 const properties_generate_file_service_1 = require("./services/properties-generate-file.service");
@@ -48,9 +49,10 @@ let DashboardPropertiesController = class DashboardPropertiesController {
     async convertFileExcelToDB() {
         return await this.service.inputBulkFromExcel();
     }
-    async generatePdfComparisson(res, location, query) {
-        console.log('query', query);
-        const pdfBuffer = await this.serviceGenerateFile.generatePDFComparisson(query.property_id);
+    async generatePdfComparisson(res, location, query, user) {
+        console.log('query comparisson', query);
+        console.log('user', user);
+        const pdfBuffer = await this.serviceGenerateFile.generatePDFComparisson(query.property_id, user);
         const namePdf = 'Building Comparisson - ' + location;
         res.set({
             'Content-Type': 'application/pdf',
@@ -163,8 +165,9 @@ __decorate([
     __param(0, (0, common_1.Res)()),
     __param(1, (0, common_1.Param)('location')),
     __param(2, (0, common_1.Query)()),
+    __param(3, (0, common_2.UserAuth)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, request_dto_1.GeneratePDFDTO]),
+    __metadata("design:paramtypes", [Object, String, request_dto_1.GeneratePDFDTO, Object]),
     __metadata("design:returntype", Promise)
 ], DashboardPropertiesController.prototype, "generatePdfComparisson", null);
 __decorate([
@@ -178,6 +181,7 @@ __decorate([
 ], DashboardPropertiesController.prototype, "generatePdfPropertyDetail", null);
 exports.DashboardPropertiesController = DashboardPropertiesController = __decorate([
     (0, common_1.Controller)('dashboard/properties'),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     __metadata("design:paramtypes", [properties_service_1.DashboardPropertiesService,
         properties_generate_file_service_1.DashboardPropertiesGenerateFileService])
 ], DashboardPropertiesController);

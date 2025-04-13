@@ -295,6 +295,13 @@ export class ReqCreatePropertyDTO implements Partial<IProperty> {
   })
   status_publish: StatusPublishEnum;
 
+  @ApiPropertyOptional({ example: PropertyStatusEnum.LEASE })
+  @IsOptional()
+  @IsEnum(PropertyStatusEnum, {
+    message: 'Value status must be list in enum',
+  })
+  property_status?: PropertyStatusEnum;
+
   @ApiPropertyOptional({ example: PropertyTypeEnum.OFFICE })
   @IsOptional()
   @IsEnum(PropertyTypeEnum, {

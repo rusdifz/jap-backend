@@ -34,7 +34,15 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], ReqCreateFeedbackDTO.prototype, "comment", void 0);
-class ReqUpdateFeedbackDTO extends ReqCreateFeedbackDTO {
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: common_1.StatusPublishEnum.PUBLISH }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsEnum)(common_1.StatusPublishEnum, {
+        message: 'Value status must be list in enum',
+    }),
+    __metadata("design:type", String)
+], ReqCreateFeedbackDTO.prototype, "status_publish", void 0);
+class ReqUpdateFeedbackDTO extends (0, swagger_1.PartialType)(ReqCreateFeedbackDTO) {
 }
 exports.ReqUpdateFeedbackDTO = ReqUpdateFeedbackDTO;
 __decorate([
@@ -46,4 +54,12 @@ __decorate([
 class GetListFeedbackDTO extends common_1.PaginationDTO {
 }
 exports.GetListFeedbackDTO = GetListFeedbackDTO;
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: common_1.StatusPublishEnum.DRAFT }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(common_1.StatusPublishEnum, {
+        message: 'Value status must be list in enum',
+    }),
+    __metadata("design:type", String)
+], GetListFeedbackDTO.prototype, "status_publish", void 0);
 //# sourceMappingURL=request.dto.js.map

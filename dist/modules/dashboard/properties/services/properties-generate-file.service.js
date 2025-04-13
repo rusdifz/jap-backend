@@ -13,6 +13,7 @@ exports.DashboardPropertiesGenerateFileService = void 0;
 const common_1 = require("@nestjs/common");
 const PDFDocument = require('pdfkit-table');
 const PDFDocumentHolland = require('@hollandjake/pdfkit-table');
+const fs_1 = require("fs");
 const typeorm_1 = require("typeorm");
 const properties_repository_1 = require("../properties.repository");
 const currency_helper_1 = require("../../../../common/helpers/currency.helper");
@@ -21,7 +22,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
         this.repository = repository;
         this.rootPathImageJAP = __dirname.replace('dist/modules/dashboard/properties/services', 'public/image-jap-main');
     }
-    async generatePDFComparisson(property_id) {
+    async generatePDFComparisson(property_id, admin) {
         return new Promise(async (resolve, reject) => {
             try {
                 const query = {
@@ -51,6 +52,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     },
                 };
                 const getData = await this.repository.find(query);
+                console.log('data', getData);
                 const buffers = [];
                 const doc = new PDFDocument({
                     margin: 30,
@@ -67,7 +69,9 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     const totalCostBargain = negoRent > 0 ? size * (negoRent + serviceCharge) : 0;
                     return {
                         name: dt.name,
-                        image: dt.images[0].path + '/' + dt.images[0].name,
+                        image: dt.images.length > 0
+                            ? dt.images[0].path + '/' + dt.images[0].name
+                            : '',
                         location: dt.location,
                         property_size: size,
                         total_floor: dt.total_floor ?? 0,
@@ -100,6 +104,66 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                 doc.image(this.rootPathImageJAP + '/cover.png', coverImageX, coverImageY, {
                     width: coverImageWidth,
                     height: coverImageHeight,
+                });
+                doc.image(this.rootPathImageJAP + '/white.jpg', 575, 450, {
+                    width: 200,
+                    height: 150,
+                });
+                doc
+                    .font('Helvetica-Bold')
+                    .fontSize(6)
+                    .fillColor('#000000')
+                    .text('PT. Jardine Asia Pasific', 580, 450, {
+                    align: 'left',
+                    width: 150,
+                });
+                doc
+                    .font('Helvetica-Bold')
+                    .fontSize(6)
+                    .fillColor('#000000')
+                    .text('World Trade Centre, WTC 5, Lt. 11,', 580, 460, {
+                    align: 'left',
+                    width: 150,
+                });
+                doc
+                    .text('Jl. Jend Sudirman Kav. 29-31, Kel. Karet, Setiabudi, Jakarta Selatan -', 580, 470, {
+                    align: 'left',
+                    width: 300,
+                })
+                    .font('Helvetica-Bold')
+                    .fontSize(6)
+                    .fillColor('#000000');
+                doc
+                    .text('DKl Jakarta, 12920', 580, 480, {
+                    align: 'left',
+                    width: 300,
+                })
+                    .font('Helvetica-Bold')
+                    .fontSize(6)
+                    .fillColor('#000000');
+                doc
+                    .font('Helvetica-Bold')
+                    .fontSize(6)
+                    .fillColor('#000000')
+                    .text('T    : 021-50106277', 580, 490, {
+                    align: 'left',
+                    width: 300,
+                });
+                doc
+                    .font('Helvetica-Bold')
+                    .fontSize(6)
+                    .fillColor('#000000')
+                    .text('E    : info@jardineasiapasific.asia', 580, 500, {
+                    align: 'left',
+                    width: 300,
+                });
+                doc
+                    .font('Helvetica-Bold')
+                    .fontSize(6)
+                    .fillColor('#000000')
+                    .text('W    : jardineasiapasific.asia', 580, 510, {
+                    align: 'left',
+                    width: 300,
                 });
                 for (let iTable = 0; iTable < page; iTable++) {
                     doc.addPage();
@@ -161,10 +225,18 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                                     const imgHeight = rectCell.height;
                                     const xPos = rectCell.x + (rectCell.width - imgWidth) / 2;
                                     const yPos = rectCell.y + (rectCell.height - imgHeight) / 2;
-                                    doc.image(value, xPos, yPos, {
-                                        width: imgWidth,
-                                        height: imgHeight,
-                                    });
+                                    if ((0, fs_1.existsSync)(value)) {
+                                        doc.image(value, xPos, yPos, {
+                                            width: imgWidth,
+                                            height: imgHeight,
+                                        });
+                                    }
+                                    else {
+                                        doc.image(this.rootPathImageJAP + '/no-image.jpg', xPos, yPos, {
+                                            width: imgWidth,
+                                            height: imgHeight,
+                                        });
+                                    }
                                 }
                                 else {
                                     const cellHeight = rectCell.height;
@@ -414,6 +486,95 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                 doc.image(this.rootPathImageJAP + '/cover-back.png', coverBackImageX, coverBackImageY, {
                     width: coverBackImageWidth,
                     height: coverBackImageHeight,
+                });
+                doc.image(this.rootPathImageJAP + '/white.jpg', 85, 180, {
+                    width: 250,
+                    height: 200,
+                });
+                const adminName = admin.user.first_name + ' ' + admin.user.last_name;
+                doc
+                    .font('Helvetica-Bold')
+                    .fontSize(10)
+                    .fillColor('#000000')
+                    .text(adminName !== '' ? adminName : admin.user.username, 89, 200, {
+                    align: 'left',
+                    width: 150,
+                });
+                doc
+                    .font('Helvetica')
+                    .fontSize(10)
+                    .fillColor('#000000')
+                    .text(admin.user.phone_number ?? '+62 87870702538', 89, 230, {
+                    align: 'left',
+                    width: 150,
+                });
+                doc
+                    .font('Helvetica')
+                    .fontSize(10)
+                    .fillColor('#000000')
+                    .text('fauzanrusdi20@gmail.com', 89, 245, {
+                    align: 'left',
+                    width: 150,
+                });
+                doc.image(this.rootPathImageJAP + '/white.jpg', 500, 250, {
+                    width: 250,
+                    height: 200,
+                });
+                doc
+                    .font('Helvetica-Bold')
+                    .fontSize(7)
+                    .fillColor('#000000')
+                    .text('PT. Jardine Asia Pasific', 500, 260, {
+                    align: 'left',
+                    width: 150,
+                });
+                doc
+                    .font('Helvetica-Bold')
+                    .fontSize(7)
+                    .fillColor('#000000')
+                    .text('World Trade Centre, WTC 5, Lt. 11,', 500, 273, {
+                    align: 'left',
+                    width: 150,
+                });
+                doc
+                    .text('Jl. Jend Sudirman Kav. 29-31, Kel. Karet, Setiabudi, Jakarta Selatan -', 500, 286, {
+                    align: 'left',
+                    width: 300,
+                })
+                    .font('Helvetica-Bold')
+                    .fontSize(7)
+                    .fillColor('#000000');
+                doc
+                    .text('DKl Jakarta, 12920', 500, 299, {
+                    align: 'left',
+                    width: 300,
+                })
+                    .font('Helvetica-Bold')
+                    .fontSize(7)
+                    .fillColor('#000000');
+                doc
+                    .font('Helvetica-Bold')
+                    .fontSize(7)
+                    .fillColor('#000000')
+                    .text('T    : 021-50106277', 500, 312, {
+                    align: 'left',
+                    width: 300,
+                });
+                doc
+                    .font('Helvetica-Bold')
+                    .fontSize(7)
+                    .fillColor('#000000')
+                    .text('E    : info@jardineasiapasific.asia', 500, 325, {
+                    align: 'left',
+                    width: 300,
+                });
+                doc
+                    .font('Helvetica-Bold')
+                    .fontSize(7)
+                    .fillColor('#000000')
+                    .text('W    : jardineasiapasific.asia', 500, 338, {
+                    align: 'left',
+                    width: 300,
                 });
                 doc.end();
                 doc.on('data', buffers.push.bind(buffers));

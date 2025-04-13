@@ -272,7 +272,7 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => media_entity_1.MediaDB, (media) => media.property, {
         createForeignKeyConstraints: false,
     }),
-    (0, typeorm_1.JoinColumn)({ name: 'property_id', referencedColumnName: 'property_id' }),
+    (0, typeorm_1.JoinColumn)({ name: 'reference_id', referencedColumnName: 'property_id' }),
     __metadata("design:type", Array)
 ], PropertiesDB.prototype, "images", void 0);
 exports.PropertiesDB = PropertiesDB = __decorate([

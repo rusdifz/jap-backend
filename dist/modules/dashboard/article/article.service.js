@@ -32,6 +32,9 @@ let DashboardArticleService = class DashboardArticleService {
         if (props.search_keyword) {
             Object.assign(query.where, { title: (0, typeorm_1.Like)(`%${props.search_keyword}%`) });
         }
+        if (props.status_publish) {
+            Object.assign(query.where, { status_publish: props.status_publish });
+        }
         const searchData = await this.repository.findAndCount(query);
         const mapRes = searchData[0].length > 0 ? await (0, view_mapping_1.mapDbToResList)(searchData[0]) : [];
         return {
@@ -56,6 +59,9 @@ let DashboardArticleService = class DashboardArticleService {
             await this.repository.update({ article_id }, { updated_by: admin?.user?.username ?? 'system' }),
         ]);
         return remove.affected > 0 ? {} : null;
+    }
+    async updateImage(article_id, thumbnail) {
+        return await this.repository.update({ article_id }, { thumbnail });
     }
 };
 exports.DashboardArticleService = DashboardArticleService;

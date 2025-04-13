@@ -80,6 +80,11 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UsersDTO.prototype, "username", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'rusdifz' }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UsersDTO.prototype, "role", void 0);
 class UserDetailDTO {
 }
 exports.UserDetailDTO = UserDetailDTO;

@@ -68,6 +68,7 @@ export declare class ReqCreatePropertyDTO implements Partial<IProperty> {
     location: LocationEnum;
     koordinat_map: string;
     status_publish: StatusPublishEnum;
+    property_status?: PropertyStatusEnum;
     property_type: PropertyTypeEnum;
     completion: string;
     amenities: string[];

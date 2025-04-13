@@ -14,4 +14,5 @@ export declare class DashboardFeedbackService {
     create(body: ReqCreateFeedbackDTO, admin: IJwtUser): Promise<ReqCreateFeedbackDTO>;
     update(body: ReqUpdateFeedbackDTO, admin: IJwtUser): Promise<ReqUpdateFeedbackDTO>;
     delete(feedback_id: number, admin: IJwtUser): Promise<Object>;
+    updateImage(feedback_id: number, profile_image: string): Promise<import("typeorm").UpdateResult>;
 }

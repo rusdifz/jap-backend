@@ -43,6 +43,10 @@ export class DashboardArticleService {
       Object.assign(query.where, { title: Like(`%${props.search_keyword}%`) });
     }
 
+    if (props.status_publish) {
+      Object.assign(query.where, { status_publish: props.status_publish });
+    }
+
     const searchData = await this.repository.findAndCount(query);
 
     const mapRes =
@@ -89,5 +93,9 @@ export class DashboardArticleService {
     ]);
 
     return remove.affected > 0 ? {} : null;
+  }
+
+  async updateImage(article_id: number, thumbnail: string) {
+    return await this.repository.update({ article_id }, { thumbnail });
   }
 }
