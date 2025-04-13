@@ -31,18 +31,22 @@ export const filterImage = (req: any, file: any, cb: any) => {
 export const storageImage = multer.diskStorage({
   destination: (req: any, file: any, callback: any) => {
     const folderName = req.params.reference_type + '/' + req.params.slug;
+    const publicFolderImage =
+      process.env.NODE_ENV === 'localhost'
+        ? 'public/images-local/'
+        : 'public/images/';
+    const publicFolderVideo =
+      process.env.NODE_ENV === 'localhost'
+        ? 'public/videos-local/'
+        : 'public/videos/';
 
     const directory = file.mimetype.includes('image')
-      ? 'public/images/' + folderName
-      : 'public/videos/' + folderName;
-
-    console.log('direc', directory);
+      ? publicFolderImage + folderName
+      : publicFolderVideo + folderName;
 
     const dirname = __dirname
       .toString()
       .replace('dist/middlewares/upload-file', directory);
-
-    console.log('driname', dirname);
 
     if (!existsSync(dirname)) {
       console.log('Directory Image Not Exist.');

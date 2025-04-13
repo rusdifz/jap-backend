@@ -21,7 +21,7 @@ __decorate([
     __metadata("design:type", String)
 ], MediaDB.prototype, "media_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'bigint' }),
+    (0, typeorm_1.Column)({ type: 'bigint', default: 0 }),
     __metadata("design:type", Number)
 ], MediaDB.prototype, "reference_id", void 0);
 __decorate([
@@ -78,7 +78,7 @@ __decorate([
 ], MediaDB.prototype, "deleted_at", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => property_entity_1.PropertiesDB, (property) => property.images, {
-        createForeignKeyConstraints: true,
+        createForeignKeyConstraints: false,
     }),
     (0, typeorm_1.JoinColumn)({ name: 'reference_id', referencedColumnName: 'property_id' }),
     __metadata("design:type", property_entity_1.PropertiesDB)

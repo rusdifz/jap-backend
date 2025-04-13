@@ -221,6 +221,6 @@ export class PropertiesDB implements PropertyAbstract {
   @OneToMany(() => MediaDB, (media) => media.property, {
     createForeignKeyConstraints: false,
   })
-  @JoinColumn({ name: 'reference_id', referencedColumnName: 'property_id' })
+  @JoinColumn({ name: 'property_id', referencedColumnName: 'reference_id' })
   images?: MediaDB[];
 }

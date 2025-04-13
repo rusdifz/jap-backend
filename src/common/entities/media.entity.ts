@@ -23,7 +23,7 @@ export class MediaDB implements IMedia {
   @PrimaryGeneratedColumn('uuid')
   media_id: string;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'bigint', default: 0 })
   reference_id: number;
 
   @Column({
@@ -69,7 +69,7 @@ export class MediaDB implements IMedia {
   deleted_at: Date;
 
   @ManyToOne(() => PropertiesDB, (property) => property.images, {
-    createForeignKeyConstraints: true,
+    createForeignKeyConstraints: false,
   })
   @JoinColumn({ name: 'reference_id', referencedColumnName: 'property_id' })
   property: PropertiesDB;
