@@ -20,7 +20,7 @@ const currency_helper_1 = require("../../../../common/helpers/currency.helper");
 let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFileService {
     constructor(repository) {
         this.repository = repository;
-        this.rootPathImageJAP = __dirname.replace('dist/modules/dashboard/properties/services', 'public/image-jap-main');
+        this.rootPathImageJAP = __dirname.replace('dist/modules/dashboard/properties/services', 'public/images/main');
     }
     async generatePDFComparisson(property_id, admin) {
         return new Promise(async (resolve, reject) => {

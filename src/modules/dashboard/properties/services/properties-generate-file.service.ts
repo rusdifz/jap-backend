@@ -20,7 +20,7 @@ export class DashboardPropertiesGenerateFileService {
 
   private rootPathImageJAP = __dirname.replace(
     'dist/modules/dashboard/properties/services',
-    'public/image-jap-main',
+    'public/images/main',
   );
 
   async generatePDFComparisson(
