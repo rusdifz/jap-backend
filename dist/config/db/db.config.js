@@ -13,9 +13,6 @@ const dbConfig = () => ({
         autoLoadEntities: false,
         synchronize: false,
         entities: [common_1.ArticleDB, common_1.FeedbackDB, common_1.MediaDB, common_1.PropertiesDB, common_1.UnitsDB, common_1.UsersDB],
-        ssl: {
-            rejectUnauthorized: false,
-        },
     },
 });
 exports.dbConfig = dbConfig;

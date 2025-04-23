@@ -18,19 +18,11 @@ async function mapDbToResDetail(db) {
                     value: db.completion,
                 },
                 {
-                    title: 'Phone Deposit',
-                    value: db.phone_deposit,
-                },
-                {
-                    title: 'Service Charge',
-                    value: db.service_charge,
-                },
-                {
                     title: 'Parking Charge Car',
                     value: db.parking_charge_reserved_car,
                 },
                 {
-                    title: 'Service Charge Info',
+                    title: 'Component Service Charge',
                     value: db.service_charge_info,
                 },
                 {

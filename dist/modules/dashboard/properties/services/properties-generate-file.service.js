@@ -854,11 +854,11 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     getData.parking_charge_reserved_car,
                     '',
                     {
-                        value: getData.minimum_lease_term,
+                        value: getData.minimum_lease_term ?? 'tba',
                         rowspan: 3,
                     },
                     {
-                        value: getData.payment_term,
+                        value: getData.payment_term ?? 'tba',
                         rowspan: 3,
                     },
                 ])
@@ -959,17 +959,19 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     textColor: 'white',
                 })
                     .row([
-                    getData.other_info_loading_capacity,
-                    'ISP : ' + getData.telecommunication_isp ? 'Y' : 'N',
-                    'Fiber Optic : ' + getData.telecommunication_fiber_optic
-                        ? 'Y'
-                        : 'N',
-                    'Wifi : ' + getData.telecommunication_wifi ? 'Y' : 'N',
-                    'Sprinkle : ' + getData.fire_safety_sprinkle ? 'Y' : 'N',
-                    'Heat Detector : ' + getData.fire_safety_heat_detector ? 'Y' : 'N',
-                    'Smoke Detector : ' + getData.fire_safety_smoke_detector
-                        ? 'Y'
-                        : 'N',
+                    getData.other_info_loading_capacity ?? 'tba',
+                    getData.telecommunication_isp ? 'ISP : Y' : 'ISP : N',
+                    getData.telecommunication_fiber_optic
+                        ? 'Fiber Optic : Y'
+                        : 'Fiber Optic : N',
+                    getData.telecommunication_wifi ? 'Wifi : Y' : 'Wifi : N',
+                    getData.fire_safety_sprinkle ? 'Sprinkle : Y' : 'Sprinkle : N',
+                    getData.fire_safety_heat_detector
+                        ? 'Heat Detector : Y'
+                        : 'Heat Detector : N',
+                    getData.fire_safety_smoke_detector
+                        ? 'Smoke Detector : Y'
+                        : 'Smoke Detector : N',
                 ]);
                 doc.moveDown(moveDown);
                 doc
@@ -998,9 +1000,9 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     getData.other_info_ac_system == null || ''
                         ? 'tba'
                         : getData.other_info_ac_system,
-                    getData.other_info_ac_zoning,
-                    getData.other_info_electricity,
-                    getData.other_info_power_unit,
+                    getData.other_info_ac_zoning ?? 'tba',
+                    getData.other_info_electricity ?? 'tba',
+                    getData.other_info_power_unit ?? 'tba',
                 ]);
                 doc.moveDown(moveDown);
                 doc

@@ -128,8 +128,6 @@ export class DashboardPropertiesService {
     body: ReqUpdatePropertyDTO,
     admin: IJwtUser,
   ): Promise<ReqUpdatePropertyDTO> {
-    console.log('update', body);
-
     const mapProperty = await mapReqUpdateToDB(body, admin);
     await this.repository.update(
       { property_id: mapProperty.property_id },

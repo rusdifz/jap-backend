@@ -21,9 +21,9 @@ export const dbConfig = (): DbConfigInterface => ({
     synchronize: false, // disabled for auto migration syncronize
     // logging: true,
     entities: [ArticleDB, FeedbackDB, MediaDB, PropertiesDB, UnitsDB, UsersDB],
-    ssl: {
-      rejectUnauthorized: false,
-    },
+    // ssl: {
+    //   rejectUnauthorized: false,
+    // },
     // charset: 'utf8mb4_unicode_ci',
   },
 });

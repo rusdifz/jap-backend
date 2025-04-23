@@ -14,6 +14,7 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("typeorm");
 const view_mapping_1 = require("./mappings/view.mapping");
 const properties_repository_1 = require("./properties.repository");
+const common_2 = require("../../../common");
 let ClientPropertiesService = class ClientPropertiesService {
     constructor(repository) {
         this.repository = repository;
@@ -22,6 +23,7 @@ let ClientPropertiesService = class ClientPropertiesService {
         const query = {
             where: {
                 slug,
+                status_publish: common_2.StatusPublishEnum.PUBLISH,
             },
             relations: {
                 units: true,
@@ -33,7 +35,9 @@ let ClientPropertiesService = class ClientPropertiesService {
     }
     async getList(props) {
         let query = {
-            where: {},
+            where: {
+                status_publish: common_2.StatusPublishEnum.PUBLISH,
+            },
             order: {
                 created_at: 'desc',
             },

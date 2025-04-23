@@ -29,7 +29,6 @@ let IsUniqueConstraint = class IsUniqueConstraint {
         const where = {
             where: { [entityProperty]: value },
         };
-        console.log('art', args.object);
         if (args.object['property_id']) {
             where.where['property_id'] = (0, typeorm_2.Not)(args.object['property_id']);
         }

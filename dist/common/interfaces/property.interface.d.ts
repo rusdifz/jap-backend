@@ -75,21 +75,21 @@ export interface IProperty {
     koordinat_map: string;
     property_type: PropertyTypeEnum;
     price: {
-        phone_deposit: string;
-        booking_deposit: string;
-        security_deposit: string;
-        overtime: {
+        phone_deposit?: string;
+        booking_deposit?: string;
+        security_deposit?: string;
+        overtime?: {
             electricity: string;
             lighting: string;
             ac: string;
         };
-        ground_floor_sqm: number;
+        ground_floor_sqm?: number;
         rent_sqm: number;
-        service_charge: {
+        service_charge?: {
             price: number;
             info: string;
         };
-        parking_charge: {
+        parking_charge?: {
             reserved: {
                 car: string;
                 motorcycle: string;

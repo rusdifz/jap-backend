@@ -71,6 +71,9 @@ export class ResProperties implements Partial<IProperty> {
   slug: string;
   location?: LocationEnum;
   property_type?: PropertyTypeEnum;
+  price: {
+    rent_sqm: number;
+  };
   spesification?: {
     property_size: number;
   };

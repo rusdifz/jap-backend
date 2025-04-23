@@ -4,7 +4,7 @@ import { PropertiesDTO } from './dto/request.dto';
 import { mapDbToResDetail, mapDbToResList } from './mappings/view.mapping';
 import { ResProperties, ResProperty } from './dto/response.dto';
 import { ClientPropertiesRepository } from './properties.repository';
-import { PropertiesDB } from 'src/common';
+import { PropertiesDB, StatusPublishEnum } from 'src/common';
 
 @Injectable()
 export class ClientPropertiesService {
@@ -14,6 +14,7 @@ export class ClientPropertiesService {
     const query: FindOneOptions<PropertiesDB> = {
       where: {
         slug,
+        status_publish: StatusPublishEnum.PUBLISH,
       },
       relations: {
         units: true,
@@ -30,7 +31,9 @@ export class ClientPropertiesService {
   ): Promise<{ data: ResProperties[]; count: number }> {
     // initiate empty where query
     let query: FindManyOptions<PropertiesDB> = {
-      where: {},
+      where: {
+        status_publish: StatusPublishEnum.PUBLISH,
+      },
       order: {
         created_at: 'desc',
       },
