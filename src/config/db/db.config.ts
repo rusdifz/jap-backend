@@ -7,7 +7,10 @@ import {
   PropertiesDB,
   UnitsDB,
   UsersDB,
+  MasterAmenitiesDB,
+  MasterLocationDB,
 } from 'src/common';
+
 export const dbConfig = (): DbConfigInterface => ({
   db: {
     type: 'mysql',
@@ -16,11 +19,20 @@ export const dbConfig = (): DbConfigInterface => ({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    autoLoadEntities: false,
+    autoLoadEntities: true,
     // synchronize: true, // disabled for auto migration syncronize
     synchronize: false, // disabled for auto migration syncronize
     // logging: true,
-    entities: [ArticleDB, FeedbackDB, MediaDB, PropertiesDB, UnitsDB, UsersDB],
+    entities: [
+      ArticleDB,
+      FeedbackDB,
+      MediaDB,
+      PropertiesDB,
+      UnitsDB,
+      UsersDB,
+      MasterAmenitiesDB,
+      MasterLocationDB,
+    ],
     // ssl: {
     //   rejectUnauthorized: false,
     // },

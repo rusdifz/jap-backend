@@ -53,6 +53,7 @@ export interface PropertyAbstract {
     nearby_hospital: string;
     nearby_police: string;
     nearby_mall: string;
+    url_youtube?: string;
     units?: Unit[];
     images?: IMedia[];
     created_at?: Date;
@@ -137,6 +138,7 @@ export interface IProperty {
         electricity: string;
         power_unit: string;
     };
+    url_youtube?: string;
     property_feature?: any[];
     units: Unit[];
     images: IMedia[];

@@ -10,10 +10,13 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 
-import { uploadImageInterceptor } from 'src/middlewares/upload-file';
+import {
+  uploadImageInterceptor,
+  validateImageInterceptor,
+} from 'src/middlewares/upload-file';
 import { ResponseSuccessInterceptor } from 'src/middlewares';
 
 import { DashboardImagesService } from './images.service';
@@ -24,42 +27,27 @@ import { MediaReferenceType } from 'src/common';
 export class DashboardImagesController {
   constructor(private readonly service: DashboardImagesService) {}
 
-  @Post('/upload_image/:reference_type/:slug')
+  @Post('/upload_image')
   @UseInterceptors(
-    FilesInterceptor('media_image', 5, uploadImageInterceptor),
+    FilesInterceptor('media_image', 5, validateImageInterceptor),
     ResponseSuccessInterceptor,
   )
   async uploadImages(
-    // @Body() body: ReqUploadImages,
-    @Body() body: any,
-    @Param('reference_type') referenceType: MediaReferenceType,
+    @Body() body: ReqUploadImages,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
-    console.log('Received files:', files.length);
-
-    return await this.service.uploadImages(
-      files,
-      body.reference_id,
-      referenceType,
-    );
+    body.files = files;
+    return await this.service.uploadImages(body);
   }
 
-  // @Post('/upload_image/:reference_type/:slug')
-  // @UseInterceptors(
-  //   FilesInterceptor('single_image', 1, uploadImageInterceptor),
-  //   ResponseSuccessInterceptor,
-  // )
-  // async uploadSingleImage(
-  //   @Body() body: any,
-  //   @Param('folder_name') slug: string,
-  //   @UploadedFile() file: Express.Multer.File,
-  // ) {
-  //   return await this.service.uploaSingleImage(file, body.property_id);
+  @Get('/delete/image/:public_id')
+  async deleteImage(@Param('public_id') param: string) {
+    return await this.service.deleteData(param);
+  }
+
+  // @Get('/image/:name')
+  // async getImage(@Res() res: Response, @Param('name') name: string) {
+  //   const path = await this.service.getImage(name);
+  //   res.sendFile(path);
   // }
-
-  @Get('/image/:name')
-  async getImage(@Res() res: Response, @Param('name') name: string) {
-    const path = await this.service.getImage(name);
-    res.sendFile(path);
-  }
 }

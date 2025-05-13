@@ -314,6 +314,11 @@ export class ReqCreatePropertyDTO implements Partial<IProperty> {
   @IsString()
   completion: string;
 
+  @ApiPropertyOptional({ example: '' })
+  @IsOptional()
+  @IsString()
+  url_youtube: string;
+
   @ApiPropertyOptional({
     example: ['A/C & Heating', 'Garages', 'Garden', 'Disabled Access'],
   })
@@ -405,4 +410,23 @@ export class GeneratePDFDTO {
   @IsNotEmpty()
   @IsArray()
   property_id: number[];
+}
+
+export class PdfComparisonDTO {
+  @IsNotEmpty()
+  location: string;
+
+  @IsNotEmpty()
+  properties_download: { property_id: number; unit_id: string }[];
+}
+
+export class PdfDetailDTO {
+  @IsNotEmpty()
+  location: string;
+
+  @IsNotEmpty()
+  properties_download: {
+    property_id: number;
+    unit_id: string[];
+  }[];
 }

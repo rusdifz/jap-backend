@@ -31,6 +31,10 @@ let AuthController = class AuthController {
     async create(user, body) {
         return await this.service.signup(body, user);
     }
+    async createSignupAllData(user, body) {
+        console.log('anjay', body);
+        return await this.service.signup(body, user);
+    }
     async changePassword(body) {
         return await this.service.changePassword(body);
     }
@@ -61,6 +65,15 @@ __decorate([
     __metadata("design:paramtypes", [Object, request_dto_1.ReqCreateUserDTO]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "create", null);
+__decorate([
+    (0, common_1.Version)('1'),
+    (0, common_1.Post)('signup/new'),
+    __param(0, (0, common_2.UserAuth)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, request_dto_1.ReqCreateUserDTO]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "createSignupAllData", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'endpoint change password' }),
     (0, swagger_1.ApiHeader)((0, common_2.AuthorizationHeader)(true)),

@@ -20,6 +20,8 @@ export class ResProperty implements IProperty {
   @ApiProperty({ example: 'nana' })
   name: string;
 
+  url_youtube?: string;
+
   slug: string;
   description: string;
   address: string;

@@ -47,6 +47,9 @@ export class PropertiesDB implements PropertyAbstract {
   })
   status_publish: StatusPublishEnum;
 
+  @Column({ type: 'varchar', length: 250, nullable: true })
+  url_youtube?: string;
+
   @Column({
     type: 'enum',
     enum: PropertyStatusEnum,
@@ -159,7 +162,7 @@ export class PropertiesDB implements PropertyAbstract {
     enum: LocationEnum,
     default: LocationEnum.AMPERA,
   })
-  location: LocationEnum;
+  location: LocationEnum | any;
 
   @Column({ type: 'varchar', length: 200, nullable: true })
   koordinat_map: string;

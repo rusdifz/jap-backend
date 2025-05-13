@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GeneratePDFDTO = exports.PropertyDetailDTO = exports.PropertiesDTO = exports.ReqUpdatePropertyDTO = exports.ReqCreatePropertyDTO = void 0;
+exports.PdfDetailDTO = exports.PdfComparisonDTO = exports.GeneratePDFDTO = exports.PropertyDetailDTO = exports.PropertiesDTO = exports.ReqUpdatePropertyDTO = exports.ReqCreatePropertyDTO = void 0;
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 const swagger_1 = require("@nestjs/swagger");
@@ -342,6 +342,12 @@ __decorate([
     __metadata("design:type", String)
 ], ReqCreatePropertyDTO.prototype, "completion", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: '' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ReqCreatePropertyDTO.prototype, "url_youtube", void 0);
+__decorate([
     (0, swagger_1.ApiPropertyOptional)({
         example: ['A/C & Heating', 'Garages', 'Garden', 'Disabled Access'],
     }),
@@ -454,4 +460,26 @@ __decorate([
     (0, class_validator_1.IsArray)(),
     __metadata("design:type", Array)
 ], GeneratePDFDTO.prototype, "property_id", void 0);
+class PdfComparisonDTO {
+}
+exports.PdfComparisonDTO = PdfComparisonDTO;
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], PdfComparisonDTO.prototype, "location", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Array)
+], PdfComparisonDTO.prototype, "properties_download", void 0);
+class PdfDetailDTO {
+}
+exports.PdfDetailDTO = PdfDetailDTO;
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], PdfDetailDTO.prototype, "location", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Array)
+], PdfDetailDTO.prototype, "properties_download", void 0);
 //# sourceMappingURL=request.dto.js.map

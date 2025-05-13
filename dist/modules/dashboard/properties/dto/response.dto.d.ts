@@ -4,6 +4,7 @@ export declare class ResProperty implements IProperty {
     popular: number;
     property_status: PropertyStatusEnum;
     name: string;
+    url_youtube?: string;
     slug: string;
     description: string;
     address: string;

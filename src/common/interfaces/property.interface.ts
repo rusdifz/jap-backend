@@ -70,6 +70,9 @@ export interface PropertyAbstract {
   nearby_police: string;
   nearby_mall: string;
 
+  //media
+  url_youtube?: string;
+
   //join table
   units?: Unit[];
   images?: IMedia[];
@@ -158,6 +161,7 @@ export interface IProperty {
     electricity: string;
     power_unit: string;
   };
+  url_youtube?: string;
   property_feature?: any[];
   //join table
   units: Unit[];

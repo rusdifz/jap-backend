@@ -60,8 +60,25 @@ let DashboardPropertiesController = class DashboardPropertiesController {
         });
         res.send(pdfBuffer);
     }
+    async generatePdfComparissonNew(res, body, user) {
+        const pdfBuffer = await this.serviceGenerateFile.generatePDFComparissonNew(body, user);
+        const namePdf = 'Building Comparisson - ' + body.location;
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `attachment; filename="${namePdf}.pdf"`,
+        });
+        res.send(pdfBuffer);
+    }
     async generatePdfPropertyDetail(res, slug) {
         const pdfBuffer = await this.serviceGenerateFile.generatePDFDetailProperty(slug);
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `attachment; filename="${slug}.pdf"`,
+        });
+        res.send(pdfBuffer);
+    }
+    async generatePdfPropertyDetailNew(res, slug, body) {
+        const pdfBuffer = await this.serviceGenerateFile.generatePDFDetailPropertyDetail(body);
         res.set({
             'Content-Type': 'application/pdf',
             'Content-Disposition': `attachment; filename="${slug}.pdf"`,
@@ -172,6 +189,16 @@ __decorate([
 ], DashboardPropertiesController.prototype, "generatePdfComparisson", null);
 __decorate([
     (0, common_1.Version)('1'),
+    (0, common_1.Post)('pdf/comparison'),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_2.UserAuth)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, request_dto_1.PdfComparisonDTO, Object]),
+    __metadata("design:returntype", Promise)
+], DashboardPropertiesController.prototype, "generatePdfComparissonNew", null);
+__decorate([
+    (0, common_1.Version)('1'),
     (0, common_1.Get)('pdf/detail/:slug'),
     __param(0, (0, common_1.Res)()),
     __param(1, (0, common_1.Param)('slug')),
@@ -179,6 +206,16 @@ __decorate([
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], DashboardPropertiesController.prototype, "generatePdfPropertyDetail", null);
+__decorate([
+    (0, common_1.Version)('1'),
+    (0, common_1.Post)('pdf/detail/:slug'),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Param)('slug')),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String, request_dto_1.PdfDetailDTO]),
+    __metadata("design:returntype", Promise)
+], DashboardPropertiesController.prototype, "generatePdfPropertyDetailNew", null);
 exports.DashboardPropertiesController = DashboardPropertiesController = __decorate([
     (0, common_1.Controller)('dashboard/properties'),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),

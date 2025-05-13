@@ -1,4 +1,5 @@
-import { IJwtUser } from 'src/common';
+import { FindManyOptions, FindOptionsWhere } from 'typeorm';
+import { IJwtUser, PropertiesDB } from 'src/common';
 import { PropertiesDTO } from '../dto/request.dto';
 import { ReqCreatePropertyDTO, ReqUpdatePropertyDTO } from '../dto/request.dto';
 import { ResProperty } from '../dto/response.dto';
@@ -15,6 +16,8 @@ export declare class DashboardPropertiesService {
         data: ResProperty[];
         count: number;
     }>;
+    getListCustom(queryOptions: FindManyOptions<PropertiesDB>): Promise<PropertiesDB[]>;
+    CountData(queryWhere: FindOptionsWhere<PropertiesDB>): Promise<number>;
     create(body: ReqCreatePropertyDTO, admin: IJwtUser): Promise<ReqCreatePropertyDTO>;
     update(body: ReqUpdatePropertyDTO, admin: IJwtUser): Promise<ReqUpdatePropertyDTO>;
     delete(property_id: number, admin: IJwtUser): Promise<Object>;

@@ -6,5 +6,6 @@ export declare class AuthController {
     constructor(service: AuthService);
     login(body: AuthDTO): Promise<JsonWebKey>;
     create(user: IJwtUser, body: ReqCreateUserDTO): Promise<ReqCreateUserDTO>;
+    createSignupAllData(user: IJwtUser, body: ReqCreateUserDTO): Promise<ReqCreateUserDTO>;
     changePassword(body: AuthDTO): Promise<any>;
 }

@@ -71,6 +71,7 @@ export declare class ReqCreatePropertyDTO implements Partial<IProperty> {
     property_status?: PropertyStatusEnum;
     property_type: PropertyTypeEnum;
     completion: string;
+    url_youtube: string;
     amenities: string[];
     price: Price;
     spesification: Spesification;
@@ -97,5 +98,19 @@ export declare class PropertyDetailDTO {
 }
 export declare class GeneratePDFDTO {
     property_id: number[];
+}
+export declare class PdfComparisonDTO {
+    location: string;
+    properties_download: {
+        property_id: number;
+        unit_id: string;
+    }[];
+}
+export declare class PdfDetailDTO {
+    location: string;
+    properties_download: {
+        property_id: number;
+        unit_id: string[];
+    }[];
 }
 export {};

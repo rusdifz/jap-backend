@@ -10,9 +10,18 @@ const dbConfig = () => ({
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
-        autoLoadEntities: false,
+        autoLoadEntities: true,
         synchronize: false,
-        entities: [common_1.ArticleDB, common_1.FeedbackDB, common_1.MediaDB, common_1.PropertiesDB, common_1.UnitsDB, common_1.UsersDB],
+        entities: [
+            common_1.ArticleDB,
+            common_1.FeedbackDB,
+            common_1.MediaDB,
+            common_1.PropertiesDB,
+            common_1.UnitsDB,
+            common_1.UsersDB,
+            common_1.MasterAmenitiesDB,
+            common_1.MasterLocationDB,
+        ],
     },
 });
 exports.dbConfig = dbConfig;

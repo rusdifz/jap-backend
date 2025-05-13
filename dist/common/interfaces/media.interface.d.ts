@@ -7,6 +7,7 @@ export interface IMedia {
     host: string;
     path: string;
     name: string;
+    public_id: string;
     type: MediaTypeEnum;
     full_url: string;
     property?: PropertyAbstract;

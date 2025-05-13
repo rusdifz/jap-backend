@@ -11,6 +11,7 @@ export class ResProperty implements Partial<IProperty> {
   property_id: number;
   name: string;
   slug: string;
+  url_youtube?: string;
   description: string;
   address: string;
   location: LocationEnum;

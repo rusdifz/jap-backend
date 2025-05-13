@@ -1,9 +1,8 @@
-import { Response } from 'express';
 import { DashboardImagesService } from './images.service';
-import { MediaReferenceType } from 'src/common';
+import { ReqUploadImages } from './dto/request.dto';
 export declare class DashboardImagesController {
     private readonly service;
     constructor(service: DashboardImagesService);
-    uploadImages(body: any, referenceType: MediaReferenceType, files: Express.Multer.File[]): Promise<import("src/common").IMedia[]>;
-    getImage(res: Response, name: string): Promise<void>;
+    uploadImages(body: ReqUploadImages, files: Express.Multer.File[]): Promise<import("src/common").IMedia[]>;
+    deleteImage(param: string): Promise<any>;
 }

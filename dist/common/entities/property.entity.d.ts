@@ -9,6 +9,7 @@ export declare class PropertiesDB implements PropertyAbstract {
     slug: string;
     description: string;
     status_publish: StatusPublishEnum;
+    url_youtube?: string;
     property_status: PropertyStatusEnum;
     total_unit: number;
     price_overtime_electricity: string;
@@ -42,7 +43,7 @@ export declare class PropertiesDB implements PropertyAbstract {
     total_floor: number;
     size_floor: number;
     address: string;
-    location: LocationEnum;
+    location: LocationEnum | any;
     koordinat_map: string;
     nearby_bus_station: string;
     nearby_hospital: string;

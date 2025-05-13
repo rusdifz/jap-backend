@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.dayNow = exports.dayjs = void 0;
+exports.monthAgo = exports.dayNow = exports.dayjs = void 0;
 exports.compareInSeconds = compareInSeconds;
 const dayjs = require('dayjs');
 exports.dayjs = dayjs;
@@ -15,5 +15,6 @@ function compareInSeconds(dateA, dateB) {
     const diffInSeconds = diffInMilliseconds / 1000;
     return diffInSeconds;
 }
-exports.dayNow = dayjs().tz("Asia/Jakarta").format();
+exports.dayNow = dayjs().tz('Asia/Jakarta').format();
+exports.monthAgo = dayjs().subtract(1, 'month').format('YYYY-MM-DD');
 //# sourceMappingURL=date.helper.js.map

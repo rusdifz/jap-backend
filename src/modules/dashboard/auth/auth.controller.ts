@@ -59,6 +59,16 @@ export class AuthController {
     return await this.service.signup(body, user);
   }
 
+  @Version('1')
+  @Post('signup/new')
+  async createSignupAllData(
+    @UserAuth() user: IJwtUser,
+    @Body() body: ReqCreateUserDTO,
+  ) {
+    console.log('anjay', body);
+    return await this.service.signup(body, user);
+  }
+
   @ApiOperation({ summary: 'endpoint change password' })
   @ApiHeader(AuthorizationHeader(true))
   @ApiOkResponse(swgLoginOK)

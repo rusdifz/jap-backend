@@ -8,6 +8,7 @@ export declare class MediaDB implements IMedia {
     host: string;
     path: string;
     name: string;
+    public_id: string;
     type: MediaTypeEnum;
     mimetype: MimeTypeEnum | string;
     full_url: string;

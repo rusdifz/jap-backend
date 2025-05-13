@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadImageInterceptor = exports.storageImage = exports.filterImage = void 0;
+exports.validateImageInterceptor = exports.uploadImageInterceptor = exports.storageImage = exports.filterImage = void 0;
 const common_1 = require("@nestjs/common");
 const multer = require("multer");
 const fs_1 = require("fs");
@@ -17,6 +17,7 @@ const filterImage = (req, file, cb) => {
         'video/mpeg',
         'video/webm',
     ];
+    console.log('file type', file.mimetype);
     if (!whitelist.includes(file.mimetype)) {
         return cb(new common_1.HttpException('file is not allowed', common_1.HttpStatus.BAD_REQUEST), null);
     }
@@ -47,7 +48,7 @@ exports.storageImage = multer.diskStorage({
         else {
             console.log('Directory Image Exists.');
         }
-        callback(null, dirname);
+        callback(null, '');
     },
     filename: (req, file, callback) => {
         const timestamp = (0, common_2.dayjs)().format('YYMMDDHHmmss');
@@ -59,6 +60,10 @@ exports.storageImage = multer.diskStorage({
 });
 exports.uploadImageInterceptor = {
     storage: exports.storageImage,
+    fileFilter: exports.filterImage,
+    limits: { fileSize: 50 * 1024 * 1024 },
+};
+exports.validateImageInterceptor = {
     fileFilter: exports.filterImage,
     limits: { fileSize: 50 * 1024 * 1024 },
 };

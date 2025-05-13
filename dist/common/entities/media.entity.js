@@ -45,6 +45,10 @@ __decorate([
     __metadata("design:type", String)
 ], MediaDB.prototype, "name", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: true }),
+    __metadata("design:type", String)
+], MediaDB.prototype, "public_id", void 0);
+__decorate([
     (0, typeorm_1.Column)({
         type: 'enum',
         enum: enums_1.MediaTypeEnum,

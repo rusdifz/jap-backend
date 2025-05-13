@@ -14,20 +14,16 @@ async function mapDbToResDetail(db) {
                     value: db.property_type,
                 },
                 {
+                    title: 'Parking Charge Motorcycle',
+                    value: db.parking_charge_reserved_motorcycle,
+                },
+                {
                     title: 'Completion',
                     value: db.completion,
                 },
                 {
                     title: 'Parking Charge Car',
                     value: db.parking_charge_reserved_car,
-                },
-                {
-                    title: 'Component Service Charge',
-                    value: db.service_charge_info,
-                },
-                {
-                    title: 'Parking Charge Motorcycle',
-                    value: db.parking_charge_reserved_motorcycle,
                 },
                 {
                     title: 'Office Hour Weekday',
@@ -42,7 +38,7 @@ async function mapDbToResDetail(db) {
                     value: db.office_hours_weekend,
                 },
                 {
-                    title: 'Size Floor',
+                    title: 'Typical Floor Size',
                     value: db.size_floor,
                 },
             ],
@@ -69,10 +65,6 @@ async function mapDbToResDetail(db) {
                 },
             ],
         },
-        {
-            id: 3,
-            title: 'Amenities',
-        },
     ];
     return {
         property_id: db.property_id,
@@ -80,6 +72,7 @@ async function mapDbToResDetail(db) {
         name: db.name,
         slug: db.slug,
         description: db.description,
+        url_youtube: 'https://www.youtube.com/watch?v=hrMkfNN0KjM&list=RDhrMkfNN0KjM&start_radio=1',
         address: db.address,
         location: db.location,
         koordinat_map: db.koordinat_map,

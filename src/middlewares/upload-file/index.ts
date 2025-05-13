@@ -16,6 +16,8 @@ export const filterImage = (req: any, file: any, cb: any) => {
     'video/webm',
   ];
 
+  console.log('file type', file.mimetype);
+
   if (!whitelist.includes(file.mimetype)) {
     return cb(
       new HttpException('file is not allowed', HttpStatus.BAD_REQUEST),
@@ -56,7 +58,7 @@ export const storageImage = multer.diskStorage({
       console.log('Directory Image Exists.');
     }
 
-    callback(null, dirname);
+    callback(null, '');
   },
   filename: (req: any, file: any, callback: any) => {
     const timestamp = dayjs().format('YYMMDDHHmmss');
@@ -70,6 +72,11 @@ export const storageImage = multer.diskStorage({
 
 export const uploadImageInterceptor = {
   storage: storageImage,
+  fileFilter: filterImage,
+  limits: { fileSize: 50 * 1024 * 1024 }, //max 50 mb
+};
+
+export const validateImageInterceptor = {
   fileFilter: filterImage,
   limits: { fileSize: 50 * 1024 * 1024 }, //max 50 mb
 };

@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import { MurLockService } from 'murlock';
 
 import { IJwtUser } from 'src/common';
 
@@ -36,10 +37,8 @@ export class AuthService {
   }
 
   //function for create user
-  async signup(
-    payload: ReqCreateUserDTO,
-    admin: IJwtUser,
-  ): Promise<ReqCreateUserDTO> {
+
+  async signup(payload: ReqCreateUserDTO, admin: IJwtUser) {
     payload.password = await bcrypt.hash(payload.password, 10);
 
     payload['created_by'] = admin?.user?.username ?? 'system';

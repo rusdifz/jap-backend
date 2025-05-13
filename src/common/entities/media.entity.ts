@@ -24,7 +24,7 @@ export class MediaDB implements IMedia {
   media_id: string;
 
   @Column({ type: 'bigint', default: 0 })
-  reference_id: number;
+  reference_id: number; //id dari file parent yang berkaitan
 
   @Column({
     type: 'enum',
@@ -34,13 +34,16 @@ export class MediaDB implements IMedia {
   reference_type: MediaReferenceType;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  host: string;
+  host: string; //nama hosting cloudinary
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  path: string;
+  path: string; //folder name in cloudinary
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   name: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  public_id: string; //public id
 
   @Column({
     type: 'enum',

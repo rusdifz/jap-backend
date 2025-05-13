@@ -12,29 +12,18 @@ export async function mapDbToResDetail(db: PropertiesDB): Promise<ResProperty> {
           value: db.property_type,
         },
         {
+          title: 'Parking Charge Motorcycle',
+          value: db.parking_charge_reserved_motorcycle,
+        },
+        {
           title: 'Completion',
           value: db.completion,
         },
-        // {
-        //   title: 'Phone Deposit',
-        //   value: db.phone_deposit,
-        // },
-        // {
-        //   title: 'Service Charge',
-        //   value: db.service_charge,
-        // },
         {
           title: 'Parking Charge Car',
           value: db.parking_charge_reserved_car,
         },
-        {
-          title: 'Component Service Charge',
-          value: db.service_charge_info,
-        },
-        {
-          title: 'Parking Charge Motorcycle',
-          value: db.parking_charge_reserved_motorcycle,
-        },
+
         {
           title: 'Office Hour Weekday',
           value: db.office_hours_weekday,
@@ -48,9 +37,13 @@ export async function mapDbToResDetail(db: PropertiesDB): Promise<ResProperty> {
           value: db.office_hours_weekend,
         },
         {
-          title: 'Size Floor',
+          title: 'Typical Floor Size',
           value: db.size_floor,
         },
+        // {
+        //   title: 'Component Service Charge',
+        //   value: db.service_charge_info,
+        // },
       ],
     },
     {
@@ -75,10 +68,6 @@ export async function mapDbToResDetail(db: PropertiesDB): Promise<ResProperty> {
         },
       ],
     },
-    {
-      id: 3,
-      title: 'Amenities',
-    },
   ];
 
   return {
@@ -87,6 +76,9 @@ export async function mapDbToResDetail(db: PropertiesDB): Promise<ResProperty> {
     name: db.name,
     slug: db.slug,
     description: db.description,
+    // url_youtube: db.url_youtube,
+    url_youtube:
+      'https://www.youtube.com/watch?v=hrMkfNN0KjM&list=RDhrMkfNN0KjM&start_radio=1',
     address: db.address,
     location: db.location,
     koordinat_map: db.koordinat_map,

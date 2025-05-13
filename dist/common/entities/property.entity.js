@@ -46,6 +46,10 @@ __decorate([
     __metadata("design:type", String)
 ], PropertiesDB.prototype, "status_publish", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 250, nullable: true }),
+    __metadata("design:type", String)
+], PropertiesDB.prototype, "url_youtube", void 0);
+__decorate([
     (0, typeorm_1.Column)({
         type: 'enum',
         enum: common_1.PropertyStatusEnum,
@@ -191,7 +195,7 @@ __decorate([
         enum: common_1.LocationEnum,
         default: common_1.LocationEnum.AMPERA,
     }),
-    __metadata("design:type", String)
+    __metadata("design:type", Object)
 ], PropertiesDB.prototype, "location", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 200, nullable: true }),

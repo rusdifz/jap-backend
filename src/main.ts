@@ -46,7 +46,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseSuccessInterceptor());
   app.useGlobalFilters(new ResponseErrorInterceptor());
 
-  // app.useGlobalGuards(new CommonHeaderGuard());
+  app.useGlobalGuards(new CommonHeaderGuard());
 
   app.setGlobalPrefix('api');
 

@@ -1,4 +1,4 @@
-import { GeneratePDFDTO, ReqCreatePropertyDTO, ReqUpdatePropertyDTO } from './dto/request.dto';
+import { GeneratePDFDTO, PdfComparisonDTO, PdfDetailDTO, ReqCreatePropertyDTO, ReqUpdatePropertyDTO } from './dto/request.dto';
 import { IJwtUser } from 'src/common';
 import { PropertiesDTO } from './dto/request.dto';
 import { DashboardPropertiesService } from './services/properties.service';
@@ -18,5 +18,7 @@ export declare class DashboardPropertiesController {
     checkForStaleDataOlderThanOneMonth(): Promise<any[]>;
     convertFileExcelToDB(): Promise<any[]>;
     generatePdfComparisson(res: any, location: string, query: GeneratePDFDTO, user: IJwtUser): Promise<void>;
+    generatePdfComparissonNew(res: any, body: PdfComparisonDTO, user: IJwtUser): Promise<void>;
     generatePdfPropertyDetail(res: any, slug: string): Promise<void>;
+    generatePdfPropertyDetailNew(res: any, slug: string, body: PdfDetailDTO): Promise<void>;
 }

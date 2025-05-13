@@ -20,6 +20,7 @@ async function bootstrap() {
     app.useGlobalInterceptors(new common_1.ClassSerializerInterceptor(app.get(core_1.Reflector)));
     app.useGlobalInterceptors(new middlewares_1.ResponseSuccessInterceptor());
     app.useGlobalFilters(new middlewares_1.ResponseErrorInterceptor());
+    app.useGlobalGuards(new middlewares_1.CommonHeaderGuard());
     app.setGlobalPrefix('api');
     app.enableCors({
         origin: process.env.FRONTEND_URL,

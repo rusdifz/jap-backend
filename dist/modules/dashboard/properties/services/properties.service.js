@@ -65,6 +65,12 @@ let DashboardPropertiesService = class DashboardPropertiesService {
         const properties = search[0].length > 0 ? await (0, view_mapping_1.mapDbToResList)(search[0]) : [];
         return { data: properties, count: search[1] };
     }
+    async getListCustom(queryOptions) {
+        return await this.repository.find(queryOptions);
+    }
+    async CountData(queryWhere) {
+        return await this.repository.count({ where: { ...queryWhere } });
+    }
     async create(body, admin) {
         const mapProperty = await (0, upsert_mapping_1.mapReqCreateToDb)(body, admin);
         const saveData = await this.repository.save(mapProperty);
@@ -98,7 +104,6 @@ let DashboardPropertiesService = class DashboardPropertiesService {
         return null;
     }
     async checkForStaleDataOlderThanOneMonth() {
-        const monthAgo = (0, common_2.dayjs)().subtract(1, 'month').format('YYYY-MM-DD');
         const properties = await this.repository.find({
             select: {
                 property_id: true,
@@ -107,7 +112,7 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                 updated_at: true,
             },
             where: {
-                updated_at: (0, typeorm_1.LessThanOrEqual)(monthAgo),
+                updated_at: (0, typeorm_1.LessThanOrEqual)(common_2.monthAgo),
             },
         });
         let message = [];
@@ -144,7 +149,10 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                 const property = {
                     name: dt.nama_gedung,
                     popular: 0,
-                    description: dt.description ?? '',
+                    description: dt.description ??
+                        dt.nama_gedung +
+                            ' adalah gedung perkantoran dengan lokasi yang strategis, akses mudah, serta kapasitas parkir yang luas. Gedung ini memiliki luas bangunan sekitar 25.386 meter persegi dan total 30 lantai, serta dilengkapi fasilitas gedung mulai dari 7 lift dalam dua zona (low zone dan high zone), 1 service lift, kantin, ATM, bank, parkir untuk total sekitar  1000 unit kendaraan, keamanan selama 24 jam, system back-up power dan internet berkecepatan tinggi. Wisma Nusantara adalah gedung grade B yang lokasinya berada di jalan M.H. Thamrin No. 59 Jakarta Pusat. Gedung ini berdekatan dengan jalan Sudirman, tanah abang, menteng. Sarana transportasi umum  mudah didapatkan di area gedung ini mulai dari bus kota (Metro Mini, Mayasari Bakti, PPD, Agung Bhakti, dan Kopaja), TransJakarta , taksi, transportasi online, stasiun KRL sudirman dan MRT.',
+                    url_youtube: '',
                     address: dt.address ?? '',
                     location: common_2.LocationEnum.THAMRIN,
                     koordinat_map: dt.koordinat_map ?? dt.address ?? dt.building,

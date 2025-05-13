@@ -5,9 +5,12 @@ import { readFileSync } from 'fs';
 import {
   FindManyOptions,
   FindOneOptions,
+  FindOptionsSelect,
+  FindOptionsWhere,
   In,
   LessThanOrEqual,
   Like,
+  MoreThanOrEqual,
 } from 'typeorm';
 
 import {
@@ -20,6 +23,7 @@ import {
   PropertiesDB,
   dayjs,
   MediaReferenceType,
+  monthAgo,
 } from 'src/common';
 
 import { PropertiesDTO } from '../dto/request.dto';
@@ -71,9 +75,6 @@ export class DashboardPropertiesService {
     // initiate empty where query
     let query: FindManyOptions<PropertiesDB> = {
       where: {},
-      // order: {
-      //   created_at: 'desc',
-      // },
       relations: { units: true },
     };
 
@@ -110,6 +111,14 @@ export class DashboardPropertiesService {
       search[0].length > 0 ? await mapDbToResList(search[0]) : [];
 
     return { data: properties, count: search[1] };
+  }
+
+  async getListCustom(queryOptions: FindManyOptions<PropertiesDB>) {
+    return await this.repository.find(queryOptions);
+  }
+
+  async CountData(queryWhere: FindOptionsWhere<PropertiesDB>) {
+    return await this.repository.count({ where: { ...queryWhere } });
   }
 
   async create(
@@ -180,8 +189,6 @@ export class DashboardPropertiesService {
 
   //notification ketika data tidak di update sebulan
   async checkForStaleDataOlderThanOneMonth() {
-    const monthAgo = dayjs().subtract(1, 'month').format('YYYY-MM-DD');
-
     const properties = await this.repository.find({
       select: {
         property_id: true,
@@ -250,7 +257,11 @@ export class DashboardPropertiesService {
         const property: ReqCreatePropertyDTO = {
           name: dt.nama_gedung,
           popular: 0,
-          description: dt.description ?? '',
+          description:
+            dt.description ??
+            dt.nama_gedung +
+              ' adalah gedung perkantoran dengan lokasi yang strategis, akses mudah, serta kapasitas parkir yang luas. Gedung ini memiliki luas bangunan sekitar 25.386 meter persegi dan total 30 lantai, serta dilengkapi fasilitas gedung mulai dari 7 lift dalam dua zona (low zone dan high zone), 1 service lift, kantin, ATM, bank, parkir untuk total sekitar  1000 unit kendaraan, keamanan selama 24 jam, system back-up power dan internet berkecepatan tinggi. Wisma Nusantara adalah gedung grade B yang lokasinya berada di jalan M.H. Thamrin No. 59 Jakarta Pusat. Gedung ini berdekatan dengan jalan Sudirman, tanah abang, menteng. Sarana transportasi umum  mudah didapatkan di area gedung ini mulai dari bus kota (Metro Mini, Mayasari Bakti, PPD, Agung Bhakti, dan Kopaja), TransJakarta , taksi, transportasi online, stasiun KRL sudirman dan MRT.',
+          url_youtube: '',
           address: dt.address ?? '',
           location: LocationEnum.THAMRIN,
           koordinat_map: dt.koordinat_map ?? dt.address ?? dt.building,

@@ -17,11 +17,12 @@ import {
   ApiHeader,
   ApiOkResponse,
   ApiOperation,
-  ApiTags,
 } from '@nestjs/swagger';
 
 import {
   GeneratePDFDTO,
+  PdfComparisonDTO,
+  PdfDetailDTO,
   ReqCreatePropertyDTO,
   ReqUpdatePropertyDTO,
 } from './dto/request.dto';
@@ -31,14 +32,7 @@ import {
   swgGetListOK,
 } from './swaggers/endpoint.swagger';
 
-import {
-  AuthorizationHeader,
-  BodyParam,
-  CommonHeaders,
-  IJwtUser,
-  swgDeleteOK,
-  UserAuth,
-} from 'src/common';
+import { AuthorizationHeader, BodyParam, IJwtUser, UserAuth } from 'src/common';
 
 import { AuthGuard } from '../../../middlewares/guards/auth.guard';
 
@@ -173,6 +167,26 @@ export class DashboardPropertiesController {
   }
 
   @Version('1')
+  @Post('pdf/comparison')
+  async generatePdfComparissonNew(
+    @Res() res: any,
+    @Body() body: PdfComparisonDTO,
+    @UserAuth() user: IJwtUser,
+  ) {
+    const pdfBuffer = await this.serviceGenerateFile.generatePDFComparissonNew(
+      body,
+      user,
+    );
+
+    const namePdf = 'Building Comparisson - ' + body.location;
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="${namePdf}.pdf"`,
+    });
+    res.send(pdfBuffer);
+  }
+
+  @Version('1')
   @Get('pdf/detail/:slug')
   async generatePdfPropertyDetail(
     @Res() res: any,
@@ -180,6 +194,23 @@ export class DashboardPropertiesController {
   ) {
     const pdfBuffer =
       await this.serviceGenerateFile.generatePDFDetailProperty(slug);
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="${slug}.pdf"`,
+    });
+    res.send(pdfBuffer);
+  }
+
+  @Version('1')
+  @Post('pdf/detail/:slug')
+  async generatePdfPropertyDetailNew(
+    @Res() res: any,
+    @Param('slug') slug: string,
+    @Body() body: PdfDetailDTO,
+  ) {
+    const pdfBuffer =
+      await this.serviceGenerateFile.generatePDFDetailPropertyDetail(body);
 
     res.set({
       'Content-Type': 'application/pdf',

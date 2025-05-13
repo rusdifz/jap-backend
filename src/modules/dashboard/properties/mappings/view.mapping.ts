@@ -13,6 +13,7 @@ export async function mapDbToResDetail(
     slug: db.slug,
     description: db.description,
     address: db.address,
+    url_youtube: db.url_youtube,
     location: db.location,
     koordinat_map: db.koordinat_map,
     property_type: db.property_type,

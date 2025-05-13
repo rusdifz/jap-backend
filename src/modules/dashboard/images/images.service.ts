@@ -1,14 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { readFileSync, existsSync, unlinkSync } from 'fs';
 
-// import { MediaTypeEnum } from '@libs/common';
+import { CloudinaryFileService } from 'src/libs/cloudinary-file/cloudinary-file.service';
+
 import { DashboardArticleService } from '../article/article.service';
 import { AdminService } from '../admin/admin.service';
 import { DashboardFeedbackService } from '../feedback/feedback.service';
+import { DashboardMasterLocationService } from '../master-location/master-location.service';
 
 import { DashboardImageRepository } from './images.repository';
 import { mapInsertDB } from './mappings/upsert.mapping';
 import { IMedia, MediaReferenceType } from 'src/common';
+import { ReqUploadImages } from './dto/request.dto';
 
 @Injectable()
 export class DashboardImagesService {
@@ -17,62 +20,81 @@ export class DashboardImagesService {
     private readonly articleService: DashboardArticleService,
     private readonly adminService: AdminService,
     private readonly feedbackService: DashboardFeedbackService,
+    private readonly masterLocationService: DashboardMasterLocationService,
+    private readonly cdnService: CloudinaryFileService,
   ) {}
 
-  async uploadImages(
-    files: Express.Multer.File[],
-    reference_id: number,
-    reference_type: MediaReferenceType,
-  ): Promise<IMedia[]> {
+  async uploadImages(body: ReqUploadImages): Promise<IMedia[]> {
     //check data dengan property id tersebut ada atau tidak, jika ada hapus semua
 
-    console.log('befiore check');
+    console.log('before check', body);
 
     const checkDataExist = await this.repository.find({
-      where: { reference_id, reference_type },
+      where: {
+        reference_id: body.reference_id,
+        reference_type: body.reference_type,
+      },
     });
     console.log('after check');
 
     if (checkDataExist.length > 0) {
       for (const exist of checkDataExist) {
-        await this.repository.delete({ media_id: exist.media_id });
-
-        const filePath = exist.path + '/' + exist.name;
-
-        if (existsSync(filePath)) {
-          console.log('exist lalu unlink', filePath);
-          unlinkSync(filePath);
-        }
+        await Promise.all([
+          this.repository.delete({ media_id: exist.media_id }),
+          this.cdnService.deleteFiled(exist.public_id), //delete on cloudinary with public id
+        ]);
       }
     }
 
-    if (files.length > 0) {
-      const resp = [];
-      for (const file of files) {
-        console.log('file ', file);
+    console.log('check exist', checkDataExist);
 
-        const mapData = await mapInsertDB(file, reference_id, reference_type);
-        console.log('map data', mapData);
+    if (body.files.length > 0) {
+      console.log('yes');
+
+      const resp = [];
+      for (const file of body.files) {
+        const folderName = `${body.reference_type}/${body.folder_name}`;
+        //upload to cloudinary
+        const uploadFile = await this.cdnService.FileUpload(file, folderName);
+        console.log('upload file', uploadFile);
+
+        const mapData = await mapInsertDB(
+          file,
+          body.reference_id,
+          body.reference_type,
+          uploadFile,
+        );
+        console.log('ma', mapData);
 
         const saveData = await this.repository.save(mapData);
 
-        if (reference_type !== MediaReferenceType.PROPERTY) {
+        if (body.reference_type !== MediaReferenceType.PROPERTY) {
           //update data profile, article and image
           //sebenernya ini buat make sure aja data urlnya sudah yang terbaru di masing2 image profile, article and feedback
 
-          if (reference_type === MediaReferenceType.ARTICLE) {
+          if (body.reference_type === MediaReferenceType.ARTICLE) {
             await this.articleService.updateImage(
-              reference_id,
+              body.reference_id,
               mapData.full_url,
             );
-          } else if (reference_type === MediaReferenceType.FEEDBACK) {
+          } else if (body.reference_type === MediaReferenceType.FEEDBACK) {
             await this.feedbackService.updateImage(
-              reference_id,
+              body.reference_id,
+              mapData.full_url,
+            );
+          } else if (
+            body.reference_type === MediaReferenceType.MASTER_LOCATION
+          ) {
+            await this.masterLocationService.updateImage(
+              body.reference_id,
               mapData.full_url,
             );
           } else {
             //user profile
-            await this.adminService.updateImage(reference_id, mapData.full_url);
+            await this.adminService.updateImage(
+              body.reference_id,
+              mapData.full_url,
+            );
           }
         }
 
@@ -85,31 +107,8 @@ export class DashboardImagesService {
     return null;
   }
 
-  async uploaSingleImage(files: Express.Multer.File, property_id: number) {
-    //check data dengan property id tersebut ada atau tidak, jika ada hapus semua
-    // const checkDataExist = await this.repository.find({
-    //   where: { property_id },
-    // });
-    // if (checkDataExist.length > 0) {
-    //   for (const exist of checkDataExist) {
-    //     await this.repository.delete({ media_id: exist.media_id });
-    //     const filePath = exist.path + '/' + exist.name;
-    //     if (existsSync(filePath)) {
-    //       console.log('exist', filePath);
-    //       unlinkSync(filePath);
-    //     }
-    //   }
-    // }
-    // if (files.length > 0) {
-    //   const resp = [];
-    //   for (const file of files) {
-    //     const mapData = await mapInsertDB(file, property_id);
-    //     const saveData = await this.repository.save(mapData);
-    //     resp.push(saveData);
-    //   }
-    //   return resp;
-    // }
-    // return null;
+  async deleteData(param: string) {
+    return await this.cdnService.deleteFiled(param);
   }
 
   async getImage(image_name: string): Promise<string> {
@@ -119,7 +118,7 @@ export class DashboardImagesService {
       throw new HttpException('wrong file type', HttpStatus.BAD_REQUEST);
     }
 
-    const getData = await this.repository.findOneBy({ name: image_name });
+    const getData = await this.repository.findOneBy({ public_id: image_name });
 
     if (getData) {
       // const path = __dirname

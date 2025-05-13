@@ -1,39 +1,29 @@
-// import { ArticleDB } from 'src/common/entities';
-// import { ReqCreateArticleDTO, ReqUpdateArticleDTO } from '../dto/request.dto';
-
+import { UploadApiResponse } from 'cloudinary';
 import { MediaDB, MediaReferenceType, MediaTypeEnum } from 'src/common';
 
 export async function mapInsertDB(
   file: Express.Multer.File,
   reference_id: number,
   reference_type: MediaReferenceType,
+  resp_cloudinary: UploadApiResponse | any,
 ): Promise<Partial<MediaDB>> {
   const host = process.env.URL_MEDIA;
+
+  const url = new URL(resp_cloudinary.secure_url);
+  const pathParts = url.pathname.split('/');
+  const fileName = pathParts[pathParts.length - 1];
+
   return {
     reference_id: Number(reference_id),
     reference_type,
     host: host,
-    path: file.destination,
-    name: file.filename,
+    path: resp_cloudinary.folder,
+    public_id: resp_cloudinary.public_id,
     type: file.mimetype.includes('image')
       ? MediaTypeEnum.IMAGE
       : MediaTypeEnum.VIDEO,
     mimetype: file.mimetype,
-    full_url: `${host}/api/media/image/${file.filename}`,
+    full_url: resp_cloudinary.secure_url,
+    name: fileName,
   };
 }
-
-// export async function mapReqUpdateToDB(
-//   payload: ReqUpdateArticleDTO,
-//   username_login: string,
-// ): Promise<Partial<ArticleDB>> {
-//   return {
-//     article_id: payload.article_id,
-//     title: payload.title,
-//     slug: payload['slug'],
-//     content: payload.content,
-//     thumbnail: payload.thumbnail,
-//     status_publish: payload.status_publish,
-//     updated_by: username_login ?? 'admin system',
-//   };
-// }
