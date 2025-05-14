@@ -1427,6 +1427,9 @@ export class DashboardPropertiesGenerateFileService {
               images: true,
             },
           },
+          order: {
+            property_id: 'ASC',
+          },
         };
 
         const getData = await this.unitService.findCustomOptions(queryUnit);

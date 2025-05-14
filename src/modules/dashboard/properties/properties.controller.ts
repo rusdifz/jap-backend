@@ -205,10 +205,9 @@ export class DashboardPropertiesController {
   }
 
   @Version('1')
-  @Post('pdf/detail/:slug')
+  @Post('pdf/detail')
   async generatePdfPropertyDetailNew(
     @Res() res: any,
-    @Param('slug') slug: string,
     @Body() body: PdfDetailDTO,
   ) {
     const pdfBuffer =
@@ -216,7 +215,7 @@ export class DashboardPropertiesController {
 
     res.set({
       'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename="${slug}.pdf"`,
+      'Content-Disposition': `attachment; filename="property-detail-${body.location}.pdf"`,
     });
     res.send(pdfBuffer);
   }
