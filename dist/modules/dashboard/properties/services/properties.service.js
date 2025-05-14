@@ -41,6 +41,7 @@ let DashboardPropertiesService = class DashboardPropertiesService {
         return property ? await (0, view_mapping_1.mapDbToResDetail)(property, images) : null;
     }
     async getList(props) {
+        console.log('props', props);
         let query = {
             where: {},
             relations: { units: true },
@@ -60,6 +61,31 @@ let DashboardPropertiesService = class DashboardPropertiesService {
         }
         if (props.search_keyword) {
             Object.assign(query.where, { name: (0, typeorm_1.Like)(`%${props.search_keyword}%`) });
+        }
+        if (props.condition) {
+            Object.assign(query.where, { units: { condition: props.condition } });
+        }
+        if (props.unit_size) {
+            if (props.unit_size >= 1000) {
+                Object.assign(query.where, {
+                    units: { size: (0, typeorm_1.MoreThanOrEqual)(props.unit_size) },
+                });
+            }
+            else if (props.unit_size == 100) {
+                Object.assign(query.where, {
+                    units: { size: (0, typeorm_1.LessThan)(200) },
+                });
+            }
+            else {
+                Object.assign(query.where, {
+                    units: { size: (0, typeorm_1.Between)(props.unit_size, props.unit_size + 99) },
+                });
+            }
+        }
+        if (props.min_rent_sqm && props.max_rent_sqm) {
+            Object.assign(query.where, {
+                units: { rent_sqm: (0, typeorm_1.Between)(props.min_rent_sqm, props.max_rent_sqm) },
+            });
         }
         const search = await this.repository.findAndCount(query);
         const properties = search[0].length > 0 ? await (0, view_mapping_1.mapDbToResList)(search[0]) : [];

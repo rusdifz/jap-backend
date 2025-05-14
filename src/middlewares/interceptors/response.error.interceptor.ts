@@ -15,15 +15,9 @@ export class ResponseErrorInterceptor implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const request = ctx.getRequest();
     const response = ctx.getResponse<Response>();
-    console.log('aaaa', exception instanceof HttpException);
 
-    // console.log('exception response', exception.getResponse());
-    // console.log('exception status', exception.getStatus());
-    console.log('exception stack', exception.stack);
-    console.log('exception name', exception.name);
     // assign message from thrown exception
     let message = exception.message;
-    console.log('exception message', message);
 
     // get status code from thrown exception if stated when throwing, or ISE if not stated
     let status =
@@ -48,12 +42,10 @@ export class ResponseErrorInterceptor implements ExceptionFilter {
     // MurLockException
     // error object for response error_data
     const errorDatas: ErrorData[] = [];
-    console.log('asas', typeof exception.getResponse);
 
     // check if there is any DTO error, and push to error data message
     if (typeof exception.getResponse === 'function') {
       const resException = exception.getResponse();
-      console.log('res', resException);
 
       const errorDTOs =
         typeof resException === 'object'
@@ -105,6 +97,8 @@ export class ResponseErrorInterceptor implements ExceptionFilter {
       error: errorMessage,
       error_data: errorDatas,
     };
+
+    console.log('error response', responseBody);
 
     response.status(status).json(responseBody);
   }

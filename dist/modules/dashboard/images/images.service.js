@@ -55,9 +55,15 @@ let DashboardImagesService = class DashboardImagesService {
                 const uploadFile = await this.cdnService.FileUpload(file, folderName);
                 console.log('upload file', uploadFile);
                 const mapData = await (0, upsert_mapping_1.mapInsertDB)(file, body.reference_id, body.reference_type, uploadFile);
-                console.log('ma', mapData);
+                console.log('map data', mapData);
                 const saveData = await this.repository.save(mapData);
+                console.log('save', saveData);
+                console.log('body refe', body.reference_type);
+                console.log('ref', common_2.MediaReferenceType.MASTER_LOCATION);
                 if (body.reference_type !== common_2.MediaReferenceType.PROPERTY) {
+                    console.log('masuk', mapData);
+                    console.log('body refe', body.reference_type);
+                    console.log('ref', common_2.MediaReferenceType.MASTER_LOCATION);
                     if (body.reference_type === common_2.MediaReferenceType.ARTICLE) {
                         await this.articleService.updateImage(body.reference_id, mapData.full_url);
                     }
@@ -65,14 +71,17 @@ let DashboardImagesService = class DashboardImagesService {
                         await this.feedbackService.updateImage(body.reference_id, mapData.full_url);
                     }
                     else if (body.reference_type === common_2.MediaReferenceType.MASTER_LOCATION) {
+                        console.log('location');
                         await this.masterLocationService.updateImage(body.reference_id, mapData.full_url);
                     }
                     else {
+                        console.log('masa profile');
                         await this.adminService.updateImage(body.reference_id, mapData.full_url);
                     }
                 }
                 resp.push(saveData);
             }
+            console.log('resp', resp);
             return resp;
         }
         return null;

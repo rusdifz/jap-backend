@@ -27,6 +27,7 @@ import {
   PropertyTypeEnum,
   PaginationDTO,
   PropertyStatusEnum,
+  ConditionUnitEnum,
 } from 'src/common';
 
 class OvertimePrice {
@@ -392,6 +393,22 @@ export class PropertiesDTO extends PaginationDTO {
   @IsOptional()
   @Transform(({ value }) => value?.toLowerCase())
   search_keyword?: string;
+
+  @IsOptional()
+  @IsEnum(ConditionUnitEnum, { message: 'value not found' })
+  condition?: ConditionUnitEnum;
+
+  @IsOptional()
+  @IsNumber()
+  unit_size?: number; //filter luasan
+
+  @IsOptional()
+  @IsNumber()
+  min_rent_sqm?: number;
+
+  @IsOptional()
+  @IsNumber()
+  max_rent_sqm?: number;
 }
 
 export class PropertyDetailDTO {
@@ -413,11 +430,12 @@ export class GeneratePDFDTO {
 }
 
 export class PdfComparisonDTO {
-  @IsNotEmpty()
-  location: string;
+  @IsOptional()
+  location: string = 'JAP';
 
   @IsNotEmpty()
-  properties_download: { property_id: number; unit_id: string }[];
+  // properties_download: { property_id: number; unit_id: string }[];
+  unit_id: string[];
 }
 
 export class PdfDetailDTO {

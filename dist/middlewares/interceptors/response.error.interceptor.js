@@ -14,11 +14,7 @@ let ResponseErrorInterceptor = class ResponseErrorInterceptor {
         const ctx = host.switchToHttp();
         const request = ctx.getRequest();
         const response = ctx.getResponse();
-        console.log('aaaa', exception instanceof common_1.HttpException);
-        console.log('exception stack', exception.stack);
-        console.log('exception name', exception.name);
         let message = exception.message;
-        console.log('exception message', message);
         let status = exception instanceof common_1.HttpException
             ? exception.getStatus()
             : common_1.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -32,10 +28,8 @@ let ResponseErrorInterceptor = class ResponseErrorInterceptor {
             messageObject = [];
         }
         const errorDatas = [];
-        console.log('asas', typeof exception.getResponse);
         if (typeof exception.getResponse === 'function') {
             const resException = exception.getResponse();
-            console.log('res', resException);
             const errorDTOs = typeof resException === 'object'
                 ? resException['message']
                 : resException;
@@ -72,6 +66,7 @@ let ResponseErrorInterceptor = class ResponseErrorInterceptor {
             error: errorMessage,
             error_data: errorDatas,
         };
+        console.log('error response', responseBody);
         response.status(status).json(responseBody);
     }
 };

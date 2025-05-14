@@ -1,4 +1,4 @@
-import { IProperty, StatusPublishEnum, LocationEnum, PropertyTypeEnum, PaginationDTO, PropertyStatusEnum } from 'src/common';
+import { IProperty, StatusPublishEnum, LocationEnum, PropertyTypeEnum, PaginationDTO, PropertyStatusEnum, ConditionUnitEnum } from 'src/common';
 declare class OvertimePrice {
     electricity: string;
     lighting: string;
@@ -91,6 +91,10 @@ export declare class PropertiesDTO extends PaginationDTO {
     property_status?: PropertyStatusEnum;
     amenities?: string[];
     search_keyword?: string;
+    condition?: ConditionUnitEnum;
+    unit_size?: number;
+    min_rent_sqm?: number;
+    max_rent_sqm?: number;
 }
 export declare class PropertyDetailDTO {
     property_id?: number;
@@ -101,10 +105,7 @@ export declare class GeneratePDFDTO {
 }
 export declare class PdfComparisonDTO {
     location: string;
-    properties_download: {
-        property_id: number;
-        unit_id: string;
-    }[];
+    unit_id: string[];
 }
 export declare class PdfDetailDTO {
     location: string;

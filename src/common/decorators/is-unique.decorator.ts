@@ -41,6 +41,10 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
       where.where['slug'] = args.object['slug'];
     }
 
+    if (args.object['id']) {
+      where.where['id'] = Not(args.object['id']);
+    }
+
     const foundEntity = await repositorys.findOne(where);
 
     return !foundEntity;

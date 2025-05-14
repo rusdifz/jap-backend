@@ -3,11 +3,11 @@ import * as XLSX from 'xlsx';
 
 import { readFileSync } from 'fs';
 import {
+  Between,
   FindManyOptions,
   FindOneOptions,
-  FindOptionsSelect,
   FindOptionsWhere,
-  In,
+  LessThan,
   LessThanOrEqual,
   Like,
   MoreThanOrEqual,
@@ -72,6 +72,8 @@ export class DashboardPropertiesService {
   async getList(
     props: PropertiesDTO,
   ): Promise<{ data: ResProperty[]; count: number }> {
+    console.log('props', props);
+
     // initiate empty where query
     let query: FindManyOptions<PropertiesDB> = {
       where: {},
@@ -103,6 +105,32 @@ export class DashboardPropertiesService {
 
     if (props.search_keyword) {
       Object.assign(query.where, { name: Like(`%${props.search_keyword}%`) });
+    }
+
+    if (props.condition) {
+      Object.assign(query.where, { units: { condition: props.condition } });
+    }
+
+    if (props.unit_size) {
+      if (props.unit_size >= 1000) {
+        Object.assign(query.where, {
+          units: { size: MoreThanOrEqual(props.unit_size) },
+        });
+      } else if (props.unit_size == 100) {
+        Object.assign(query.where, {
+          units: { size: LessThan(200) },
+        });
+      } else {
+        Object.assign(query.where, {
+          units: { size: Between(props.unit_size, props.unit_size + 99) },
+        });
+      }
+    }
+
+    if (props.min_rent_sqm && props.max_rent_sqm) {
+      Object.assign(query.where, {
+        units: { rent_sqm: Between(props.min_rent_sqm, props.max_rent_sqm) },
+      });
     }
 
     const search = await this.repository.findAndCount(query);

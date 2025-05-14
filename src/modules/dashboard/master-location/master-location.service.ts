@@ -100,7 +100,12 @@ export class DashboardMasterLocationService {
   }
 
   async updateImage(id: number, url_image: string) {
-    return await this.repository.update({ id }, { url_image });
+    console.log('id', id);
+    console.log('url', url_image);
+    const data = await this.repository.update({ id }, { url_image });
+    console.log('data', data);
+
+    return data;
   }
 
   async getListPosition() {

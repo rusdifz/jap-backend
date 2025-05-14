@@ -43,6 +43,9 @@ let IsUniqueConstraint = class IsUniqueConstraint {
             delete where.where['title'];
             where.where['slug'] = args.object['slug'];
         }
+        if (args.object['id']) {
+            where.where['id'] = (0, typeorm_2.Not)(args.object['id']);
+        }
         const foundEntity = await repositorys.findOne(where);
         return !foundEntity;
     }

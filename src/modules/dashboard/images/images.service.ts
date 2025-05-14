@@ -64,13 +64,18 @@ export class DashboardImagesService {
           body.reference_type,
           uploadFile,
         );
-        console.log('ma', mapData);
+        console.log('map data', mapData);
 
         const saveData = await this.repository.save(mapData);
-
+        console.log('save', saveData);
+        console.log('body refe', body.reference_type);
+        console.log('ref', MediaReferenceType.MASTER_LOCATION);
         if (body.reference_type !== MediaReferenceType.PROPERTY) {
           //update data profile, article and image
           //sebenernya ini buat make sure aja data urlnya sudah yang terbaru di masing2 image profile, article and feedback
+          console.log('masuk', mapData);
+          console.log('body refe', body.reference_type);
+          console.log('ref', MediaReferenceType.MASTER_LOCATION);
 
           if (body.reference_type === MediaReferenceType.ARTICLE) {
             await this.articleService.updateImage(
@@ -85,12 +90,16 @@ export class DashboardImagesService {
           } else if (
             body.reference_type === MediaReferenceType.MASTER_LOCATION
           ) {
+            console.log('location');
+
             await this.masterLocationService.updateImage(
               body.reference_id,
               mapData.full_url,
             );
           } else {
             //user profile
+            console.log('masa profile');
+
             await this.adminService.updateImage(
               body.reference_id,
               mapData.full_url,
@@ -100,6 +109,7 @@ export class DashboardImagesService {
 
         resp.push(saveData);
       }
+      console.log('resp', resp);
 
       return resp;
     }

@@ -437,6 +437,26 @@ __decorate([
     (0, class_transformer_1.Transform)(({ value }) => value?.toLowerCase()),
     __metadata("design:type", String)
 ], PropertiesDTO.prototype, "search_keyword", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(common_1.ConditionUnitEnum, { message: 'value not found' }),
+    __metadata("design:type", String)
+], PropertiesDTO.prototype, "condition", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], PropertiesDTO.prototype, "unit_size", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], PropertiesDTO.prototype, "min_rent_sqm", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], PropertiesDTO.prototype, "max_rent_sqm", void 0);
 class PropertyDetailDTO {
 }
 exports.PropertyDetailDTO = PropertyDetailDTO;
@@ -461,16 +481,19 @@ __decorate([
     __metadata("design:type", Array)
 ], GeneratePDFDTO.prototype, "property_id", void 0);
 class PdfComparisonDTO {
+    constructor() {
+        this.location = 'JAP';
+    }
 }
 exports.PdfComparisonDTO = PdfComparisonDTO;
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], PdfComparisonDTO.prototype, "location", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Array)
-], PdfComparisonDTO.prototype, "properties_download", void 0);
+], PdfComparisonDTO.prototype, "unit_id", void 0);
 class PdfDetailDTO {
 }
 exports.PdfDetailDTO = PdfDetailDTO;

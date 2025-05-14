@@ -17,9 +17,11 @@ const fs_1 = require("fs");
 const typeorm_1 = require("typeorm");
 const properties_repository_1 = require("../properties.repository");
 const currency_helper_1 = require("../../../../common/helpers/currency.helper");
+const units_service_1 = require("../../units/units.service");
 let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFileService {
-    constructor(repository) {
+    constructor(repository, unitService) {
         this.repository = repository;
+        this.unitService = unitService;
         this.rootPathImageJAP = __dirname.replace('dist/modules/dashboard/properties/services', 'public/images/main');
     }
     async generatePDFComparisson(property_id, admin) {
@@ -1082,39 +1084,37 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
     async generatePDFComparissonNew(propertiesData, admin) {
         return new Promise(async (resolve, reject) => {
             try {
-                const propertyIds = propertiesData.properties_download.map((dt) => {
-                    return dt.property_id;
-                });
-                const query = {
+                console.log('props', propertiesData);
+                const queryUnit = {
                     select: {
-                        property_id: true,
-                        name: true,
-                        location: true,
-                        property_size: true,
-                        total_floor: true,
-                        price_overtime_ac: true,
-                        price_overtime_electricity: true,
-                        units: {
-                            unit_id: true,
-                            size: true,
-                            condition: true,
+                        unit_id: true,
+                        size: true,
+                        condition: true,
+                        property: {
+                            property_id: true,
+                            name: true,
+                            location: true,
+                            property_size: true,
+                            total_floor: true,
+                            price_overtime_ac: true,
+                            price_overtime_electricity: true,
+                            images: {
+                                full_url: true,
+                            },
+                            price_rent_sqm: true,
+                            service_charge: true,
                         },
-                        images: {
-                            public_id: true,
-                            path: true,
-                        },
-                        price_rent_sqm: true,
-                        service_charge: true,
                     },
                     where: {
-                        property_id: (0, typeorm_1.In)(propertyIds),
+                        unit_id: (0, typeorm_1.In)(propertiesData.unit_id),
                     },
                     relations: {
-                        units: true,
-                        images: true,
+                        property: {
+                            images: true,
+                        },
                     },
                 };
-                const getData = await this.repository.find(query);
+                const getData = await this.unitService.findCustomOptions(queryUnit);
                 const buffers = [];
                 const doc = new PDFDocument({
                     margin: 30,
@@ -1122,36 +1122,29 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     size: 'A4',
                     layout: 'landscape',
                 });
-                const properties = getData.map((dt) => {
-                    let size = dt.property_size ?? 0;
-                    propertiesData.properties_download.forEach((property) => {
-                        if (property.property_id == dt.property_id) {
-                            const findUnit = dt.units.find((id) => id.unit_id == property.unit_id);
-                            if (findUnit) {
-                                size = findUnit.size;
-                            }
-                        }
-                    });
-                    const priceRent = dt.price_rent_sqm ?? 0;
-                    const serviceCharge = dt.service_charge ?? 0;
+                const propertiesNew = getData.map((dt) => {
+                    let size = dt.size ?? dt.property.property_size ?? 0;
+                    const priceRent = dt.property.price_rent_sqm ?? 0;
+                    const serviceCharge = dt.property.service_charge ?? 0;
                     const costTotal = priceRent > 0 ? size * (priceRent + serviceCharge) : 0;
                     const negoRent = priceRent > 0 ? priceRent - 10000 : 0;
                     const totalCostBargain = negoRent > 0 ? size * (negoRent + serviceCharge) : 0;
                     return {
-                        name: dt.name,
-                        image: dt.images.length > 0
-                            ? dt.images[0].path + '/' + dt.images[0].public_id
+                        unit_id: dt.unit_id,
+                        name: dt.property.name,
+                        image: dt.property.images.length > 0
+                            ? dt.property.images[0].full_url
                             : '',
-                        location: dt.location,
+                        location: dt.property.location,
                         property_size: size,
-                        total_floor: dt.total_floor ?? 0,
-                        price_overtime_ac: dt.price_overtime_ac
-                            ? dt.price_overtime_ac.length > 42
-                                ? dt.price_overtime_ac.toString().substring(0, 42)
-                                : dt.price_overtime_ac
+                        total_floor: dt.property.total_floor ?? 0,
+                        price_overtime_ac: dt.property.price_overtime_ac
+                            ? dt.property.price_overtime_ac.length > 42
+                                ? dt.property.price_overtime_ac.toString().substring(0, 42)
+                                : dt.property.price_overtime_ac
                             : 0,
-                        price_overtime_electricity: dt.price_overtime_electricity ?? 0,
-                        condition: dt.units[0].condition ?? 'Bare',
+                        price_overtime_electricity: dt.property.price_overtime_electricity ?? 0,
+                        condition: dt.condition ?? 'Bare',
                         price_rent_sqm: (0, currency_helper_1.formatCurrency)(priceRent),
                         service_charge: (0, currency_helper_1.formatCurrency)(serviceCharge),
                         cost_total: (0, currency_helper_1.formatCurrency)(costTotal),
@@ -1166,7 +1159,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     };
                 });
                 const dataPerPage = 5;
-                const page = Math.ceil(properties.length / dataPerPage);
+                const page = Math.ceil(propertiesNew.length / dataPerPage);
                 const coverImageWidth = 750;
                 const coverImageHeight = 500;
                 const coverImageX = (doc.page.width - coverImageWidth) / 2;
@@ -1245,12 +1238,12 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     });
                     let databuilding;
                     if (iTable === 0) {
-                        databuilding = properties.slice(iTable, dataPerPage);
+                        databuilding = propertiesNew.slice(iTable, dataPerPage);
                     }
                     else {
                         const start = iTable * dataPerPage;
                         const end = start * dataPerPage;
-                        databuilding = properties.slice(start, end);
+                        databuilding = propertiesNew.slice(start, end);
                     }
                     const headers = [
                         {
@@ -1282,7 +1275,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     for (const dt of databuilding) {
                         headers.push({
                             label: dt.name,
-                            property: dt.name,
+                            property: dt.name + '-' + dt.unit_id,
                             width: 120,
                             headerColor: '#7f7f7f',
                             headerOpacity: 2,
@@ -1339,6 +1332,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                             },
                         });
                     }
+                    console.log('headers', headers);
                     const rowCell1 = [
                         'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry,s standard dummy text ever since the 1500s',
                         'bold:Location',
@@ -1368,6 +1362,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     const row4 = databuilding.map((dt) => {
                         return dt.property_size;
                     });
+                    console.log('property size', row4);
                     const row5 = databuilding.map((dt) => {
                         return dt.total_floor;
                     });
@@ -1472,6 +1467,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         }
                         datas.push(data);
                     }
+                    console.log('datas', datas);
                     const table = {
                         headers: headers,
                         datas: datas,
@@ -2159,6 +2155,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
 exports.DashboardPropertiesGenerateFileService = DashboardPropertiesGenerateFileService;
 exports.DashboardPropertiesGenerateFileService = DashboardPropertiesGenerateFileService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [properties_repository_1.DashboardPropertiesRepository])
+    __metadata("design:paramtypes", [properties_repository_1.DashboardPropertiesRepository,
+        units_service_1.DashboardUnitsService])
 ], DashboardPropertiesGenerateFileService);
 //# sourceMappingURL=properties-generate-file.service.js.map

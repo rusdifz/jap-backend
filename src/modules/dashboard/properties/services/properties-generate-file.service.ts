@@ -6,17 +6,18 @@ const PDFDocumentHolland = require('@hollandjake/pdfkit-table');
 import { existsSync, mkdirSync } from 'fs';
 import { FindManyOptions, FindOneOptions, In } from 'typeorm';
 
-import { IJwtUser, PropertiesDB } from 'src/common';
+import { IJwtUser, PropertiesDB, UnitsDB } from 'src/common';
 
 import { DashboardPropertiesRepository } from '../properties.repository';
 import { formatCurrency } from 'src/common/helpers/currency.helper';
 import { PdfComparisonDTO, PdfDetailDTO } from '../dto/request.dto';
+import { DashboardUnitsService } from '../../units/units.service';
 
 @Injectable()
 export class DashboardPropertiesGenerateFileService {
   constructor(
     private readonly repository: DashboardPropertiesRepository,
-    // private readonly unitService: DashboardUnitsService,
+    private readonly unitService: DashboardUnitsService,
   ) {}
 
   private rootPathImageJAP = __dirname.replace(
@@ -1396,42 +1397,77 @@ export class DashboardPropertiesGenerateFileService {
   ): Promise<Buffer> {
     return new Promise(async (resolve, reject) => {
       try {
-        const propertyIds = propertiesData.properties_download.map((dt) => {
-          return dt.property_id;
-        });
+        console.log('props', propertiesData);
 
-        const query: FindManyOptions<PropertiesDB> = {
+        const queryUnit: FindManyOptions<UnitsDB> = {
           select: {
-            property_id: true,
-            name: true,
-            location: true,
-            property_size: true,
-            total_floor: true,
-            price_overtime_ac: true,
-            price_overtime_electricity: true,
-            units: {
-              unit_id: true,
-              size: true,
-              condition: true,
+            unit_id: true,
+            size: true,
+            condition: true,
+            property: {
+              property_id: true,
+              name: true,
+              location: true,
+              property_size: true,
+              total_floor: true,
+              price_overtime_ac: true,
+              price_overtime_electricity: true,
+              images: {
+                full_url: true,
+              },
+              price_rent_sqm: true,
+              service_charge: true,
             },
-            images: {
-              // name: true,
-              public_id: true,
-              path: true,
-            },
-            price_rent_sqm: true,
-            service_charge: true,
           },
           where: {
-            property_id: In(propertyIds),
+            unit_id: In(propertiesData.unit_id),
           },
           relations: {
-            units: true,
-            images: true,
+            property: {
+              images: true,
+            },
           },
         };
 
-        const getData = await this.repository.find(query);
+        const getData = await this.unitService.findCustomOptions(queryUnit);
+        // console.log('data units', getData);
+
+        // const propertyIds = propertiesData.properties_download.map((dt) => {
+        //   return dt.property_id;
+        // });
+
+        // const query: FindManyOptions<PropertiesDB> = {
+        //   select: {
+        //     property_id: true,
+        //     name: true,
+        //     location: true,
+        //     property_size: true,
+        //     total_floor: true,
+        //     price_overtime_ac: true,
+        //     price_overtime_electricity: true,
+        //     units: {
+        //       unit_id: true,
+        //       size: true,
+        //       condition: true,
+        //     },
+        //     images: {
+        //       // name: true,
+        //       public_id: true,
+        //       path: true,
+        //     },
+        //     price_rent_sqm: true,
+        //     service_charge: true,
+        //   },
+        //   where: {
+        //     property_id: In(propertyIds),
+        //   },
+        //   relations: {
+        //     units: true,
+        //     images: true,
+        //   },
+        // };
+
+        // const getData = await this.repository.find(query);
 
         const buffers: any[] = [];
         const doc = new PDFDocument({
@@ -1441,24 +1477,25 @@ export class DashboardPropertiesGenerateFileService {
           layout: 'landscape',
         });
 
-        const properties: any = getData.map((dt) => {
-          let size = dt.property_size ?? 0;
-          propertiesData.properties_download.forEach((property) => {
-            if (property.property_id == dt.property_id) {
-              //find unit
+        const propertiesNew: any = getData.map((dt) => {
+          let size = dt.size ?? dt.property.property_size ?? 0;
 
-              const findUnit = dt.units.find(
-                (id) => id.unit_id == property.unit_id,
-              );
+          // propertiesData.properties_download.forEach((property) => {
+          //   if (property.property_id == dt.property_id) {
+          //     //find unit
 
-              if (findUnit) {
-                size = findUnit.size;
-              }
-            }
-          });
+          //     const findUnit = dt.units.find(
+          //       (id) => id.unit_id == property.unit_id,
+          //     );
 
-          const priceRent = dt.price_rent_sqm ?? 0;
-          const serviceCharge = dt.service_charge ?? 0;
+          //     if (findUnit) {
+          //       size = findUnit.size;
+          //     }
+          //   }
+          // });
+
+          const priceRent = dt.property.price_rent_sqm ?? 0;
+          const serviceCharge = dt.property.service_charge ?? 0;
 
           const costTotal =
             priceRent > 0 ? size * (priceRent + serviceCharge) : 0;
@@ -1468,21 +1505,23 @@ export class DashboardPropertiesGenerateFileService {
             negoRent > 0 ? size * (negoRent + serviceCharge) : 0;
 
           return {
-            name: dt.name,
+            unit_id: dt.unit_id,
+            name: dt.property.name,
             image:
-              dt.images.length > 0
-                ? dt.images[0].path + '/' + dt.images[0].public_id
+              dt.property.images.length > 0
+                ? dt.property.images[0].full_url
                 : '',
-            location: dt.location,
+            location: dt.property.location,
             property_size: size,
-            total_floor: dt.total_floor ?? 0,
-            price_overtime_ac: dt.price_overtime_ac
-              ? dt.price_overtime_ac.length > 42
-                ? dt.price_overtime_ac.toString().substring(0, 42)
-                : dt.price_overtime_ac
+            total_floor: dt.property.total_floor ?? 0,
+            price_overtime_ac: dt.property.price_overtime_ac
+              ? dt.property.price_overtime_ac.length > 42
+                ? dt.property.price_overtime_ac.toString().substring(0, 42)
+                : dt.property.price_overtime_ac
               : 0,
-            price_overtime_electricity: dt.price_overtime_electricity ?? 0,
-            condition: dt.units[0].condition ?? 'Bare',
+            price_overtime_electricity:
+              dt.property.price_overtime_electricity ?? 0,
+            condition: dt.condition ?? 'Bare',
             price_rent_sqm: formatCurrency(priceRent),
             service_charge: formatCurrency(serviceCharge),
             cost_total: formatCurrency(costTotal),
@@ -1500,7 +1539,7 @@ export class DashboardPropertiesGenerateFileService {
         });
 
         const dataPerPage = 5;
-        const page = Math.ceil(properties.length / dataPerPage);
+        const page = Math.ceil(propertiesNew.length / dataPerPage);
 
         const coverImageWidth = 750; // lebar gambar yang diinginkan
         const coverImageHeight = 500; // tinggi gambar yang diinginkan
@@ -1606,15 +1645,15 @@ export class DashboardPropertiesGenerateFileService {
             },
           );
 
-          let databuilding: PropertiesDB[];
+          let databuilding: any[];
 
           if (iTable === 0) {
-            databuilding = properties.slice(iTable, dataPerPage);
+            databuilding = propertiesNew.slice(iTable, dataPerPage);
           } else {
             //pagination after page 1
             const start = iTable * dataPerPage;
             const end = start * dataPerPage;
-            databuilding = properties.slice(start, end);
+            databuilding = propertiesNew.slice(start, end);
           }
 
           //row 1 building name
@@ -1666,7 +1705,7 @@ export class DashboardPropertiesGenerateFileService {
           for (const dt of databuilding) {
             headers.push({
               label: dt.name,
-              property: dt.name,
+              property: dt.name + '-' + dt.unit_id,
               width: 120,
               headerColor: '#7f7f7f',
               headerOpacity: 2,
@@ -1772,6 +1811,7 @@ export class DashboardPropertiesGenerateFileService {
               },
             });
           }
+          console.log('headers', headers);
 
           //list cell 1
           const rowCell1 = [
@@ -1810,6 +1850,7 @@ export class DashboardPropertiesGenerateFileService {
           const row4 = databuilding.map((dt) => {
             return dt.property_size;
           });
+          console.log('property size', row4);
 
           //row 5 total floor
           const row5 = databuilding.map((dt) => {
@@ -1897,6 +1938,7 @@ export class DashboardPropertiesGenerateFileService {
             row17,
             row18,
           ];
+          // console.log('rows', rows);
 
           let textPositionYEstimateNego: number = 390;
 
@@ -1949,11 +1991,13 @@ export class DashboardPropertiesGenerateFileService {
 
             datas.push(data);
           }
+          console.log('datas', datas);
 
           const table = {
             headers: headers,
             datas: datas,
           };
+          // console.log('tab', table);
 
           //color header : #7f7f7f
           //color kolom 1 #bfbfbf

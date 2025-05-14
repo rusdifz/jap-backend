@@ -138,4 +138,10 @@ export class DashboardUnitsService {
   async countUnitByPropertyId(property_id: number): Promise<number> {
     return await this.repository.count({ where: { property_id } });
   }
+
+  async findCustomOptions(
+    options: FindManyOptions<UnitsDB>,
+  ): Promise<UnitsDB[]> {
+    return await this.repository.find(options);
+  }
 }

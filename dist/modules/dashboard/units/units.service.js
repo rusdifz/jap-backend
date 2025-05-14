@@ -90,6 +90,9 @@ let DashboardUnitsService = class DashboardUnitsService {
     async countUnitByPropertyId(property_id) {
         return await this.repository.count({ where: { property_id } });
     }
+    async findCustomOptions(options) {
+        return await this.repository.find(options);
+    }
 };
 exports.DashboardUnitsService = DashboardUnitsService;
 exports.DashboardUnitsService = DashboardUnitsService = __decorate([
