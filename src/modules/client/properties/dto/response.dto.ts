@@ -16,7 +16,7 @@ export class ResProperty implements Partial<IProperty> {
   address: string;
   location: LocationEnum;
   koordinat_map: string;
-  property_type: PropertyTypeEnum;
+  property_type: string[];
   property_status: PropertyStatusEnum;
   price: {
     phone_deposit: string;
@@ -71,7 +71,7 @@ export class ResProperties implements Partial<IProperty> {
   name: string;
   slug: string;
   location?: LocationEnum;
-  property_type?: PropertyTypeEnum;
+  property_type?: string[];
   price: {
     rent_sqm: number;
   };

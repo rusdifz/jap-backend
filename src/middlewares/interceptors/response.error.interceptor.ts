@@ -15,9 +15,11 @@ export class ResponseErrorInterceptor implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const request = ctx.getRequest();
     const response = ctx.getResponse<Response>();
+    console.log('response', exception);
 
     // assign message from thrown exception
     let message = exception.message;
+    console.log('error message', message);
 
     // get status code from thrown exception if stated when throwing, or ISE if not stated
     let status =

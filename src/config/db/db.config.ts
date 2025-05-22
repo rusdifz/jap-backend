@@ -19,10 +19,10 @@ export const dbConfig = (): DbConfigInterface => ({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    autoLoadEntities: true,
+    autoLoadEntities: false,
     // synchronize: true, // disabled for auto migration syncronize
     synchronize: false, // disabled for auto migration syncronize
-    // logging: true,
+    logging: true,
     entities: [
       ArticleDB,
       FeedbackDB,

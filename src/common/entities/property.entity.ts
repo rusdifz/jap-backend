@@ -37,7 +37,7 @@ export class PropertiesDB implements PropertyAbstract {
   @Column({ type: 'varchar', length: 150 })
   slug: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'longtext', nullable: true })
   description: string;
 
   @Column({
@@ -60,13 +60,13 @@ export class PropertiesDB implements PropertyAbstract {
   @Column({ type: 'int', default: 0 })
   total_unit: number;
 
-  @Column({ type: 'varchar', length: 250, nullable: true })
+  @Column({ type: 'varchar', length: 400, nullable: true })
   price_overtime_electricity: string;
 
-  @Column({ type: 'varchar', length: 250, nullable: true })
+  @Column({ type: 'varchar', length: 400, nullable: true })
   price_overtime_lighting: string;
 
-  @Column({ type: 'varchar', length: 250, nullable: true })
+  @Column({ type: 'varchar', length: 400, nullable: true })
   price_overtime_ac: string;
 
   @Column({ type: 'int', nullable: true })
@@ -126,12 +126,13 @@ export class PropertiesDB implements PropertyAbstract {
   @Column({ type: 'boolean', default: true })
   fire_safety_smoke_detector: boolean;
 
-  @Column({
-    type: 'enum',
-    enum: PropertyTypeEnum,
-    default: PropertyTypeEnum.OFFICE,
-  })
-  property_type: PropertyTypeEnum;
+  // @Column({
+  //   type: 'enum',
+  //   enum: PropertyTypeEnum,
+  //   default: PropertyTypeEnum.OFFICE,
+  // })
+  @Column({ type: 'simple-array' })
+  property_type: string[];
 
   @Column({ type: 'int', nullable: true })
   property_size: number;
@@ -160,7 +161,7 @@ export class PropertiesDB implements PropertyAbstract {
   @Column({
     type: 'enum',
     enum: LocationEnum,
-    default: LocationEnum.AMPERA,
+    default: LocationEnum.KEMANG,
   })
   location: LocationEnum | any;
 

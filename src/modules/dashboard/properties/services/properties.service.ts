@@ -253,7 +253,10 @@ export class DashboardPropertiesService {
   async inputBulkFromExcel() {
     const dirName = __dirname;
 
-    const dirExcel = dirName.replace('/dist/modules/dashboard', '/spread.xlsx');
+    const dirExcel = dirName.replace(
+      '/dist/modules/dashboard/properties/services',
+      '/spread.xlsx',
+    );
 
     const excelData = readFileSync(dirExcel);
 
@@ -263,7 +266,10 @@ export class DashboardPropertiesService {
     });
 
     // Ambil sheet pertama
-    const sheetName = workbook.SheetNames[0];
+    // console.log('work', workbook.SheetNames);
+
+    const sheetName = workbook.SheetNames[1];
+
     const worksheet = workbook.Sheets[sheetName];
 
     // // Konversi data sheet ke JSON
@@ -274,26 +280,34 @@ export class DashboardPropertiesService {
     let propertyId = 0;
 
     const arr = [];
-    console.log('sini', jsonData);
+    // console.log('cuy', jsonData);
 
     for (const dt of jsonData) {
-      console.log('dt', dt);
+      // console.log('dt', dt);
 
       if (dt.no && typeof dt.no === 'number') {
+        console.log('dt', dt);
+
         key = dt.no;
 
+        const description = dt.description
+          ? dt.description.trim()
+          : dt.nama_gedung +
+            ' adalah gedung perkantoran dengan lokasi yang strategis, akses mudah, serta kapasitas parkir yang luas. Gedung ini memiliki luas bangunan sekitar 25.386 meter persegi dan total 30 lantai, serta dilengkapi fasilitas gedung mulai dari 7 lift dalam dua zona (low zone dan high zone), 1 service lift, kantin, ATM, bank, parkir untuk total sekitar  1000 unit kendaraan, keamanan selama 24 jam, system back-up power dan internet berkecepatan tinggi. Wisma Nusantara adalah gedung grade B yang lokasinya berada di jalan M.H. Thamrin No. 59 Jakarta Pusat. Gedung ini berdekatan dengan jalan Sudirman, tanah abang, menteng. Sarana transportasi umum  mudah didapatkan di area gedung ini mulai dari bus kota (Metro Mini, Mayasari Bakti, PPD, Agung Bhakti, dan Kopaja), TransJakarta , taksi, transportasi online, stasiun KRL sudirman dan MRT.';
+
         const property: ReqCreatePropertyDTO = {
-          name: dt.nama_gedung,
+          name: dt.nama_gedung.trim(),
           popular: 0,
-          description:
-            dt.description ??
-            dt.nama_gedung +
-              ' adalah gedung perkantoran dengan lokasi yang strategis, akses mudah, serta kapasitas parkir yang luas. Gedung ini memiliki luas bangunan sekitar 25.386 meter persegi dan total 30 lantai, serta dilengkapi fasilitas gedung mulai dari 7 lift dalam dua zona (low zone dan high zone), 1 service lift, kantin, ATM, bank, parkir untuk total sekitar  1000 unit kendaraan, keamanan selama 24 jam, system back-up power dan internet berkecepatan tinggi. Wisma Nusantara adalah gedung grade B yang lokasinya berada di jalan M.H. Thamrin No. 59 Jakarta Pusat. Gedung ini berdekatan dengan jalan Sudirman, tanah abang, menteng. Sarana transportasi umum  mudah didapatkan di area gedung ini mulai dari bus kota (Metro Mini, Mayasari Bakti, PPD, Agung Bhakti, dan Kopaja), TransJakarta , taksi, transportasi online, stasiun KRL sudirman dan MRT.',
+          description: description,
           url_youtube: '',
-          address: dt.address ?? '',
-          location: LocationEnum.THAMRIN,
-          koordinat_map: dt.koordinat_map ?? dt.address ?? dt.building,
-          property_type: PropertyTypeEnum.OFFICE,
+          address: dt.address ? dt.address.trim() : '',
+          location: LocationEnum.JAKARTA_TIMUR,
+          koordinat_map: dt.koordinat_map
+            ? dt.koordinat_map.trim()
+            : dt.address
+              ? dt.address.trim()
+              : dt.nama_gedung.trim(),
+          property_type: dt.property_type ?? PropertyTypeEnum.OFFICE,
           completion: dt.completion,
           status_publish: StatusPublishEnum.PUBLISH,
           amenities: [
@@ -304,25 +318,39 @@ export class DashboardPropertiesService {
             'Cafe & Coffee Shop',
           ],
           price: {
-            phone_deposit: dt.phone_deposit,
-            booking_deposit: '',
-            security_deposit: '',
-            ground_floor_sqm: dt.ground_floor,
-            rent_sqm: dt.rent
-              ? typeof dt.rent === 'string'
-                ? dt.rent.replace(/\D/g, '')
-                : dt.rent
+            phone_deposit: dt.phone_deposit ?? 'tba',
+            booking_deposit: 'tba',
+            security_deposit: 'tba',
+            ground_floor_sqm: dt.ground_floor ?? 0,
+            rent_sqm: dt.rent_price
+              ? typeof dt.rent_price === 'string'
+                ? isNaN(Number(dt.rent_price))
+                  ? 0
+                  : dt.rent_price.replace(/\D/g, '')
+                : dt.rent_price
               : 0,
             overtime: {
-              electricity: dt.overtime_electric,
-              lighting: dt.overtime_lighting,
-              ac: dt.overtime_ac,
+              electricity: dt.overtime_electricity
+                ? typeof dt.overtime_electric === 'string'
+                  ? dt.overtime_electric.substring(0, 300)
+                  : dt.overtime_electric
+                : 'tba',
+              lighting: dt.overtime_lighting
+                ? typeof dt.overtime_lighting === 'string'
+                  ? dt.overtime_lighting.substring(0, 300)
+                  : dt.overtime_lighting
+                : 'tba',
+              ac: dt.overtime_ac
+                ? typeof dt.overtime_ac === 'string'
+                  ? dt.overtime_ac.substring(0, 400)
+                  : dt.overtime_ac
+                : 'tba',
             },
             service_charge: {
               price: dt.service_charge
                 ? typeof dt.service_charge === 'string'
                   ? dt.service_charge.replace(/\D/g, '')
-                  : dt.service_charge
+                  : dt.service_charge.trim()
                 : 0,
               info: dt.service_charge_info,
             },
@@ -338,13 +366,19 @@ export class DashboardPropertiesService {
             },
           },
           spesification: {
-            property_size: dt.total_size,
+            property_size: dt.total_size
+              ? typeof dt.total_size === 'string'
+                ? dt.total_size === 'tba'
+                : 0
+              : dt.total_size,
             office_hours_weekday: dt.office_hours_weekdays,
             office_hours_weekend: dt.office_hours_weekend,
-            total_floor: dt.floor,
+            total_floor: dt.floor_total,
             size_floor: dt.floor_size
               ? typeof dt.floor_size === 'string'
-                ? dt.floor_size.replace(/\D/g, '')
+                ? dt.floor_size === 'tba'
+                  ? 0
+                  : dt.floor_size.replace(/\D/g, '')
                 : dt.floor_size
               : 0,
             provider_internet: dt.internet,
@@ -378,17 +412,31 @@ export class DashboardPropertiesService {
           },
         };
 
+        console.log('create', property);
+
         const insertProperty: any = await this.create(property, null);
 
         propertyId = insertProperty.property_id;
 
+        // if (dt.unit_size && dt.unit_floor) {
+        // const unitSize = isNaN(
+        //   Number(dt.unit_size.toString().replace(/,/g, '')),
+        // )
+        //   ? 0
+        //   : Number(dt.unit_size.toString().replace(/,/g, ''));
+        // console.log('unit size', unitSize);
+
+        let unitSize = 0;
+
+        if (dt.unitSize) {
+          unitSize = isNaN(Number(dt.unit_size.toString().replace(/,/g, '')))
+            ? 0
+            : Number(dt.unit_size.toString().replace(/,/g, ''));
+        }
+
         const unit: ReqCreateUnitDTO = {
           property_id: propertyId,
-          size: dt.unit_size
-            ? typeof dt.unit_size === 'string'
-              ? Number(dt.unit_size.toString().replace(/,/g, ''))
-              : 0
-            : 0,
+          size: unitSize,
           floor: dt.unit_floor,
           condition: dt.unit_condition
             ? Object.values(dt.unit_condition).includes(ConditionUnitEnum)
@@ -397,34 +445,43 @@ export class DashboardPropertiesService {
             : ConditionUnitEnum.BARE,
           rent_sqm: dt.unit_rent,
           available: true,
-          pic_name: dt.pic_name,
-          pic_phone: dt.pic_phone,
+          // pic_name: dt.pic_name,
+          // pic_phone: dt.pic_phone,
           status: PropertyStatusEnum.LEASE,
         };
 
         await this.unitService.create(unit, null);
+        // }
 
         arr.push(property);
       } else {
+        // if (dt.unit_size && dt.unit_floor) {
+        let unitSize = 0;
+
+        if (dt.unitSize) {
+          unitSize = isNaN(Number(dt.unit_size.toString().replace(/,/g, '')))
+            ? 0
+            : Number(dt.unit_size.toString().replace(/,/g, ''));
+        }
+
         const unit: ReqCreateUnitDTO = {
           property_id: propertyId,
-          size: dt.unit_size
-            ? Number(dt.unit_size.toString().replace(/,/g, ''))
-            : 0,
-          floor: dt.unit_floor,
+          size: unitSize,
+          floor: dt.unit_floor ?? '',
           condition: dt.unit_condition
             ? Object.values(dt.unit_condition).includes(ConditionUnitEnum)
               ? dt.unit_condition
               : ConditionUnitEnum.BARE
             : ConditionUnitEnum.BARE,
           available: true,
-          rent_sqm: dt.unit_rent,
-          pic_name: dt.pic_name,
-          pic_phone: dt.pic_phone,
-          status: PropertyStatusEnum.LEASE,
+          rent_sqm: dt.unit_rent ?? 0,
+          // pic_name: dt.pic_name,
+          // pic_phone: dt.pic_phone,
+          status: PropertyStatusEnum.RENT,
         };
 
         await this.unitService.create(unit, null);
+        // }
       }
     }
 

@@ -28,7 +28,8 @@ export class ResProperty implements IProperty {
   location: LocationEnum;
   koordinat_map: string;
   status_publish: StatusPublishEnum;
-  property_type: PropertyTypeEnum;
+  // property_type: PropertyTypeEnum;
+  property_type: string[];
   price: {
     phone_deposit: string;
     booking_deposit: string;

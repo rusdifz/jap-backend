@@ -274,7 +274,7 @@ export class ReqCreatePropertyDTO implements Partial<IProperty> {
   address: string;
 
   @ApiProperty({
-    example: LocationEnum.AMPERA,
+    example: LocationEnum.PASAR_MINGGU,
   })
   @IsNotEmpty()
   @IsEnum(LocationEnum, {
@@ -305,10 +305,11 @@ export class ReqCreatePropertyDTO implements Partial<IProperty> {
 
   @ApiPropertyOptional({ example: PropertyTypeEnum.OFFICE })
   @IsOptional()
-  @IsEnum(PropertyTypeEnum, {
-    message: 'Value status must be list in enum',
-  })
-  property_type: PropertyTypeEnum;
+  // @IsEnum(PropertyTypeEnum, {
+  //   message: 'Value status must be list in enum',
+  // })
+  // property_type: PropertyTypeEnum;
+  property_type: string[];
 
   @ApiPropertyOptional({ example: 'Q3 2015' })
   @IsOptional()

@@ -29,14 +29,16 @@ export class ClientPropertiesService {
   async getList(
     props: PropertiesDTO,
   ): Promise<{ data: ResProperties[]; count: number }> {
+    console.log('props get list client', props);
+
     // initiate empty where query
     let query: FindManyOptions<PropertiesDB> = {
       where: {
         status_publish: StatusPublishEnum.PUBLISH,
       },
-      order: {
-        created_at: 'desc',
-      },
+      // order: {
+      //   created_at: 'desc',
+      // },
       relations: { units: true, images: true },
     };
 

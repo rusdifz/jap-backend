@@ -26,7 +26,7 @@ export class ReqCreateUnitDTO implements Partial<Unit> {
   @IsNumber()
   size: number;
 
-  @ApiProperty({ example: 10 })
+  @ApiProperty({ example: '10' })
   @IsNotEmpty()
   @IsString()
   floor: string;

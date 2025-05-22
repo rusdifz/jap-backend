@@ -37,7 +37,8 @@ export interface PropertyAbstract {
   //spesification building
   completion: string;
   amenities: string[];
-  property_type: PropertyTypeEnum;
+  // property_type: PropertyTypeEnum;
+  property_type: string[];
   property_size: number;
   office_hours_weekday: string;
   office_hours_weekend: string;
@@ -97,7 +98,7 @@ export interface IProperty {
   address: string;
   location: LocationEnum;
   koordinat_map: string;
-  property_type: PropertyTypeEnum;
+  property_type: string[];
   price: {
     phone_deposit?: string;
     booking_deposit?: string;

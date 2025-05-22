@@ -1404,6 +1404,7 @@ export class DashboardPropertiesGenerateFileService {
             unit_id: true,
             size: true,
             condition: true,
+            floor: true,
             property: {
               property_id: true,
               name: true,
@@ -1515,15 +1516,16 @@ export class DashboardPropertiesGenerateFileService {
                 ? dt.property.images[0].full_url
                 : '',
             location: dt.property.location,
-            property_size: size,
-            total_floor: dt.property.total_floor ?? 0,
+            property_size: size === 0 ? 'TBA' : size,
+            // total_floor: dt.property.total_floor ?? 'TBA',
+            total_floor: dt.floor ?? 'TBA',
             price_overtime_ac: dt.property.price_overtime_ac
               ? dt.property.price_overtime_ac.length > 42
                 ? dt.property.price_overtime_ac.toString().substring(0, 42)
                 : dt.property.price_overtime_ac
-              : 0,
+              : 'TBA',
             price_overtime_electricity:
-              dt.property.price_overtime_electricity ?? 0,
+              dt.property.price_overtime_electricity ?? 'TBA',
             condition: dt.condition ?? 'Bare',
             price_rent_sqm: formatCurrency(priceRent),
             service_charge: formatCurrency(serviceCharge),
@@ -1540,6 +1542,7 @@ export class DashboardPropertiesGenerateFileService {
                 : formatCurrency(0),
           };
         });
+        console.log('florr', propertiesNew);
 
         const dataPerPage = 5;
         const page = Math.ceil(propertiesNew.length / dataPerPage);
@@ -2254,7 +2257,10 @@ export class DashboardPropertiesGenerateFileService {
           // size: 'A4',
         });
 
-        for (const property of propertiesData.properties_download) {
+        for (const [
+          index,
+          property,
+        ] of propertiesData.properties_download.entries()) {
           const query: FindManyOptions<PropertiesDB> = {
             where: {
               property_id: property.property_id,
@@ -2269,6 +2275,7 @@ export class DashboardPropertiesGenerateFileService {
           };
 
           const getData = await this.repository.findOne(query);
+          console.log('get data', getData);
 
           const headerImageX = doc.page.width - doc.page.margins.right - 150;
           const headerImageY = 20;
@@ -2281,6 +2288,7 @@ export class DashboardPropertiesGenerateFileService {
               height: 50,
             },
           );
+          console.log('there');
 
           const imageFooterX = 25;
           const imageFooterY = 690;
@@ -2294,15 +2302,18 @@ export class DashboardPropertiesGenerateFileService {
               height: 40,
             },
           );
+          console.log('asa');
 
           if (getData.images.length > 0) {
-            const imagePropertyPath =
-              getData.images[0].path + '/' + getData.images[0].public_id;
-            doc.image(imagePropertyPath, 25, 70, {
+            // const imagePropertyPath =
+            //   getData.images[0].path + '/' + getData.images[0].public_id;
+            // const imagePropertyPath = '';
+            doc.image('public/images/property/1.png', 25, 70, {
               width: 138,
               height: 188,
             });
           }
+          console.log('this');
 
           let address: any = getData.location;
           // 1. Cari posisi "Jl"
@@ -2405,6 +2416,7 @@ export class DashboardPropertiesGenerateFileService {
 
           if (getData.units.length > 0) {
             getData.units = getData.units.slice(0, 8);
+
             for (const unit of getData.units) {
               const size = unit.size;
               const rentalPrice = getData.price_rent_sqm;
@@ -2423,6 +2435,9 @@ export class DashboardPropertiesGenerateFileService {
               });
             }
           }
+          console.log('dd', dynamicRows.length);
+
+          console.log('dyna', dynamicRows);
 
           // Buat tabel dengan konfigurasi dasar
           const table = doc.table({
@@ -2450,6 +2465,19 @@ export class DashboardPropertiesGenerateFileService {
               rowConfig.styles || {}, // Optional styles
             );
           });
+
+          if (dynamicRows.length < 8) {
+            console.log('asas', 8 - dynamicRows.length);
+
+            for (let index = 0; index <= 10 - dynamicRows.length; index++) {
+              // // const element = array[index];
+              // console.log('index', index);
+              // dynamicRows.push({
+              //   content: ['', '', '', '', '', ''],
+              // });
+              table.row(['', '', '', '', '', '']);
+            }
+          }
 
           doc.moveDown(moveDown);
 
@@ -2817,8 +2845,11 @@ export class DashboardPropertiesGenerateFileService {
               getData.amenities[4],
               '',
             ]);
+          console.log('index', index);
 
-          doc.addPage();
+          // if (index !== propertiesData.properties_download.length) {
+          //   doc.addPage();
+          // }
         }
 
         // Finalisasi PDF
