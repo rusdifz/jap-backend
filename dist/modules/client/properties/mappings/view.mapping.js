@@ -72,7 +72,7 @@ async function mapDbToResDetail(db) {
         name: db.name,
         slug: db.slug,
         description: db.description,
-        url_youtube: 'https://www.youtube.com/watch?v=hrMkfNN0KjM&list=RDhrMkfNN0KjM&start_radio=1',
+        url_youtube: db.url_youtube,
         address: db.address,
         location: db.location,
         koordinat_map: db.koordinat_map,

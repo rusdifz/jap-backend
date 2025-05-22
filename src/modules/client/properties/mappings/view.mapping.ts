@@ -76,9 +76,7 @@ export async function mapDbToResDetail(db: PropertiesDB): Promise<ResProperty> {
     name: db.name,
     slug: db.slug,
     description: db.description,
-    // url_youtube: db.url_youtube,
-    url_youtube:
-      'https://www.youtube.com/watch?v=hrMkfNN0KjM&list=RDhrMkfNN0KjM&start_radio=1',
+    url_youtube: db.url_youtube,
     address: db.address,
     location: db.location,
     koordinat_map: db.koordinat_map,

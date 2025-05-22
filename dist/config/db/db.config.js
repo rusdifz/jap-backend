@@ -12,7 +12,7 @@ const dbConfig = () => ({
         database: process.env.DB_NAME,
         autoLoadEntities: false,
         synchronize: false,
-        logging: true,
+        logging: false,
         entities: [
             common_1.ArticleDB,
             common_1.FeedbackDB,

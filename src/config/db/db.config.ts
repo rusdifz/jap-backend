@@ -22,7 +22,7 @@ export const dbConfig = (): DbConfigInterface => ({
     autoLoadEntities: false,
     // synchronize: true, // disabled for auto migration syncronize
     synchronize: false, // disabled for auto migration syncronize
-    logging: true,
+    logging: false,
     entities: [
       ArticleDB,
       FeedbackDB,
