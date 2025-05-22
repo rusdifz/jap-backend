@@ -1,0 +1,1 @@
+{"version":3,"file":"endpoint.swagger.js","sourceRoot":"","sources":["../../../../../src/modules/dashboard/auth/swaggers/endpoint.swagger.ts"],"names":[],"mappings":";;;AACA,yDAAyD;AAE5C,QAAA,WAAW,GAAuB;IAC7C,WAAW,EAAE,SAAS;IACtB,IAAI,EAAE,4BAAS;CAChB,CAAC;AAEW,QAAA,UAAU,GAAuB;IAC5C,WAAW,EAAE,SAAS;IACtB,IAAI,EAAE,2BAAQ;CACf,CAAC"}
