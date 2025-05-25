@@ -1,5 +1,4 @@
 export enum LocationEnum {
-  JAKARTA_BARAT = 'Jakarta Barat',
   KEMANG = 'Kemang & Ampera',
   KUNINGAN = 'Kuningan',
   MAMPANG = 'Mampang',
