@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConditionUnitEnum = exports.PropertyTypeEnum = exports.PropertyStatusEnum = exports.LocationEnum = void 0;
 var LocationEnum;
 (function (LocationEnum) {
-    LocationEnum["JAKARTA_BARAT"] = "Jakarta Barat";
     LocationEnum["KEMANG"] = "Kemang & Ampera";
     LocationEnum["KUNINGAN"] = "Kuningan";
     LocationEnum["MAMPANG"] = "Mampang";

@@ -20,7 +20,7 @@ async function mapDbToResList(db) {
             slug: dt.slug,
             title: dt.title,
             thumbnail: dt.thumbnail,
-            updated_at: (0, helpers_1.dayjs)(dt.updated_at).format('MMMM D, YYYY'),
+            updated_at: (0, helpers_1.dayjs)(dt.updated_at).format('D MMM YYYY'),
             created_by: dt.created_by,
         };
     });
