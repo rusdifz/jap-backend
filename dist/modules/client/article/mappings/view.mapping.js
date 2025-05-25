@@ -3,13 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.mapDbToResDetail = mapDbToResDetail;
 exports.mapDbToResList = mapDbToResList;
 const helpers_1 = require("../../../../common/helpers");
-async function mapDbToResDetail(db) {
+async function mapDbToResDetail(db, images_activity) {
     return {
         slug: db.slug,
         content: db.content,
         title: db.title,
         thumbnail: db.thumbnail,
-        updated_at: (0, helpers_1.dayjs)(db.updated_at).format('MMMM D, YYYY'),
+        url_youtube: db.url_youtube,
+        images_activity,
+        updated_at: (0, helpers_1.dayjs)(db.updated_at).format('D MMM YYYY'),
         created_by: db.created_by,
         updated_by: db.updated_by,
     };

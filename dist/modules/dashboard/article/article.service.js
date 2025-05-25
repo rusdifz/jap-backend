@@ -21,7 +21,7 @@ let DashboardArticleService = class DashboardArticleService {
     }
     async getDetail(article_id) {
         const searchData = await this.repository.findOneBy({ article_id });
-        return searchData ? await (0, view_mapping_1.mapDbToResDetail)(searchData) : null;
+        return searchData ? await (0, view_mapping_1.mapDbToResDetail)(searchData, []) : null;
     }
     async getList(props) {
         let query = {

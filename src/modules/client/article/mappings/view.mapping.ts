@@ -3,13 +3,18 @@ import { ResDetail, ResList } from '../dto/response.dto';
 
 import { ArticleDB } from '../../../../common/entities/article.entity';
 
-export async function mapDbToResDetail(db: ArticleDB): Promise<ResDetail> {
+export async function mapDbToResDetail(
+  db: ArticleDB,
+  images_activity: any[],
+): Promise<ResDetail> {
   return {
     slug: db.slug,
     content: db.content,
     title: db.title,
     thumbnail: db.thumbnail,
-    updated_at: dayjs(db.updated_at).format('MMMM D, YYYY'),
+    url_youtube: db.url_youtube,
+    images_activity,
+    updated_at: dayjs(db.updated_at).format('D MMM YYYY'),
     created_by: db.created_by,
     updated_by: db.updated_by,
   };

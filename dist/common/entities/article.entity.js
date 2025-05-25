@@ -28,13 +28,17 @@ __decorate([
     __metadata("design:type", String)
 ], ArticleDB.prototype, "slug", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'text' }),
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
     __metadata("design:type", String)
 ], ArticleDB.prototype, "content", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 250, nullable: true }),
     __metadata("design:type", String)
 ], ArticleDB.prototype, "thumbnail", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 250, nullable: true }),
+    __metadata("design:type", String)
+], ArticleDB.prototype, "url_youtube", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         type: 'enum',

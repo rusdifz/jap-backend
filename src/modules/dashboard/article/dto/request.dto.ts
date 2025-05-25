@@ -45,6 +45,10 @@ export class ReqCreateArticleDTO {
   @IsUrl()
   thumbnail: string;
 
+  @IsOptional()
+  @IsUrl()
+  url_youtube: string;
+
   @ApiProperty({ example: StatusPublishEnum.DRAFT })
   @IsOptional()
   @IsEnum(StatusPublishEnum, {

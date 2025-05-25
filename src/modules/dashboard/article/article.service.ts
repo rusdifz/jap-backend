@@ -22,7 +22,7 @@ export class DashboardArticleService {
 
   async getDetail(article_id: number): Promise<ResDetail> {
     const searchData = await this.repository.findOneBy({ article_id });
-    return searchData ? await mapDbToResDetail(searchData) : null;
+    return searchData ? await mapDbToResDetail(searchData, []) : null;
   }
 
   async getList(

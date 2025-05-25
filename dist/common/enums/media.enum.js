@@ -22,5 +22,6 @@ var MediaReferenceType;
     MediaReferenceType["FEEDBACK"] = "feedback";
     MediaReferenceType["USER"] = "user";
     MediaReferenceType["MASTER_LOCATION"] = "master location";
+    MediaReferenceType["ACTIVITY"] = "activity";
 })(MediaReferenceType || (exports.MediaReferenceType = MediaReferenceType = {}));
 //# sourceMappingURL=media.enum.js.map

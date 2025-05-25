@@ -18,4 +18,5 @@ export enum MediaReferenceType {
   FEEDBACK = 'feedback',
   USER = 'user',
   MASTER_LOCATION = 'master location',
+  ACTIVITY = 'activity',
 }

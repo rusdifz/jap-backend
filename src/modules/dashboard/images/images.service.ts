@@ -64,52 +64,39 @@ export class DashboardImagesService {
           body.reference_type,
           uploadFile,
         );
-        console.log('map data', mapData);
 
         const saveData = await this.repository.save(mapData);
-        console.log('save', saveData);
-        console.log('body refe', body.reference_type);
-        console.log('ref', MediaReferenceType.MASTER_LOCATION);
-        if (body.reference_type !== MediaReferenceType.PROPERTY) {
-          //update data profile, article and image
-          //sebenernya ini buat make sure aja data urlnya sudah yang terbaru di masing2 image profile, article and feedback
-          console.log('masuk', mapData);
-          console.log('body refe', body.reference_type);
-          console.log('ref', MediaReferenceType.MASTER_LOCATION);
 
-          if (body.reference_type === MediaReferenceType.ARTICLE) {
-            await this.articleService.updateImage(
-              body.reference_id,
-              mapData.full_url,
-            );
-          } else if (body.reference_type === MediaReferenceType.FEEDBACK) {
-            await this.feedbackService.updateImage(
-              body.reference_id,
-              mapData.full_url,
-            );
-          } else if (
-            body.reference_type === MediaReferenceType.MASTER_LOCATION
-          ) {
-            console.log('location');
+        //selain type propety dan activity upload ke tabel masing2
+        //update data profile, article and image
+        //sebenernya ini buat make sure aja data urlnya sudah yang terbaru di masing2 image profile, article and feedback
 
-            await this.masterLocationService.updateImage(
-              body.reference_id,
-              mapData.full_url,
-            );
-          } else {
-            //user profile
-            console.log('masa profile');
+        if (body.reference_type === MediaReferenceType.ARTICLE) {
+          await this.articleService.updateImage(
+            body.reference_id,
+            mapData.full_url,
+          );
+        } else if (body.reference_type === MediaReferenceType.FEEDBACK) {
+          await this.feedbackService.updateImage(
+            body.reference_id,
+            mapData.full_url,
+          );
+        } else if (body.reference_type === MediaReferenceType.MASTER_LOCATION) {
+          await this.masterLocationService.updateImage(
+            body.reference_id,
+            mapData.full_url,
+          );
+        } else if (body.reference_type === MediaReferenceType.USER) {
+          //user profile
 
-            await this.adminService.updateImage(
-              body.reference_id,
-              mapData.full_url,
-            );
-          }
+          await this.adminService.updateImage(
+            body.reference_id,
+            mapData.full_url,
+          );
         }
 
         resp.push(saveData);
       }
-      console.log('resp', resp);
 
       return resp;
     }

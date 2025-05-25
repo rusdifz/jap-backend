@@ -15,5 +15,6 @@ export declare enum MediaReferenceType {
     PROPERTY = "property",
     FEEDBACK = "feedback",
     USER = "user",
-    MASTER_LOCATION = "master location"
+    MASTER_LOCATION = "master location",
+    ACTIVITY = "activity"
 }

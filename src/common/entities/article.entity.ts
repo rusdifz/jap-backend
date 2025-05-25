@@ -22,11 +22,14 @@ export class ArticleDB {
   @Column({ type: 'varchar', length: 250 })
   slug: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   content: string;
 
   @Column({ type: 'varchar', length: 250, nullable: true })
   thumbnail: string;
+
+  @Column({ type: 'varchar', length: 250, nullable: true })
+  url_youtube: string;
 
   @Column({
     type: 'enum',

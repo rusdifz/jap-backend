@@ -10,6 +10,7 @@ export async function mapReqCreateToDB(
     slug: payload['slug'],
     content: payload.content,
     thumbnail: payload.thumbnail,
+    url_youtube: payload.url_youtube,
     status_publish: payload.status_publish,
     created_by: username_login ?? 'admin system',
   };
@@ -25,6 +26,7 @@ export async function mapReqUpdateToDB(
     slug: payload['slug'],
     content: payload.content,
     thumbnail: payload.thumbnail,
+    url_youtube: payload.url_youtube,
     status_publish: payload.status_publish,
     updated_by: username_login ?? 'admin system',
   };

@@ -8,11 +8,16 @@ import { mapDbToResDetail, mapDbToResList } from './mappings/view.mapping';
 
 import { ClientArticleRepository } from './article.repository';
 import { FindManyOptions } from 'typeorm';
-import { ArticleDB, StatusPublishEnum } from 'src/common';
+import { ArticleDB, MediaReferenceType, StatusPublishEnum } from 'src/common';
+
+import { DashboardImagesService } from 'src/modules/dashboard/images/images.service';
 
 @Injectable()
 export class ClientArticleService {
-  constructor(private readonly repository: ClientArticleRepository) {}
+  constructor(
+    private readonly repository: ClientArticleRepository,
+    private readonly imageService: DashboardImagesService,
+  ) {}
 
   // async getDetail(article_id: number): Promise<ResDetail> {
   //   const searchData = await this.repository.findOneBy({
@@ -27,7 +32,14 @@ export class ClientArticleService {
       slug,
       status_publish: StatusPublishEnum.PUBLISH,
     });
-    return searchData ? await mapDbToResDetail(searchData) : null;
+
+    //panggil data images
+    const images = await this.imageService.findImageJoin(
+      searchData.article_id,
+      MediaReferenceType.ACTIVITY,
+    );
+
+    return searchData ? await mapDbToResDetail(searchData, images) : null;
   }
 
   async getList(

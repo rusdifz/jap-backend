@@ -14,16 +14,19 @@ const common_1 = require("@nestjs/common");
 const view_mapping_1 = require("./mappings/view.mapping");
 const article_repository_1 = require("./article.repository");
 const common_2 = require("../../../common");
+const images_service_1 = require("../../dashboard/images/images.service");
 let ClientArticleService = class ClientArticleService {
-    constructor(repository) {
+    constructor(repository, imageService) {
         this.repository = repository;
+        this.imageService = imageService;
     }
     async getDetail(slug) {
         const searchData = await this.repository.findOneBy({
             slug,
             status_publish: common_2.StatusPublishEnum.PUBLISH,
         });
-        return searchData ? await (0, view_mapping_1.mapDbToResDetail)(searchData) : null;
+        const images = await this.imageService.findImageJoin(searchData.article_id, common_2.MediaReferenceType.ACTIVITY);
+        return searchData ? await (0, view_mapping_1.mapDbToResDetail)(searchData, images) : null;
     }
     async getList(props) {
         let query = {
@@ -44,6 +47,7 @@ let ClientArticleService = class ClientArticleService {
 exports.ClientArticleService = ClientArticleService;
 exports.ClientArticleService = ClientArticleService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [article_repository_1.ClientArticleRepository])
+    __metadata("design:paramtypes", [article_repository_1.ClientArticleRepository,
+        images_service_1.DashboardImagesService])
 ], ClientArticleService);
 //# sourceMappingURL=article.service.js.map

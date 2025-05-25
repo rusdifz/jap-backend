@@ -1,12 +1,17 @@
 import { dayjs, ArticleDB } from 'src/common';
 import { ResDetail, ResList } from '../dto/response.dto';
 
-export async function mapDbToResDetail(db: ArticleDB): Promise<ResDetail> {
+export async function mapDbToResDetail(
+  db: ArticleDB,
+  images_activity: any[],
+): Promise<ResDetail> {
   return {
     article_id: Number(db.article_id),
     content: db.content,
     title: db.title,
     thumbnail: db.thumbnail,
+    url_youtube: db.url_youtube,
+    images_activity,
     status_publish: db.status_publish,
     created_at: dayjs(db.created_at).format('MMMM D, YYYY'),
     updated_at: dayjs(db.updated_at).format('MMMM D, YYYY'),
