@@ -14,9 +14,17 @@ import { ArticleDB, StatusPublishEnum } from 'src/common';
 export class ClientArticleService {
   constructor(private readonly repository: ClientArticleRepository) {}
 
-  async getDetail(article_id: number): Promise<ResDetail> {
+  // async getDetail(article_id: number): Promise<ResDetail> {
+  //   const searchData = await this.repository.findOneBy({
+  //     article_id,
+  //     status_publish: StatusPublishEnum.PUBLISH,
+  //   });
+  //   return searchData ? await mapDbToResDetail(searchData) : null;
+  // }
+
+  async getDetail(slug: string): Promise<ResDetail> {
     const searchData = await this.repository.findOneBy({
-      article_id,
+      slug,
       status_publish: StatusPublishEnum.PUBLISH,
     });
     return searchData ? await mapDbToResDetail(searchData) : null;

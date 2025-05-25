@@ -9,10 +9,15 @@ import { ClientArticleService } from './article.service';
 export class ClientArticleController {
   constructor(private readonly service: ClientArticleService) {}
 
+  // @Version('1')
+  // @Get(':id')
+  // async getDetail(@Param('id') id: string) {
+  //   return await this.service.getDetail(Number(id));
+  // }
   @Version('1')
-  @Get(':id')
-  async getDetail(@Param('id') id: string) {
-    return await this.service.getDetail(Number(id));
+  @Get(':slug')
+  async getDetail(@Param('slug') slug: string) {
+    return await this.service.getDetail(slug);
   }
 
   @Version('1')
