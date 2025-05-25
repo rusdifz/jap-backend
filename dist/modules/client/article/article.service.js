@@ -18,9 +18,9 @@ let ClientArticleService = class ClientArticleService {
     constructor(repository) {
         this.repository = repository;
     }
-    async getDetail(article_id) {
+    async getDetail(slug) {
         const searchData = await this.repository.findOneBy({
-            article_id,
+            slug,
             status_publish: common_2.StatusPublishEnum.PUBLISH,
         });
         return searchData ? await (0, view_mapping_1.mapDbToResDetail)(searchData) : null;

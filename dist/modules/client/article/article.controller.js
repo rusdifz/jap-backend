@@ -20,8 +20,8 @@ let ClientArticleController = class ClientArticleController {
     constructor(service) {
         this.service = service;
     }
-    async getDetail(id) {
-        return await this.service.getDetail(Number(id));
+    async getDetail(slug) {
+        return await this.service.getDetail(slug);
     }
     async getList(query) {
         return await this.service.getList(query);
@@ -30,8 +30,8 @@ let ClientArticleController = class ClientArticleController {
 exports.ClientArticleController = ClientArticleController;
 __decorate([
     (0, common_1.Version)('1'),
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Get)(':slug'),
+    __param(0, (0, common_1.Param)('slug')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
