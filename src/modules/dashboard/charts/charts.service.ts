@@ -99,7 +99,7 @@ export class ChartsService {
     return findData;
   }
 
-  async countSumPropertyBySize(unit_size: number) {
+  async countSumPropertyBySize(type: string) {
     const locations = await this.masterLocationService.getList({
       page: 1,
       limit: 500,
@@ -107,22 +107,21 @@ export class ChartsService {
 
     let sizeQuery = {};
 
-    if (unit_size === 99) {
-      sizeQuery = { size: LessThanOrEqual(100) };
-    } else if (unit_size === 100) {
-      sizeQuery = { size: Between(unit_size, 200) };
-    } else if (unit_size === 200) {
-      sizeQuery = { size: Between(unit_size, 500) };
-    } else if (unit_size === 500) {
-      sizeQuery = { size: Between(unit_size, 1000) };
-    } else {
-      sizeQuery = { size: MoreThanOrEqual(unit_size) };
+    if (type == 'a') {
+      sizeQuery = { size: LessThanOrEqual(200) };
+    } else if (type == 'b') {
+      sizeQuery = { size: Between(200, 500) };
+    } else if (type == 'c') {
+      sizeQuery = { size: Between(500, 1000) };
+    } else if (type == 'd') {
+      sizeQuery = { size: MoreThanOrEqual(1000) };
     }
 
     const charts = [];
 
     locations.data.forEach(async (loc) => {
       const countData = await this.propertiesService.CountDataJoinTable({
+        location: loc.location_name,
         units: sizeQuery,
       });
 
@@ -149,7 +148,6 @@ export class ChartsService {
       sumSizeB,
       sumSizeC,
       sumSizeD,
-      sumSizeE,
     ] = await Promise.all([
       this.chartPropertyHasBeenUpdatedOneMonth(),
       this.tabelProperty(),
@@ -163,11 +161,10 @@ export class ChartsService {
       this.unitsService.countData({ condition: ConditionUnitEnum.FURNISHED }),
       this.unitsService.countData({ condition: ConditionUnitEnum.BARE }),
       this.unitsService.countData({ condition: ConditionUnitEnum.PARTITION }),
-      this.countSumPropertyBySize(99),
-      this.countSumPropertyBySize(100),
-      this.countSumPropertyBySize(200), //100 -200
-      this.countSumPropertyBySize(500), // 200 - 500
-      this.countSumPropertyBySize(1000), // > 1000
+      this.countSumPropertyBySize('a'),
+      this.countSumPropertyBySize('b'),
+      this.countSumPropertyBySize('c'),
+      this.countSumPropertyBySize('d'),
     ]);
 
     return {
@@ -197,7 +194,6 @@ export class ChartsService {
             b: sumSizeB,
             c: sumSizeC,
             d: sumSizeD,
-            e: sumSizeE,
           },
         },
         jumlahProperty: statisticProperty.charts,

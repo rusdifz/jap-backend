@@ -151,6 +151,7 @@ export class DashboardPropertiesService {
 
   async CountDataJoinTable(queryWhere: FindOptionsWhere<PropertiesDB>) {
     // initiate empty where query
+
     let query: FindManyOptions<PropertiesDB> = {
       where: queryWhere,
       relations: { units: true },

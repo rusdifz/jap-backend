@@ -15,6 +15,6 @@ export declare class ChartsService {
         charts: any[];
     }>;
     tabelProperty(): Promise<PropertiesDB[]>;
-    countSumPropertyBySize(unit_size: number): Promise<any[]>;
+    countSumPropertyBySize(type: string): Promise<any[]>;
     homeDashboard(): Promise<ResDashboardHomeDTO>;
 }

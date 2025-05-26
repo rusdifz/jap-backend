@@ -82,30 +82,28 @@ let ChartsService = class ChartsService {
         }
         return findData;
     }
-    async countSumPropertyBySize(unit_size) {
+    async countSumPropertyBySize(type) {
         const locations = await this.masterLocationService.getList({
             page: 1,
             limit: 500,
         });
         let sizeQuery = {};
-        if (unit_size === 99) {
-            sizeQuery = { size: (0, typeorm_1.LessThanOrEqual)(100) };
+        if (type == 'a') {
+            sizeQuery = { size: (0, typeorm_1.LessThanOrEqual)(200) };
         }
-        else if (unit_size === 100) {
-            sizeQuery = { size: (0, typeorm_1.Between)(unit_size, 200) };
+        else if (type == 'b') {
+            sizeQuery = { size: (0, typeorm_1.Between)(200, 500) };
         }
-        else if (unit_size === 200) {
-            sizeQuery = { size: (0, typeorm_1.Between)(unit_size, 500) };
+        else if (type == 'c') {
+            sizeQuery = { size: (0, typeorm_1.Between)(500, 1000) };
         }
-        else if (unit_size === 500) {
-            sizeQuery = { size: (0, typeorm_1.Between)(unit_size, 1000) };
-        }
-        else {
-            sizeQuery = { size: (0, typeorm_1.MoreThanOrEqual)(unit_size) };
+        else if (type == 'd') {
+            sizeQuery = { size: (0, typeorm_1.MoreThanOrEqual)(1000) };
         }
         const charts = [];
         locations.data.forEach(async (loc) => {
             const countData = await this.propertiesService.CountDataJoinTable({
+                location: loc.location_name,
                 units: sizeQuery,
             });
             charts.push({
@@ -116,7 +114,7 @@ let ChartsService = class ChartsService {
         return charts;
     }
     async homeDashboard() {
-        const [hasBeenUpdated, listPropertyLastUpdated, statisticProperty, propertiesOlderOneMonth, propertiesLastUpdate, countUnitsFurnished, countUnitsBare, countUnitsPartition, sumSizeA, sumSizeB, sumSizeC, sumSizeD, sumSizeE,] = await Promise.all([
+        const [hasBeenUpdated, listPropertyLastUpdated, statisticProperty, propertiesOlderOneMonth, propertiesLastUpdate, countUnitsFurnished, countUnitsBare, countUnitsPartition, sumSizeA, sumSizeB, sumSizeC, sumSizeD,] = await Promise.all([
             this.chartPropertyHasBeenUpdatedOneMonth(),
             this.tabelProperty(),
             this.chartStatisticProperty(),
@@ -129,11 +127,10 @@ let ChartsService = class ChartsService {
             this.unitsService.countData({ condition: common_2.ConditionUnitEnum.FURNISHED }),
             this.unitsService.countData({ condition: common_2.ConditionUnitEnum.BARE }),
             this.unitsService.countData({ condition: common_2.ConditionUnitEnum.PARTITION }),
-            this.countSumPropertyBySize(99),
-            this.countSumPropertyBySize(100),
-            this.countSumPropertyBySize(200),
-            this.countSumPropertyBySize(500),
-            this.countSumPropertyBySize(1000),
+            this.countSumPropertyBySize('a'),
+            this.countSumPropertyBySize('b'),
+            this.countSumPropertyBySize('c'),
+            this.countSumPropertyBySize('d'),
         ]);
         return {
             charts: {
@@ -162,7 +159,6 @@ let ChartsService = class ChartsService {
                         b: sumSizeB,
                         c: sumSizeC,
                         d: sumSizeD,
-                        e: sumSizeE,
                     },
                 },
                 jumlahProperty: statisticProperty.charts,

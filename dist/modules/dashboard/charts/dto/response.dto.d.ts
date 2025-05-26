@@ -18,10 +18,10 @@ export declare class ResDashboardHomeDTO {
             units: UnitCharts[];
             luasan: {
                 a: CommonCharts[];
-                b: CommonCharts[];
-                c: CommonCharts[];
-                d: CommonCharts[];
-                e: CommonCharts[];
+                b?: CommonCharts[];
+                c?: CommonCharts[];
+                d?: CommonCharts[];
+                e?: CommonCharts[];
             };
         };
         jumlahProperty: CommonCharts[];
