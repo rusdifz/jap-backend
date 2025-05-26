@@ -15,4 +15,5 @@ export declare class ReqUpdateUnitDTO extends ReqCreateUnitDTO {
 }
 export declare class UnitListDTO extends PaginationDTO {
     property_id: string;
+    status: string;
 }

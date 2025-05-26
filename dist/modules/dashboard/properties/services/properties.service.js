@@ -97,6 +97,13 @@ let DashboardPropertiesService = class DashboardPropertiesService {
     async CountData(queryWhere) {
         return await this.repository.count({ where: { ...queryWhere } });
     }
+    async CountDataJoinTable(queryWhere) {
+        let query = {
+            where: queryWhere,
+            relations: { units: true },
+        };
+        return await this.repository.count(query);
+    }
     async create(body, admin) {
         const mapProperty = await (0, upsert_mapping_1.mapReqCreateToDb)(body, admin);
         const saveData = await this.repository.save(mapProperty);

@@ -81,4 +81,9 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], UnitListDTO.prototype, "property_id", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UnitListDTO.prototype, "status", void 0);
 //# sourceMappingURL=request.dto.js.map

@@ -5,9 +5,14 @@ import { DashboardMasterLocationModule } from '../master-location/master-locatio
 
 import { ChartsService } from './charts.service';
 import { ChartsController } from './charts.controller';
+import { DashboardUnitsModule } from '../units/units.module';
 
 @Module({
-  imports: [DashboardPropertiesModule, DashboardMasterLocationModule],
+  imports: [
+    DashboardPropertiesModule,
+    DashboardMasterLocationModule,
+    DashboardUnitsModule,
+  ],
   providers: [ChartsService],
   controllers: [ChartsController],
 })

@@ -13,12 +13,6 @@ export class ChartsController {
   }
 
   @Version('1')
-  @Get('/pie-chart')
-  async getPieChart() {
-    return await this.service.pieChart();
-  }
-
-  @Version('1')
   @Get('/statistic')
   async getChartStatistic() {
     return await this.service.chartStatisticProperty();
@@ -28,5 +22,11 @@ export class ChartsController {
   @Get('/table')
   async getTabelLastUpdated() {
     return await this.service.tabelProperty();
+  }
+
+  @Version('1')
+  @Get('/home')
+  async getHomeDashboard() {
+    return await this.service.homeDashboard();
   }
 }

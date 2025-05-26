@@ -36,6 +36,9 @@ let DashboardUnitsService = class DashboardUnitsService {
         if (props.property_id) {
             Object.assign(query.where, { property_id: props.property_id });
         }
+        if (props.status) {
+            Object.assign(query.where, { status: props.status });
+        }
         const searchData = await this.repository.findAndCount(query);
         let units = [];
         if (searchData[0].length) {
@@ -92,6 +95,9 @@ let DashboardUnitsService = class DashboardUnitsService {
     }
     async findCustomOptions(options) {
         return await this.repository.find(options);
+    }
+    async countData(options_where) {
+        return await this.repository.countBy(options_where);
     }
 };
 exports.DashboardUnitsService = DashboardUnitsService;

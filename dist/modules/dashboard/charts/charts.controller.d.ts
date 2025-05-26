@@ -5,14 +5,9 @@ export declare class ChartsController {
     getChartHasBeenUpdatedOneMonth(): Promise<{
         charts: any[];
     }>;
-    getPieChart(): Promise<{
-        chart: {
-            olderOneMonth: number;
-            lastUpdate: number;
-        };
-    }>;
     getChartStatistic(): Promise<{
         charts: any[];
     }>;
     getTabelLastUpdated(): Promise<import("../../../common").PropertiesDB[]>;
+    getHomeDashboard(): Promise<any>;
 }

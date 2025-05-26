@@ -1,4 +1,4 @@
-import { FindManyOptions } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere } from 'typeorm';
 import { IJwtUser, UnitsDB } from 'src/common';
 import { UnitListDTO } from './dto/request.dto';
 import { ResUnit } from './dto/response.dto';
@@ -20,4 +20,5 @@ export declare class DashboardUnitsService {
     getDeleteData(unit_id: string): Promise<UnitsDB>;
     countUnitByPropertyId(property_id: number): Promise<number>;
     findCustomOptions(options: FindManyOptions<UnitsDB>): Promise<UnitsDB[]>;
+    countData(options_where: FindOptionsWhere<UnitsDB>): Promise<number>;
 }

@@ -70,4 +70,8 @@ export class ReqUpdateUnitDTO extends ReqCreateUnitDTO {
 export class UnitListDTO extends PaginationDTO {
   @IsNotEmpty()
   property_id: string;
+
+  @IsOptional()
+  @IsString()
+  status: string;
 }

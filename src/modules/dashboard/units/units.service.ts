@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { FindManyOptions, Not } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere, Not } from 'typeorm';
 
 import { IJwtUser, UnitsDB } from 'src/common';
 import { UnitListDTO } from './dto/request.dto';
@@ -46,6 +46,10 @@ export class DashboardUnitsService {
 
     if (props.property_id) {
       Object.assign(query.where, { property_id: props.property_id });
+    }
+
+    if (props.status) {
+      Object.assign(query.where, { status: props.status });
     }
 
     const searchData = await this.repository.findAndCount(query);
@@ -143,5 +147,9 @@ export class DashboardUnitsService {
     options: FindManyOptions<UnitsDB>,
   ): Promise<UnitsDB[]> {
     return await this.repository.find(options);
+  }
+
+  async countData(options_where: FindOptionsWhere<UnitsDB>): Promise<number> {
+    return await this.repository.countBy(options_where);
   }
 }

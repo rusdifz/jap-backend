@@ -19,14 +19,14 @@ let ChartsController = class ChartsController {
     async getChartHasBeenUpdatedOneMonth() {
         return await this.service.chartPropertyHasBeenUpdatedOneMonth();
     }
-    async getPieChart() {
-        return await this.service.pieChart();
-    }
     async getChartStatistic() {
         return await this.service.chartStatisticProperty();
     }
     async getTabelLastUpdated() {
         return await this.service.tabelProperty();
+    }
+    async getHomeDashboard() {
+        return await this.service.homeDashboard();
     }
 };
 exports.ChartsController = ChartsController;
@@ -37,13 +37,6 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], ChartsController.prototype, "getChartHasBeenUpdatedOneMonth", null);
-__decorate([
-    (0, common_1.Version)('1'),
-    (0, common_1.Get)('/pie-chart'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], ChartsController.prototype, "getPieChart", null);
 __decorate([
     (0, common_1.Version)('1'),
     (0, common_1.Get)('/statistic'),
@@ -58,6 +51,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], ChartsController.prototype, "getTabelLastUpdated", null);
+__decorate([
+    (0, common_1.Version)('1'),
+    (0, common_1.Get)('/home'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ChartsController.prototype, "getHomeDashboard", null);
 exports.ChartsController = ChartsController = __decorate([
     (0, common_1.Controller)('dashboard/charts'),
     __metadata("design:paramtypes", [charts_service_1.ChartsService])

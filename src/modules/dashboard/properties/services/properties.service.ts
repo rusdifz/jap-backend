@@ -149,6 +149,16 @@ export class DashboardPropertiesService {
     return await this.repository.count({ where: { ...queryWhere } });
   }
 
+  async CountDataJoinTable(queryWhere: FindOptionsWhere<PropertiesDB>) {
+    // initiate empty where query
+    let query: FindManyOptions<PropertiesDB> = {
+      where: queryWhere,
+      relations: { units: true },
+    };
+
+    return await this.repository.count(query);
+  }
+
   async create(
     body: ReqCreatePropertyDTO,
     admin: IJwtUser,

@@ -1,21 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import {
+  Between,
+  FindManyOptions,
+  LessThan,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+} from 'typeorm';
+
+import { ConditionUnitEnum, dayjs, monthAgo, PropertiesDB } from 'src/common';
+import { ResDashboardHomeDTO } from './dto/response.dto';
 
 import { DashboardMasterLocationService } from '../master-location/master-location.service';
 import { DashboardPropertiesService } from '../properties/services/properties.service';
-import { FindManyOptions, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
-import { dayjs, monthAgo, PropertiesDB } from 'src/common';
+import { DashboardUnitsService } from '../units/units.service';
 
 @Injectable()
 export class ChartsService {
   constructor(
     private readonly masterLocationService: DashboardMasterLocationService,
     private readonly propertiesService: DashboardPropertiesService,
+    private readonly unitsService: DashboardUnitsService,
   ) {}
 
   async chartPropertyHasBeenUpdatedOneMonth() {
     const locations = await this.masterLocationService.getList({
       page: 1,
-      limit: 500,
+      limit: 100,
     });
 
     const charts = [];
@@ -33,25 +43,6 @@ export class ChartsService {
     }
 
     return { charts };
-  }
-
-  //chart compare data update and not update (based 1 month)
-  async pieChart() {
-    const [propertiesOlderOneMonth, propertiesLastUpdate] = await Promise.all([
-      this.propertiesService.CountData({
-        updated_at: LessThanOrEqual(monthAgo),
-      }),
-      this.propertiesService.CountData({
-        updated_at: MoreThanOrEqual(monthAgo),
-      }),
-    ]);
-
-    return {
-      chart: {
-        olderOneMonth: propertiesOlderOneMonth,
-        lastUpdate: propertiesLastUpdate,
-      },
-    };
   }
 
   async chartStatisticProperty() {
@@ -106,5 +97,112 @@ export class ChartsService {
     }
 
     return findData;
+  }
+
+  async countSumPropertyBySize(unit_size: number) {
+    const locations = await this.masterLocationService.getList({
+      page: 1,
+      limit: 500,
+    });
+
+    let sizeQuery = {};
+
+    if (unit_size === 99) {
+      sizeQuery = { size: LessThanOrEqual(100) };
+    } else if (unit_size === 100) {
+      sizeQuery = { size: Between(unit_size, 200) };
+    } else if (unit_size === 200) {
+      sizeQuery = { size: Between(unit_size, 500) };
+    } else if (unit_size === 500) {
+      sizeQuery = { size: Between(unit_size, 1000) };
+    } else {
+      sizeQuery = { size: MoreThanOrEqual(unit_size) };
+    }
+
+    const charts = [];
+
+    locations.data.forEach(async (loc) => {
+      const countData = await this.propertiesService.CountDataJoinTable({
+        units: sizeQuery,
+      });
+
+      charts.push({
+        location: loc,
+        count: countData,
+      });
+    });
+
+    return charts;
+  }
+
+  async homeDashboard(): Promise<any> {
+    const [
+      hasBeenUpdated,
+      listPropertyLastUpdated,
+      statisticProperty,
+      propertiesOlderOneMonth,
+      propertiesLastUpdate,
+      countUnitsFurnished,
+      countUnitsBare,
+      countUnitsPartition,
+      sumSizeA,
+      sumSizeB,
+      sumSizeC,
+      sumSizeD,
+      sumSizeE,
+    ] = await Promise.all([
+      this.chartPropertyHasBeenUpdatedOneMonth(),
+      this.tabelProperty(),
+      this.chartStatisticProperty(),
+      this.propertiesService.CountData({
+        updated_at: LessThanOrEqual(monthAgo),
+      }),
+      this.propertiesService.CountData({
+        updated_at: MoreThanOrEqual(monthAgo),
+      }),
+      this.unitsService.countData({ condition: ConditionUnitEnum.FURNISHED }),
+      this.unitsService.countData({ condition: ConditionUnitEnum.BARE }),
+      this.unitsService.countData({ condition: ConditionUnitEnum.PARTITION }),
+      this.countSumPropertyBySize(99),
+      this.countSumPropertyBySize(100),
+      this.countSumPropertyBySize(200), //100 -200
+      this.countSumPropertyBySize(500), // 200 - 500
+      this.countSumPropertyBySize(1000), // > 1000
+    ]);
+
+    return {
+      charts: {
+        hasBeenUpdated: hasBeenUpdated.charts,
+        pieCharts: {
+          statisctisUpdated: {
+            olderOneMonth: propertiesOlderOneMonth,
+            lastUpdate: propertiesLastUpdate,
+          },
+          units: [
+            {
+              status: ConditionUnitEnum.FURNISHED,
+              count: countUnitsFurnished,
+            },
+            {
+              status: ConditionUnitEnum.BARE,
+              count: countUnitsBare,
+            },
+            {
+              status: ConditionUnitEnum.PARTITION,
+              count: countUnitsPartition,
+            },
+          ],
+          luasan: {
+            a: sumSizeA,
+            b: sumSizeB,
+            c: sumSizeC,
+            d: sumSizeD,
+            e: sumSizeE,
+          },
+        },
+        jumlahProperty: statisticProperty.charts,
+      },
+      tabels: listPropertyLastUpdated,
+    };
   }
 }

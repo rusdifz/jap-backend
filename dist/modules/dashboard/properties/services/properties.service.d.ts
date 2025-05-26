@@ -18,6 +18,7 @@ export declare class DashboardPropertiesService {
     }>;
     getListCustom(queryOptions: FindManyOptions<PropertiesDB>): Promise<PropertiesDB[]>;
     CountData(queryWhere: FindOptionsWhere<PropertiesDB>): Promise<number>;
+    CountDataJoinTable(queryWhere: FindOptionsWhere<PropertiesDB>): Promise<number>;
     create(body: ReqCreatePropertyDTO, admin: IJwtUser): Promise<ReqCreatePropertyDTO>;
     update(body: ReqUpdatePropertyDTO, admin: IJwtUser): Promise<ReqUpdatePropertyDTO>;
     delete(property_id: number, admin: IJwtUser): Promise<Object>;
