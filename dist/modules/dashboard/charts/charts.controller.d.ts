@@ -9,5 +9,5 @@ export declare class ChartsController {
         charts: any[];
     }>;
     getTabelLastUpdated(): Promise<import("../../../common").PropertiesDB[]>;
-    getHomeDashboard(): Promise<any>;
+    getHomeDashboard(): Promise<import("./dto/response.dto").ResDashboardHomeDTO>;
 }

@@ -109,7 +109,7 @@ let ChartsService = class ChartsService {
                 units: sizeQuery,
             });
             charts.push({
-                location: loc,
+                location: loc.location_name,
                 count: countData,
             });
         });

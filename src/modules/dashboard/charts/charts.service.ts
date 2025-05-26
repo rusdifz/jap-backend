@@ -127,7 +127,7 @@ export class ChartsService {
       });
 
       charts.push({
-        location: loc,
+        location: loc.location_name,
         count: countData,
       });
     });
@@ -135,7 +135,7 @@ export class ChartsService {
     return charts;
   }
 
-  async homeDashboard(): Promise<any> {
+  async homeDashboard(): Promise<ResDashboardHomeDTO> {
     const [
       hasBeenUpdated,
       listPropertyLastUpdated,
