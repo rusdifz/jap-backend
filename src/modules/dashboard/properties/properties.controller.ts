@@ -128,7 +128,7 @@ export class DashboardPropertiesController {
   @ApiHeader(AuthorizationHeader(true))
   // @ApiOkResponse(swgGetListOK)
   @Version('1')
-  @Get('')
+  @Get('prop/pic')
   async getListPic(@Query() query: ReqGetPicListDTO) {
     return await this.service.getListPic(query);
   }
@@ -141,7 +141,7 @@ export class DashboardPropertiesController {
   // @ApiCreatedResponse(swgCreateOK)
   @Version('1')
   @Throttle({ default: { limit: 10, ttl: 60000 } })
-  @Post('')
+  @Post('prop/pic')
   async createPic(
     @UserAuth() user: IJwtUser, // use this to get user data from header
     @Body() body: ReqCreatePropertyPicDTO,
@@ -157,7 +157,7 @@ export class DashboardPropertiesController {
   // @ApiCreatedResponse(swgCreateOK)
   @Version('1')
   @Throttle({ default: { limit: 10, ttl: 60000 } })
-  @Put(':id')
+  @Put('prop/pic/:id')
   async updatePic(
     @UserAuth() user: IJwtUser, // use this to get user data from header
     @BodyParam() bodyparam: ReqUpdatePropertyPicDTO,
@@ -173,7 +173,7 @@ export class DashboardPropertiesController {
   //   @ApiOkResponse(swgDeleteOK)
   @Version('1')
   @Throttle({ default: { limit: 5, ttl: 60000 } })
-  @Delete(':id')
+  @Delete('prop/pic/:id')
   async deleteOnePic(@Param('id') id: string, @UserAuth() user: IJwtUser) {
     return await this.service.deletePic(id, user);
   }

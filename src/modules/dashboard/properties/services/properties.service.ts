@@ -215,11 +215,15 @@ export class DashboardPropertiesService {
     body: ReqCreatePropertyPicDTO,
     admin: IJwtUser,
   ): Promise<ReqCreatePropertyPicDTO> {
+    console.log('body', body);
+
     const mapPic = {
       pic_name: body.pic_name ?? '',
       pic_phone: body.pic_phone ?? '',
+      property_id: body.property_id,
       created_by: admin.user.username,
     };
+    console.log('map', mapPic);
 
     const saveData = await this.repository.savePic(mapPic);
 
