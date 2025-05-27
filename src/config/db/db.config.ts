@@ -9,6 +9,7 @@ import {
   UsersDB,
   MasterAmenitiesDB,
   MasterLocationDB,
+  PropertyPicDB,
 } from 'src/common';
 
 export const dbConfig = (): DbConfigInterface => ({
@@ -19,9 +20,9 @@ export const dbConfig = (): DbConfigInterface => ({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    autoLoadEntities: false,
-    // synchronize: true, // disabled for auto migration syncronize
-    synchronize: false, // disabled for auto migration syncronize
+    autoLoadEntities: true,
+    synchronize: true, // disabled for auto migration syncronize
+    // synchronize: false, // disabled for auto migration syncronize
     logging: false,
     entities: [
       ArticleDB,
@@ -32,6 +33,7 @@ export const dbConfig = (): DbConfigInterface => ({
       UsersDB,
       MasterAmenitiesDB,
       MasterLocationDB,
+      PropertyPicDB,
     ],
     // ssl: {
     //   rejectUnauthorized: false,

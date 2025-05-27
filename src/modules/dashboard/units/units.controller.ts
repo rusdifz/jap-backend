@@ -102,6 +102,8 @@ export class DashboardUnitsController {
     @UserAuth() user: IJwtUser, // use this to get user data from header
     @BodyParam() body: ReqUpdateUnitDTO,
   ) {
+    console.log('body unit', body);
+
     return await this.service.update(body, user);
   }
 

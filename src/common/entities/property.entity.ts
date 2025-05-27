@@ -21,6 +21,7 @@ import { PropertyAbstract } from '../interfaces/property.interface';
 
 import { UnitsDB } from './unit.entity';
 import { MediaDB } from './media.entity';
+import { PropertyPicDB } from './property-pic.entity';
 
 @Entity({ name: 'properties' })
 // @Entity({ name: 'properties_dummy' })
@@ -227,4 +228,10 @@ export class PropertiesDB implements PropertyAbstract {
   })
   @JoinColumn({ name: 'property_id', referencedColumnName: 'reference_id' })
   images?: MediaDB[];
+
+  @OneToMany(() => UnitsDB, (unit) => unit.property, {
+    createForeignKeyConstraints: false,
+  })
+  @JoinColumn({ name: 'property_id', referencedColumnName: 'property_id' })
+  pic?: PropertyPicDB[];
 }

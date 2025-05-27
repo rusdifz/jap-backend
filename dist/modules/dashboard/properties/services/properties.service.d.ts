@@ -1,6 +1,6 @@
 import { FindManyOptions, FindOptionsWhere } from 'typeorm';
 import { IJwtUser, PropertiesDB } from 'src/common';
-import { PropertiesDTO } from '../dto/request.dto';
+import { PropertiesDTO, ReqCreatePropertyPicDTO, ReqGetPicListDTO, ReqUpdatePropertyPicDTO } from '../dto/request.dto';
 import { ReqCreatePropertyDTO, ReqUpdatePropertyDTO } from '../dto/request.dto';
 import { ResProperty } from '../dto/response.dto';
 import { DashboardUnitsService } from '../../units/units.service';
@@ -22,6 +22,13 @@ export declare class DashboardPropertiesService {
     create(body: ReqCreatePropertyDTO, admin: IJwtUser): Promise<ReqCreatePropertyDTO>;
     update(body: ReqUpdatePropertyDTO, admin: IJwtUser): Promise<ReqUpdatePropertyDTO>;
     delete(property_id: number, admin: IJwtUser): Promise<Object>;
+    getListPic(props: ReqGetPicListDTO): Promise<{
+        data: any[];
+        count: number;
+    }>;
+    createPic(body: ReqCreatePropertyPicDTO, admin: IJwtUser): Promise<ReqCreatePropertyPicDTO>;
+    updatePic(body: ReqUpdatePropertyPicDTO, admin: IJwtUser): Promise<ReqUpdatePropertyPicDTO>;
+    deletePic(pic_id: string, admin: IJwtUser): Promise<Object>;
     updateTotalUnit(property_id: number): Promise<number>;
     decreaseTotalUnit(unit_id: string): Promise<number>;
     checkForStaleDataOlderThanOneMonth(): Promise<any[]>;

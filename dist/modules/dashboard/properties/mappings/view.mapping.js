@@ -81,6 +81,7 @@ async function mapDbToResDetail(db, images) {
             power_unit: db.other_info_power_unit,
         },
         units: db.units,
+        pic: db.pic,
         images: images ?? [],
         created_at: (0, common_1.dayjs)(db.created_at).format('MMMM D, YYYY'),
         updated_at: (0, common_1.dayjs)(db.updated_at).format('MMMM D, YYYY'),
@@ -164,6 +165,7 @@ async function mapDbToResList(dbs) {
                 power_unit: db.other_info_power_unit,
             },
             units: db.units,
+            pic: db.pic,
             images: db.images ?? [],
             created_at: (0, common_1.dayjs)(db.created_at).format('MMMM D, YYYY'),
             updated_at: db.updated_at

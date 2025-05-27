@@ -24,7 +24,10 @@ import {
   PdfComparisonDTO,
   PdfDetailDTO,
   ReqCreatePropertyDTO,
+  ReqCreatePropertyPicDTO,
+  ReqGetPicListDTO,
   ReqUpdatePropertyDTO,
+  ReqUpdatePropertyPicDTO,
 } from './dto/request.dto';
 import {
   swgCreateOK,
@@ -116,6 +119,63 @@ export class DashboardPropertiesController {
   @Delete(':id')
   async deleteOne(@Param('id') id: number, @UserAuth() user: IJwtUser) {
     return await this.service.delete(id, user);
+  }
+
+  @ApiOperation({
+    summary: 'endpoint get office list',
+    description: '',
+  })
+  @ApiHeader(AuthorizationHeader(true))
+  // @ApiOkResponse(swgGetListOK)
+  @Version('1')
+  @Get('')
+  async getListPic(@Query() query: ReqGetPicListDTO) {
+    return await this.service.getListPic(query);
+  }
+
+  @ApiOperation({
+    summary: 'endpoint create pic property',
+    description: '',
+  })
+  @ApiHeader(AuthorizationHeader(true))
+  // @ApiCreatedResponse(swgCreateOK)
+  @Version('1')
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  @Post('')
+  async createPic(
+    @UserAuth() user: IJwtUser, // use this to get user data from header
+    @Body() body: ReqCreatePropertyPicDTO,
+  ) {
+    return await this.service.createPic(body, user);
+  }
+
+  @ApiOperation({
+    summary: 'endpoint update property pic',
+    description: '',
+  })
+  @ApiHeader(AuthorizationHeader(true))
+  // @ApiCreatedResponse(swgCreateOK)
+  @Version('1')
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  @Put(':id')
+  async updatePic(
+    @UserAuth() user: IJwtUser, // use this to get user data from header
+    @BodyParam() bodyparam: ReqUpdatePropertyPicDTO,
+  ) {
+    return await this.service.updatePic(bodyparam, user);
+  }
+
+  @ApiOperation({
+    summary: 'endpoint delete office',
+    description: '',
+  })
+  @ApiHeader(AuthorizationHeader(true))
+  //   @ApiOkResponse(swgDeleteOK)
+  @Version('1')
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Delete(':id')
+  async deleteOnePic(@Param('id') id: string, @UserAuth() user: IJwtUser) {
+    return await this.service.deletePic(id, user);
   }
 
   // @ApiOperation({
@@ -210,12 +270,14 @@ export class DashboardPropertiesController {
     @Res() res: any,
     @Body() body: PdfDetailDTO,
   ) {
+    console.log('body', body);
+
     const pdfBuffer =
       await this.serviceGenerateFile.generatePDFDetailPropertyDetail(body);
 
     res.set({
       'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename="property-detail-${body.location}.pdf"`,
+      'Content-Disposition': `attachment; filename="property-detail-${body.location ?? ''}.pdf"`,
     });
     res.send(pdfBuffer);
   }

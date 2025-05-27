@@ -35,6 +35,7 @@ let DashboardUnitsController = class DashboardUnitsController {
         return await this.service.create(body, user);
     }
     async update(user, body) {
+        console.log('body unit', body);
         return await this.service.update(body, user);
     }
     async deleteOne(user, id) {

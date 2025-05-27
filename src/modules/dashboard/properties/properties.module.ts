@@ -7,12 +7,12 @@ import { DashboardPropertiesGenerateFileService } from './services/properties-ge
 import { DashboardPropertiesController } from './properties.controller';
 
 import { DashboardUnitsModule } from '../units/units.module';
-import { PropertiesDB } from 'src/common';
+import { PropertiesDB, PropertyPicDB } from 'src/common';
 import { DashboardImagesModule } from '../images/images.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([PropertiesDB]),
+    TypeOrmModule.forFeature([PropertiesDB, PropertyPicDB]),
     DashboardUnitsModule,
     DashboardImagesModule,
   ],

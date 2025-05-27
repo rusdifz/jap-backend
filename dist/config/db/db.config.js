@@ -10,8 +10,8 @@ const dbConfig = () => ({
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
-        autoLoadEntities: false,
-        synchronize: false,
+        autoLoadEntities: true,
+        synchronize: true,
         logging: false,
         entities: [
             common_1.ArticleDB,
@@ -22,6 +22,7 @@ const dbConfig = () => ({
             common_1.UsersDB,
             common_1.MasterAmenitiesDB,
             common_1.MasterLocationDB,
+            common_1.PropertyPicDB,
         ],
     },
 });

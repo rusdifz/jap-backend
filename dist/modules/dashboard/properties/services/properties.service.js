@@ -34,6 +34,7 @@ let DashboardPropertiesService = class DashboardPropertiesService {
             where: queryWhere,
             relations: {
                 units: true,
+                pic: true,
             },
         };
         const property = await this.repository.findOne(query);
@@ -121,6 +122,32 @@ let DashboardPropertiesService = class DashboardPropertiesService {
             this.repository.update({ property_id }, { deleted_by: admin?.user?.username ?? 'system' }),
         ]);
         return {};
+    }
+    async getListPic(props) {
+        const searchData = await this.repository.findListPic(props);
+        return searchData;
+    }
+    async createPic(body, admin) {
+        const mapPic = {
+            pic_name: body.pic_name ?? '',
+            pic_phone: body.pic_phone ?? '',
+            created_by: admin.user.username,
+        };
+        const saveData = await this.repository.savePic(mapPic);
+        body['id'] = saveData.id;
+        return body;
+    }
+    async updatePic(body, admin) {
+        const mapPic = {
+            pic_name: body.pic_name ?? '',
+            pic_phone: body.pic_phone ?? '',
+            updated_by: admin.user.username,
+        };
+        await this.repository.updatePic(mapPic, body.pic_id);
+        return body;
+    }
+    async deletePic(pic_id, admin) {
+        return await this.repository.deletePic(pic_id);
     }
     async updateTotalUnit(property_id) {
         const currentUnitTotal = await this.unitService.countUnitByPropertyId(property_id);

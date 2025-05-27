@@ -275,6 +275,13 @@ __decorate([
     (0, typeorm_1.JoinColumn)({ name: 'property_id', referencedColumnName: 'reference_id' }),
     __metadata("design:type", Array)
 ], PropertiesDB.prototype, "images", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => unit_entity_1.UnitsDB, (unit) => unit.property, {
+        createForeignKeyConstraints: false,
+    }),
+    (0, typeorm_1.JoinColumn)({ name: 'property_id', referencedColumnName: 'property_id' }),
+    __metadata("design:type", Array)
+], PropertiesDB.prototype, "pic", void 0);
 exports.PropertiesDB = PropertiesDB = __decorate([
     (0, typeorm_1.Entity)({ name: 'properties' })
 ], PropertiesDB);

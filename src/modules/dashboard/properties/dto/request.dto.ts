@@ -440,7 +440,7 @@ export class PdfComparisonDTO {
 }
 
 export class PdfDetailDTO {
-  @IsNotEmpty()
+  @IsOptional()
   location: string;
 
   @IsNotEmpty()
@@ -448,4 +448,36 @@ export class PdfDetailDTO {
     property_id: number;
     unit_id: string[];
   }[];
+}
+
+export class ReqCreatePropertyPicDTO {
+  @ApiProperty({ example: 1 })
+  @IsNotEmpty()
+  @IsNumber()
+  property_id: number;
+
+  @ApiProperty({ example: 'Fauzan' })
+  @IsNotEmpty()
+  @IsString()
+  pic_name: string;
+
+  @ApiProperty({ example: '087870702538' })
+  @IsNotEmpty()
+  @IsString()
+  pic_phone: string;
+}
+
+export class ReqUpdatePropertyPicDTO extends PartialType(
+  ReqCreatePropertyPicDTO,
+) {
+  @ApiHideProperty()
+  @IsNotEmpty()
+  @IsString()
+  pic_id: string;
+}
+
+export class ReqGetPicListDTO extends PaginationDTO {
+  @IsOptional()
+  @IsNumber()
+  property_id: number;
 }

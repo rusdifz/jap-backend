@@ -26,7 +26,12 @@ import {
   monthAgo,
 } from 'src/common';
 
-import { PropertiesDTO } from '../dto/request.dto';
+import {
+  PropertiesDTO,
+  ReqCreatePropertyPicDTO,
+  ReqGetPicListDTO,
+  ReqUpdatePropertyPicDTO,
+} from '../dto/request.dto';
 // import { MasterPropertiesService } from 'apps/master/src/modules/properties/properties.service';
 
 import { ReqCreatePropertyDTO, ReqUpdatePropertyDTO } from '../dto/request.dto';
@@ -56,6 +61,7 @@ export class DashboardPropertiesService {
       where: queryWhere,
       relations: {
         units: true,
+        pic: true,
         // images: true,
       },
     };
@@ -195,6 +201,49 @@ export class DashboardPropertiesService {
     ]);
 
     return {};
+  }
+
+  async getListPic(
+    props: ReqGetPicListDTO,
+  ): Promise<{ data: any[]; count: number }> {
+    const searchData = await this.repository.findListPic(props);
+
+    return searchData;
+  }
+
+  async createPic(
+    body: ReqCreatePropertyPicDTO,
+    admin: IJwtUser,
+  ): Promise<ReqCreatePropertyPicDTO> {
+    const mapPic = {
+      pic_name: body.pic_name ?? '',
+      pic_phone: body.pic_phone ?? '',
+      created_by: admin.user.username,
+    };
+
+    const saveData = await this.repository.savePic(mapPic);
+
+    body['id'] = saveData.id;
+    return body;
+  }
+
+  async updatePic(
+    body: ReqUpdatePropertyPicDTO,
+    admin: IJwtUser,
+  ): Promise<ReqUpdatePropertyPicDTO> {
+    const mapPic = {
+      pic_name: body.pic_name ?? '',
+      pic_phone: body.pic_phone ?? '',
+      updated_by: admin.user.username,
+    };
+
+    await this.repository.updatePic(mapPic, body.pic_id);
+
+    return body;
+  }
+
+  async deletePic(pic_id: string, admin: IJwtUser): Promise<Object> {
+    return await this.repository.deletePic(pic_id);
   }
 
   async updateTotalUnit(property_id: number): Promise<number> {

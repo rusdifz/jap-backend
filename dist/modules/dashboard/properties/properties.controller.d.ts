@@ -1,4 +1,4 @@
-import { GeneratePDFDTO, PdfComparisonDTO, PdfDetailDTO, ReqCreatePropertyDTO, ReqUpdatePropertyDTO } from './dto/request.dto';
+import { GeneratePDFDTO, PdfComparisonDTO, PdfDetailDTO, ReqCreatePropertyDTO, ReqCreatePropertyPicDTO, ReqGetPicListDTO, ReqUpdatePropertyDTO, ReqUpdatePropertyPicDTO } from './dto/request.dto';
 import { IJwtUser } from 'src/common';
 import { PropertiesDTO } from './dto/request.dto';
 import { DashboardPropertiesService } from './services/properties.service';
@@ -15,6 +15,13 @@ export declare class DashboardPropertiesController {
     create(user: IJwtUser, body: ReqCreatePropertyDTO): Promise<ReqCreatePropertyDTO>;
     update(user: IJwtUser, bodyparam: ReqUpdatePropertyDTO): Promise<ReqUpdatePropertyDTO>;
     deleteOne(id: number, user: IJwtUser): Promise<Object>;
+    getListPic(query: ReqGetPicListDTO): Promise<{
+        data: any[];
+        count: number;
+    }>;
+    createPic(user: IJwtUser, body: ReqCreatePropertyPicDTO): Promise<ReqCreatePropertyPicDTO>;
+    updatePic(user: IJwtUser, bodyparam: ReqUpdatePropertyPicDTO): Promise<ReqUpdatePropertyPicDTO>;
+    deleteOnePic(id: string, user: IJwtUser): Promise<Object>;
     checkForStaleDataOlderThanOneMonth(): Promise<any[]>;
     convertFileExcelToDB(): Promise<any[]>;
     generatePdfComparisson(res: any, location: string, query: GeneratePDFDTO, user: IJwtUser): Promise<void>;

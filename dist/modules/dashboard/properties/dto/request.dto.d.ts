@@ -114,4 +114,16 @@ export declare class PdfDetailDTO {
         unit_id: string[];
     }[];
 }
+export declare class ReqCreatePropertyPicDTO {
+    property_id: number;
+    pic_name: string;
+    pic_phone: string;
+}
+declare const ReqUpdatePropertyPicDTO_base: import("@nestjs/common").Type<Partial<ReqCreatePropertyPicDTO>>;
+export declare class ReqUpdatePropertyPicDTO extends ReqUpdatePropertyPicDTO_base {
+    pic_id: string;
+}
+export declare class ReqGetPicListDTO extends PaginationDTO {
+    property_id: number;
+}
 export {};

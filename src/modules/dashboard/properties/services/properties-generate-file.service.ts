@@ -2254,7 +2254,6 @@ export class DashboardPropertiesGenerateFileService {
           margin: 20,
           width: 1200,
           height: 2000,
-          // size: 'A4',
         });
 
         for (const [
@@ -2275,7 +2274,6 @@ export class DashboardPropertiesGenerateFileService {
           };
 
           const getData = await this.repository.findOne(query);
-          console.log('get data', getData);
 
           const headerImageX = doc.page.width - doc.page.margins.right - 150;
           const headerImageY = 20;
@@ -2288,7 +2286,6 @@ export class DashboardPropertiesGenerateFileService {
               height: 50,
             },
           );
-          console.log('there');
 
           const imageFooterX = 25;
           const imageFooterY = 690;
@@ -2302,18 +2299,36 @@ export class DashboardPropertiesGenerateFileService {
               height: 40,
             },
           );
-          console.log('asa');
 
           if (getData.images.length > 0) {
-            // const imagePropertyPath =
-            //   getData.images[0].path + '/' + getData.images[0].public_id;
-            // const imagePropertyPath = '';
-            doc.image('public/images/property/1.png', 25, 70, {
+            const imagePropertyPath =
+              getData.images[0].path + '/' + getData.images[0].public_id;
+            console.log('imae', getData.images[0]);
+
+            // doc.image('public/images/property/1.png', 25, 70, {
+            //   width: 138,
+            //   height: 188,
+            // });
+            //     ,
+            // {
+            //     "property_id": 2,
+            //     "unit_id": [
+            //         "0fcf7a23-77c2-41d6-b671-6a1aab3841c9",
+            //         "110e3e59-c35a-4d1f-bada-8e895c979de9"
+            //     ]
+            // }
+            const response: any = await fetch(getData.images[0].full_url);
+            if (!response.ok) {
+              throw new Error(`Failed to fetch image: ${response.statusText}`);
+            }
+            console.log('respo', response);
+
+            const imageBuffer = await response.buffer();
+            doc.image(getData.images[0].full_url, 25, 70, {
               width: 138,
               height: 188,
             });
           }
-          console.log('this');
 
           let address: any = getData.location;
           // 1. Cari posisi "Jl"
@@ -2435,9 +2450,6 @@ export class DashboardPropertiesGenerateFileService {
               });
             }
           }
-          console.log('dd', dynamicRows.length);
-
-          console.log('dyna', dynamicRows);
 
           // Buat tabel dengan konfigurasi dasar
           const table = doc.table({
@@ -2467,14 +2479,7 @@ export class DashboardPropertiesGenerateFileService {
           });
 
           if (dynamicRows.length < 8) {
-            console.log('asas', 8 - dynamicRows.length);
-
             for (let index = 0; index <= 10 - dynamicRows.length; index++) {
-              // // const element = array[index];
-              // console.log('index', index);
-              // dynamicRows.push({
-              //   content: ['', '', '', '', '', ''],
-              // });
               table.row(['', '', '', '', '', '']);
             }
           }
@@ -2845,11 +2850,10 @@ export class DashboardPropertiesGenerateFileService {
               getData.amenities[4],
               '',
             ]);
-          console.log('index', index);
 
-          // if (index !== propertiesData.properties_download.length) {
-          //   doc.addPage();
-          // }
+          if (index !== propertiesData.properties_download.length) {
+            doc.addPage();
+          }
         }
 
         // Finalisasi PDF

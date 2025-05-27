@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PdfDetailDTO = exports.PdfComparisonDTO = exports.GeneratePDFDTO = exports.PropertyDetailDTO = exports.PropertiesDTO = exports.ReqUpdatePropertyDTO = exports.ReqCreatePropertyDTO = void 0;
+exports.ReqGetPicListDTO = exports.ReqUpdatePropertyPicDTO = exports.ReqCreatePropertyPicDTO = exports.PdfDetailDTO = exports.PdfComparisonDTO = exports.GeneratePDFDTO = exports.PropertyDetailDTO = exports.PropertiesDTO = exports.ReqUpdatePropertyDTO = exports.ReqCreatePropertyDTO = void 0;
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 const swagger_1 = require("@nestjs/swagger");
@@ -495,11 +495,49 @@ class PdfDetailDTO {
 }
 exports.PdfDetailDTO = PdfDetailDTO;
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], PdfDetailDTO.prototype, "location", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Array)
 ], PdfDetailDTO.prototype, "properties_download", void 0);
+class ReqCreatePropertyPicDTO {
+}
+exports.ReqCreatePropertyPicDTO = ReqCreatePropertyPicDTO;
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 1 }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], ReqCreatePropertyPicDTO.prototype, "property_id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'Fauzan' }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ReqCreatePropertyPicDTO.prototype, "pic_name", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '087870702538' }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ReqCreatePropertyPicDTO.prototype, "pic_phone", void 0);
+class ReqUpdatePropertyPicDTO extends (0, swagger_1.PartialType)(ReqCreatePropertyPicDTO) {
+}
+exports.ReqUpdatePropertyPicDTO = ReqUpdatePropertyPicDTO;
+__decorate([
+    (0, swagger_1.ApiHideProperty)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ReqUpdatePropertyPicDTO.prototype, "pic_id", void 0);
+class ReqGetPicListDTO extends common_1.PaginationDTO {
+}
+exports.ReqGetPicListDTO = ReqGetPicListDTO;
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], ReqGetPicListDTO.prototype, "property_id", void 0);
 //# sourceMappingURL=request.dto.js.map

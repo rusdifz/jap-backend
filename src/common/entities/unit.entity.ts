@@ -15,7 +15,6 @@ import { PropertiesDB } from './property.entity';
 import { Unit } from '../interfaces/units.interface';
 
 @Entity({ name: 'units' })
-// @Entity({ name: 'units_dummy' })
 export class UnitsDB implements Unit {
   @PrimaryGeneratedColumn('uuid')
   unit_id: string;

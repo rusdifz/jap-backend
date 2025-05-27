@@ -22,26 +22,26 @@ export class ReqCreateUnitDTO implements Partial<Unit> {
   property_id: number;
 
   @ApiProperty({ example: 26370 })
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
-  size: number;
+  size: number = 0;
 
   @ApiProperty({ example: '10' })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  floor: string;
+  floor: string = '';
 
   @ApiProperty({ example: ConditionUnitEnum.BARE })
   @IsNotEmpty()
   @IsEnum(ConditionUnitEnum, {
     message: 'Value status must be list in enum',
   })
-  condition: ConditionUnitEnum;
+  condition: ConditionUnitEnum = ConditionUnitEnum.BARE;
 
   @ApiProperty({ example: true })
   @IsNotEmpty()
   @IsBoolean()
-  available: boolean = true;
+  available: boolean;
 
   @ApiProperty({ example: 26370 })
   @IsNotEmpty()

@@ -22,7 +22,7 @@ exports.DashboardPropertiesModule = DashboardPropertiesModule;
 exports.DashboardPropertiesModule = DashboardPropertiesModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forFeature([common_2.PropertiesDB]),
+            typeorm_1.TypeOrmModule.forFeature([common_2.PropertiesDB, common_2.PropertyPicDB]),
             units_module_1.DashboardUnitsModule,
             images_module_1.DashboardImagesModule,
         ],

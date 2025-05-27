@@ -1679,28 +1679,32 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         },
                     };
                     const getData = await this.repository.findOne(query);
-                    console.log('get data', getData);
                     const headerImageX = doc.page.width - doc.page.margins.right - 150;
                     const headerImageY = 20;
                     doc.image(this.rootPathImageJAP + '/logo-new.png', headerImageX, headerImageY, {
                         width: 70,
                         height: 50,
                     });
-                    console.log('there');
                     const imageFooterX = 25;
                     const imageFooterY = 690;
                     doc.image(this.rootPathImageJAP + '/footer2.png', imageFooterX, imageFooterY, {
                         width: 550,
                         height: 40,
                     });
-                    console.log('asa');
                     if (getData.images.length > 0) {
-                        doc.image('public/images/property/1.png', 25, 70, {
+                        const imagePropertyPath = getData.images[0].path + '/' + getData.images[0].public_id;
+                        console.log('imae', getData.images[0]);
+                        const response = await fetch(getData.images[0].full_url);
+                        if (!response.ok) {
+                            throw new Error(`Failed to fetch image: ${response.statusText}`);
+                        }
+                        console.log('respo', response);
+                        const imageBuffer = await response.buffer();
+                        doc.image(getData.images[0].full_url, 25, 70, {
                             width: 138,
                             height: 188,
                         });
                     }
-                    console.log('this');
                     let address = getData.location;
                     const start = getData.address.toLowerCase().indexOf('jl');
                     if (start !== -1) {
@@ -1806,8 +1810,6 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                             });
                         }
                     }
-                    console.log('dd', dynamicRows.length);
-                    console.log('dyna', dynamicRows);
                     const table = doc.table({
                         x: 165,
                         y: positionYTable,
@@ -1829,7 +1831,6 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         table.row(rowConfig.content, rowConfig.styles || {});
                     });
                     if (dynamicRows.length < 8) {
-                        console.log('asas', 8 - dynamicRows.length);
                         for (let index = 0; index <= 10 - dynamicRows.length; index++) {
                             table.row(['', '', '', '', '', '']);
                         }
@@ -2156,7 +2157,9 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         getData.amenities[4],
                         '',
                     ]);
-                    console.log('index', index);
+                    if (index !== propertiesData.properties_download.length) {
+                        doc.addPage();
+                    }
                 }
                 doc.end();
                 doc.on('data', buffers.push.bind(buffers));

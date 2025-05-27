@@ -20,6 +20,7 @@ __exportStar(require("./master-amenities.entity"), exports);
 __exportStar(require("./master-location.entity"), exports);
 __exportStar(require("./media.entity"), exports);
 __exportStar(require("./property.entity"), exports);
+__exportStar(require("./property-pic.entity"), exports);
 __exportStar(require("./unit.entity"), exports);
 __exportStar(require("./user.entity"), exports);
 //# sourceMappingURL=index.js.map

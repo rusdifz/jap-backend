@@ -2,6 +2,7 @@ import { LocationEnum, PropertyStatusEnum, StatusPublishEnum } from 'src/common'
 import { PropertyAbstract } from '../interfaces/property.interface';
 import { UnitsDB } from './unit.entity';
 import { MediaDB } from './media.entity';
+import { PropertyPicDB } from './property-pic.entity';
 export declare class PropertiesDB implements PropertyAbstract {
     property_id: number;
     popular: number;
@@ -63,4 +64,5 @@ export declare class PropertiesDB implements PropertyAbstract {
     deleted_by: string;
     units?: UnitsDB[];
     images?: MediaDB[];
+    pic?: PropertyPicDB[];
 }

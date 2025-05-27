@@ -79,4 +79,5 @@ export declare class ResProperty implements IProperty {
     images: IMedia[];
     created_at?: string;
     updated_at?: string;
+    pic: any[];
 }
