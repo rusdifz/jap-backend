@@ -270,7 +270,6 @@ __decorate([
     (0, swagger_1.ApiProperty)({ example: 'Thamrin Building' }),
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
-    (0, common_1.IsUnique)(common_1.PropertiesDB, 'name', { message: 'Duplicate name Property' }),
     __metadata("design:type", String)
 ], ReqCreatePropertyDTO.prototype, "name", void 0);
 __decorate([
@@ -401,6 +400,21 @@ __decorate([
     (0, class_transformer_1.Type)(() => OtherInfo),
     __metadata("design:type", OtherInfo)
 ], ReqCreatePropertyDTO.prototype, "other_info", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ReqCreatePropertyDTO.prototype, "ac_info", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ReqCreatePropertyDTO.prototype, "electricity_info", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ReqCreatePropertyDTO.prototype, "lighting_info", void 0);
 class ReqUpdatePropertyDTO extends (0, swagger_1.PartialType)(ReqCreatePropertyDTO) {
 }
 exports.ReqUpdatePropertyDTO = ReqUpdatePropertyDTO;

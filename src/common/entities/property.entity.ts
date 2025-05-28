@@ -166,6 +166,15 @@ export class PropertiesDB implements PropertyAbstract {
   })
   location: LocationEnum | any;
 
+  @Column({ type: 'varchar', length: 250, nullable: true })
+  ac_info: string;
+
+  @Column({ type: 'varchar', length: 250, nullable: true })
+  electricity_info: string;
+
+  @Column({ type: 'varchar', length: 250, nullable: true })
+  lighting_info: string;
+
   @Column({ type: 'varchar', length: 200, nullable: true })
   koordinat_map: string;
 

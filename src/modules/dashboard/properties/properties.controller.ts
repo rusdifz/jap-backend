@@ -234,6 +234,7 @@ export class DashboardPropertiesController {
     @UserAuth() user: IJwtUser,
   ) {
     console.log('body pdf', body);
+    console.log('user', user);
 
     const pdfBuffer = await this.serviceGenerateFile.generatePDFComparissonNew(
       body,

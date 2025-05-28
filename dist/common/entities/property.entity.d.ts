@@ -45,6 +45,9 @@ export declare class PropertiesDB implements PropertyAbstract {
     size_floor: number;
     address: string;
     location: LocationEnum | any;
+    ac_info: string;
+    electricity_info: string;
+    lighting_info: string;
     koordinat_map: string;
     nearby_bus_station: string;
     nearby_hospital: string;

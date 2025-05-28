@@ -56,6 +56,9 @@ async function mapReqCreateToDb(payload, admin) {
         other_info_electricity: payload.other_info?.electricity,
         other_info_loading_capacity: payload.other_info?.loading_capacity,
         other_info_power_unit: payload.other_info?.power_unit,
+        lighting_info: payload.lighting_info,
+        ac_info: payload.ac_info,
+        electricity_info: payload.electricity_info,
         created_by: admin?.user?.username ?? 'system',
     };
 }
@@ -111,6 +114,9 @@ async function mapReqUpdateToDB(payload, admin) {
         other_info_electricity: payload.other_info?.electricity,
         other_info_loading_capacity: payload.other_info?.loading_capacity,
         other_info_power_unit: payload.other_info?.power_unit,
+        lighting_info: payload.lighting_info,
+        ac_info: payload.ac_info,
+        electricity_info: payload.electricity_info,
         updated_by: admin?.user?.username ?? 'system',
     };
 }

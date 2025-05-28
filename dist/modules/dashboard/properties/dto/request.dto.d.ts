@@ -80,6 +80,9 @@ export declare class ReqCreatePropertyDTO implements Partial<IProperty> {
     telecommunication: Telecommunication;
     fire_safety: FireSafety;
     other_info: OtherInfo;
+    ac_info: string;
+    electricity_info: string;
+    lighting_info: string;
 }
 declare const ReqUpdatePropertyDTO_base: import("@nestjs/common").Type<Partial<ReqCreatePropertyDTO>>;
 export declare class ReqUpdatePropertyDTO extends ReqUpdatePropertyDTO_base {

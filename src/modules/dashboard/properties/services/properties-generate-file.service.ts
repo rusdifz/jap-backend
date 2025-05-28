@@ -1399,8 +1399,6 @@ export class DashboardPropertiesGenerateFileService {
   ): Promise<Buffer> {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log('props', propertiesData);
-
         const queryUnit: FindManyOptions<UnitsDB> = {
           select: {
             unit_id: true,
@@ -1420,6 +1418,9 @@ export class DashboardPropertiesGenerateFileService {
               },
               price_rent_sqm: true,
               service_charge: true,
+              ac_info: true,
+              electricity_info: true,
+              lighting_info: true,
             },
           },
           where: {
@@ -1436,44 +1437,6 @@ export class DashboardPropertiesGenerateFileService {
         };
 
         const getData = await this.unitService.findCustomOptions(queryUnit);
-        // console.log('data units', getData);
-
-        // const propertyIds = propertiesData.properties_download.map((dt) => {
-        //   return dt.property_id;
-        // });
-
-        // const query: FindManyOptions<PropertiesDB> = {
-        //   select: {
-        //     property_id: true,
-        //     name: true,
-        //     location: true,
-        //     property_size: true,
-        //     total_floor: true,
-        //     price_overtime_ac: true,
-        //     price_overtime_electricity: true,
-        //     units: {
-        //       unit_id: true,
-        //       size: true,
-        //       condition: true,
-        //     },
-        //     images: {
-        //       // name: true,
-        //       public_id: true,
-        //       path: true,
-        //     },
-        //     price_rent_sqm: true,
-        //     service_charge: true,
-        //   },
-        //   where: {
-        //     property_id: In(propertyIds),
-        //   },
-        //   relations: {
-        //     units: true,
-        //     images: true,
-        //   },
-        // };
-
-        // const getData = await this.repository.find(query);
 
         const buffers: any[] = [];
         const doc = new PDFDocument({
@@ -1507,13 +1470,15 @@ export class DashboardPropertiesGenerateFileService {
             property_size: size === 0 ? 'TBA' : size,
             // total_floor: dt.property.total_floor ?? 'TBA',
             total_floor: dt.floor ?? 'TBA',
-            price_overtime_ac: dt.property.price_overtime_ac
-              ? dt.property.price_overtime_ac.length > 42
-                ? dt.property.price_overtime_ac.toString().substring(0, 42)
-                : dt.property.price_overtime_ac
-              : 'TBA',
-            price_overtime_electricity:
-              dt.property.price_overtime_electricity ?? 'TBA',
+            // price_overtime_ac: dt.property.price_overtime_ac
+            //   ? dt.property.price_overtime_ac.length > 42
+            //     ? dt.property.price_overtime_ac.toString().substring(0, 42)
+            //     : dt.property.price_overtime_ac
+            //   : 'TBA',
+            price_overtime_ac: dt.property.ac_info ?? 'TBA',
+            // price_overtime_electricity:
+            //   dt.property.price_overtime_electricity ?? 'TBA',
+            price_overtime_electricity: dt.property.electricity_info ?? 'TBA',
             condition: dt.condition ?? 'Bare',
             price_rent_sqm: formatCurrency(priceRent),
             service_charge: formatCurrency(serviceCharge),
@@ -1762,18 +1727,26 @@ export class DashboardPropertiesGenerateFileService {
                       height: imgHeight,
                     });
                   }
+                  console.log('value doc', value);
 
-                  // return 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry,s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic';
+                  // if (value) {
+                  //   // const imageUp =  await this.fetchImage()
+                  //   // console.log('Directory Image Not Exist.');
+                  //   // mkdirSync(dirname, { recursive: true });
+                  //   // callback(null, dirname);
+                  //   // Gambar image menggunakan instance doc (gunakan variabel global 'doc')
+                  //   doc.image(value, xPos, yPos, {
+                  //     width: imgWidth,
+                  //     height: imgHeight,
+                  //   });
+                  // } else {
+                  //   //
+                  //   doc.image(noImage, xPos, yPos, {
+                  //     width: imgWidth,
+                  //     height: imgHeight,
+                  //   });
+                  // }
                 } else {
-                  // console.log('val', value);
-
-                  // if (value && value.length > 42) {
-                  //   value = value.substring(0, 30).trim();
-                  // }
-
-                  // if (rectCell.height > 40) {
-                  //   rectCell.height = rectCell.height / 2;
-                  // }
                   const cellHeight = rectCell.height;
                   const textHeight = doc.heightOfString(value, {
                     width: rectCell.width,
@@ -1788,26 +1761,11 @@ export class DashboardPropertiesGenerateFileService {
                   }
 
                   if (indexRow >= 1 && indexRow <= 6) {
-                    // Tulis teks dengan offset vertikal
-
-                    //   if (indexRow === 4) {
-                    //     console.log('value', value);
-
-                    //     console.log('cell height', cellHeight);
-                    //     console.log('text height', textHeight);
-                    //     console.log('y offset', yOffset);
-                    //     console.log('rect cell x', rectCell.x);
-                    //     console.log('rect cell y ', rectCell.y + yOffset);
-                    //   }
-
                     doc.text(value, rectCell.x, rectCell.y + yOffset, {
                       width: rectCell.width,
                       align: row.align,
                     });
                   } else {
-                    //   if (indexRow === 4) {
-
-                    //   } else
                     if (indexRow !== 12) {
                       // Tulis teks dengan offset vertikal
 
@@ -1950,7 +1908,7 @@ export class DashboardPropertiesGenerateFileService {
           ];
           // console.log('rows', rows);
 
-          let textPositionYEstimateNego: number = 390;
+          let textPositionYEstimateNego: number = 400;
 
           for (let iRow = 0; iRow < 17; iRow++) {
             // const element = array[index];
@@ -1967,7 +1925,7 @@ export class DashboardPropertiesGenerateFileService {
               if (iHeader !== 0) {
                 if (iRow === 4 || iRow === 5) {
                   if (rows[iRow][iHeader - 1].length > 25) {
-                    textPositionYEstimateNego = 405;
+                    textPositionYEstimateNego = 400;
                   }
                 }
 
@@ -2006,7 +1964,6 @@ export class DashboardPropertiesGenerateFileService {
             headers: headers,
             datas: datas,
           };
-          // console.log('tab', table);
 
           //color header : #7f7f7f
           //color kolom 1 #bfbfbf
@@ -2291,32 +2248,8 @@ export class DashboardPropertiesGenerateFileService {
             width: 550,
             height: 40,
           });
-          console.log('get data images', getData.images);
 
           if (getData.images.length > 0) {
-            const imagePropertyPath =
-              getData.images[0].path + '/' + getData.images[0].public_id;
-            console.log('imae', getData.images[0]);
-
-            // doc.image('public/images/property/1.png', 25, 70, {
-            //   width: 138,
-            //   height: 188,
-            // });
-            //     ,
-            // {
-            //     "property_id": 2,
-            //     "unit_id": [
-            //         "0fcf7a23-77c2-41d6-b671-6a1aab3841c9",
-            //         "110e3e59-c35a-4d1f-bada-8e895c979de9"
-            //     ]
-            // }
-            // const response: any = await fetch(getData.images[0].full_url);
-            // if (!response.ok) {
-            //   throw new Error(`Failed to fetch image: ${response.statusText}`);
-            // }
-            // console.log('respo', response);
-
-            // const imageBuffer = await response.buffer();
             const logo = await this.fetchImage(getData.images[0].full_url);
 
             doc.image(logo, 25, 70, {
@@ -2870,7 +2803,6 @@ export class DashboardPropertiesGenerateFileService {
     const image = await axios.get(src, {
       responseType: 'arraybuffer',
     });
-    console.log('image data', image);
 
     return image.data;
   }

@@ -53,7 +53,9 @@ let DashboardPropertiesService = class DashboardPropertiesService {
             Object.assign(query.where, { amenities: (0, typeorm_1.Like)(`%${props.amenities}%`) });
         }
         if (props.location) {
-            Object.assign(query.where, { location: props.location.toLowerCase() });
+            Object.assign(query.where, {
+                location: (0, typeorm_1.Like)(`%${props.location.toLowerCase()}%`),
+            });
         }
         if (props.property_type) {
             Object.assign(query.where, { property_type: props.property_type });
@@ -234,6 +236,9 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                         'Restaurants',
                         'Cafe & Coffee Shop',
                     ],
+                    ac_info: '',
+                    lighting_info: '',
+                    electricity_info: '',
                     price: {
                         phone_deposit: dt.phone_deposit ?? 'tba',
                         booking_deposit: 'tba',

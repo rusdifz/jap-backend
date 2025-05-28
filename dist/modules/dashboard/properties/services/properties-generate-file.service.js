@@ -1085,7 +1085,6 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
     async generatePDFComparissonNew(propertiesData, admin) {
         return new Promise(async (resolve, reject) => {
             try {
-                console.log('props', propertiesData);
                 const queryUnit = {
                     select: {
                         unit_id: true,
@@ -1105,6 +1104,9 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                             },
                             price_rent_sqm: true,
                             service_charge: true,
+                            ac_info: true,
+                            electricity_info: true,
+                            lighting_info: true,
                         },
                     },
                     where: {
@@ -1143,12 +1145,8 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         location: dt.property.location,
                         property_size: size === 0 ? 'TBA' : size,
                         total_floor: dt.floor ?? 'TBA',
-                        price_overtime_ac: dt.property.price_overtime_ac
-                            ? dt.property.price_overtime_ac.length > 42
-                                ? dt.property.price_overtime_ac.toString().substring(0, 42)
-                                : dt.property.price_overtime_ac
-                            : 'TBA',
-                        price_overtime_electricity: dt.property.price_overtime_electricity ?? 'TBA',
+                        price_overtime_ac: dt.property.ac_info ?? 'TBA',
+                        price_overtime_electricity: dt.property.electricity_info ?? 'TBA',
                         condition: dt.condition ?? 'Bare',
                         price_rent_sqm: (0, currency_helper_1.formatCurrency)(priceRent),
                         service_charge: (0, currency_helper_1.formatCurrency)(serviceCharge),
@@ -1314,6 +1312,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                                             height: imgHeight,
                                         });
                                     }
+                                    console.log('value doc', value);
                                 }
                                 else {
                                     const cellHeight = rectCell.height;
@@ -1432,7 +1431,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         row17,
                         row18,
                     ];
-                    let textPositionYEstimateNego = 390;
+                    let textPositionYEstimateNego = 400;
                     for (let iRow = 0; iRow < 17; iRow++) {
                         const data = {
                             building: {
@@ -1445,7 +1444,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                             if (iHeader !== 0) {
                                 if (iRow === 4 || iRow === 5) {
                                     if (rows[iRow][iHeader - 1].length > 25) {
-                                        textPositionYEstimateNego = 405;
+                                        textPositionYEstimateNego = 400;
                                     }
                                 }
                                 if (iRow === 10) {
@@ -1701,10 +1700,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         width: 550,
                         height: 40,
                     });
-                    console.log('get data images', getData.images);
                     if (getData.images.length > 0) {
-                        const imagePropertyPath = getData.images[0].path + '/' + getData.images[0].public_id;
-                        console.log('imae', getData.images[0]);
                         const logo = await this.fetchImage(getData.images[0].full_url);
                         doc.image(logo, 25, 70, {
                             width: 138,
@@ -2183,7 +2179,6 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
         const image = await axios_1.default.get(src, {
             responseType: 'arraybuffer',
         });
-        console.log('image data', image);
         return image.data;
     }
 };

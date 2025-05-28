@@ -253,7 +253,7 @@ export class ReqCreatePropertyDTO implements Partial<IProperty> {
   @ApiProperty({ example: 'Thamrin Building' })
   @IsNotEmpty()
   @IsString()
-  @IsUnique(PropertiesDB, 'name', { message: 'Duplicate name Property' })
+  // @IsUnique(PropertiesDB, 'name', { message: 'Duplicate name Property' })
   name: string;
 
   @IsOptional()
@@ -369,6 +369,18 @@ export class ReqCreatePropertyDTO implements Partial<IProperty> {
   @ValidateNested({ each: true })
   @Type(() => OtherInfo)
   other_info: OtherInfo;
+
+  @IsOptional()
+  @IsString()
+  ac_info: string;
+
+  @IsOptional()
+  @IsString()
+  electricity_info: string;
+
+  @IsOptional()
+  @IsString()
+  lighting_info: string;
 }
 
 export class ReqUpdatePropertyDTO extends PartialType(ReqCreatePropertyDTO) {

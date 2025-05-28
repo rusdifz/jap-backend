@@ -98,7 +98,9 @@ export class DashboardPropertiesService {
     }
 
     if (props.location) {
-      Object.assign(query.where, { location: props.location.toLowerCase() });
+      Object.assign(query.where, {
+        location: Like(`%${props.location.toLowerCase()}%`),
+      });
     }
 
     if (props.property_type) {
@@ -381,6 +383,9 @@ export class DashboardPropertiesService {
             'Restaurants',
             'Cafe & Coffee Shop',
           ],
+          ac_info: '',
+          lighting_info: '',
+          electricity_info: '',
           price: {
             phone_deposit: dt.phone_deposit ?? 'tba',
             booking_deposit: 'tba',

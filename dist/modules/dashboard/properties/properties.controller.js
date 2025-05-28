@@ -74,6 +74,7 @@ let DashboardPropertiesController = class DashboardPropertiesController {
     }
     async generatePdfComparissonNew(res, body, user) {
         console.log('body pdf', body);
+        console.log('user', user);
         const pdfBuffer = await this.serviceGenerateFile.generatePDFComparissonNew(body, user);
         const namePdf = 'Building Comparisson - ' + body.location;
         res.set({
