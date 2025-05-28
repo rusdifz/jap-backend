@@ -57,6 +57,11 @@ __decorate([
     __metadata("design:type", String)
 ], ReqCreateArticleDTO.prototype, "url_youtube", void 0);
 __decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ReqCreateArticleDTO.prototype, "tags", void 0);
+__decorate([
     (0, swagger_1.ApiProperty)({ example: common_1.StatusPublishEnum.DRAFT }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsEnum)(common_1.StatusPublishEnum, {

@@ -31,6 +31,9 @@ export class ArticleDB {
   @Column({ type: 'varchar', length: 250, nullable: true })
   url_youtube: string;
 
+  @Column({ type: 'varchar', length: 250, nullable: true })
+  tags: string;
+
   @Column({
     type: 'enum',
     enum: StatusPublishEnum,

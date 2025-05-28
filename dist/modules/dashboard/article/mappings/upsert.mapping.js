@@ -10,6 +10,7 @@ async function mapReqCreateToDB(payload, username_login) {
         thumbnail: payload.thumbnail,
         url_youtube: payload.url_youtube,
         status_publish: payload.status_publish,
+        tags: payload.tags,
         created_by: username_login ?? 'admin system',
     };
 }
@@ -22,6 +23,7 @@ async function mapReqUpdateToDB(payload, username_login) {
         thumbnail: payload.thumbnail,
         url_youtube: payload.url_youtube,
         status_publish: payload.status_publish,
+        tags: payload.tags,
         updated_by: username_login ?? 'admin system',
     };
 }

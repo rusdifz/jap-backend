@@ -6,6 +6,7 @@ export declare class ArticleDB {
     content: string;
     thumbnail: string;
     url_youtube: string;
+    tags: string;
     status_publish: StatusPublishEnum;
     created_at?: Date;
     updated_at?: Date;

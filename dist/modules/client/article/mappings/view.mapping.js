@@ -11,6 +11,7 @@ async function mapDbToResDetail(db, images_activity) {
         thumbnail: db.thumbnail,
         url_youtube: db.url_youtube,
         images_activity,
+        tags: db.tags,
         updated_at: (0, helpers_1.dayjs)(db.updated_at).format('D MMM YYYY'),
         created_by: db.created_by,
         updated_by: db.updated_by,

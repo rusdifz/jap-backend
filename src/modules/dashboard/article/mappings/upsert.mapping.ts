@@ -12,6 +12,7 @@ export async function mapReqCreateToDB(
     thumbnail: payload.thumbnail,
     url_youtube: payload.url_youtube,
     status_publish: payload.status_publish,
+    tags: payload.tags,
     created_by: username_login ?? 'admin system',
   };
 }
@@ -28,6 +29,7 @@ export async function mapReqUpdateToDB(
     thumbnail: payload.thumbnail,
     url_youtube: payload.url_youtube,
     status_publish: payload.status_publish,
+    tags: payload.tags,
     updated_by: username_login ?? 'admin system',
   };
 }

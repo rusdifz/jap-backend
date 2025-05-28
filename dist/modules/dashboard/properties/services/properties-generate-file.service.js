@@ -1581,7 +1581,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     .font('Helvetica')
                     .fontSize(10)
                     .fillColor('#000000')
-                    .text(admin.user.phone_number ?? '+62 87870702538', 89, 230, {
+                    .text(admin.user.phone_number ?? '+62 ', 89, 230, {
                     align: 'left',
                     width: 150,
                 });
@@ -1589,7 +1589,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     .font('Helvetica')
                     .fontSize(10)
                     .fillColor('#000000')
-                    .text('fauzanrusdi20@gmail.com', 89, 245, {
+                    .text(admin.user.email, 89, 245, {
                     align: 'left',
                     width: 150,
                 });

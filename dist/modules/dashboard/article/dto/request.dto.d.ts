@@ -8,6 +8,7 @@ export declare class ReqCreateArticleDTO {
     content: string;
     thumbnail: string;
     url_youtube: string;
+    tags: string;
     status_publish: StatusPublishEnum;
 }
 export declare class ReqUpdateArticleDTO extends ReqCreateArticleDTO {

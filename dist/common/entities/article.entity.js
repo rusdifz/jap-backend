@@ -40,6 +40,10 @@ __decorate([
     __metadata("design:type", String)
 ], ArticleDB.prototype, "url_youtube", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 250, nullable: true }),
+    __metadata("design:type", String)
+], ArticleDB.prototype, "tags", void 0);
+__decorate([
     (0, typeorm_1.Column)({
         type: 'enum',
         enum: enums_1.StatusPublishEnum,
