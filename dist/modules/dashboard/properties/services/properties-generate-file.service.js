@@ -13,6 +13,7 @@ exports.DashboardPropertiesGenerateFileService = void 0;
 const common_1 = require("@nestjs/common");
 const PDFDocument = require('pdfkit-table');
 const PDFDocumentHolland = require('@hollandjake/pdfkit-table');
+const axios_1 = require("axios");
 const fs_1 = require("fs");
 const typeorm_1 = require("typeorm");
 const properties_repository_1 = require("../properties.repository");
@@ -357,7 +358,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         row17,
                         row18,
                     ];
-                    let textPositionYEstimateNego = 390;
+                    let textPositionYEstimateNego = 500;
                     for (let iRow = 0; iRow < 17; iRow++) {
                         const data = {
                             building: {
@@ -1162,18 +1163,26 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                             : (0, currency_helper_1.formatCurrency)(0),
                     };
                 });
-                console.log('florr', propertiesNew);
                 const dataPerPage = 5;
                 const page = Math.ceil(propertiesNew.length / dataPerPage);
                 const coverImageWidth = 750;
                 const coverImageHeight = 500;
                 const coverImageX = (doc.page.width - coverImageWidth) / 2;
                 const coverImageY = (doc.page.height - coverImageHeight) / 2;
-                doc.image(this.rootPathImageJAP + '/cover.png', coverImageX, coverImageY, {
+                const [coverImage, logo, logoNew, noImage, coverBack, whiteImage, footerImage,] = await Promise.all([
+                    this.fetchImage('https://res.cloudinary.com/servicebizimage/image/upload/v1748412406/cover_aftuu4.png'),
+                    this.fetchImage('https://res.cloudinary.com/servicebizimage/image/upload/v1748412837/logo-jap_phsabu.png'),
+                    this.fetchImage('https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/logo-new_hk3vvn.png'),
+                    this.fetchImage('https://res.cloudinary.com/servicebizimage/image/upload/v1748412837/no-image_bnkobg.jpg'),
+                    this.fetchImage('https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/cover-back_owp7gd.png'),
+                    this.fetchImage('https://res.cloudinary.com/servicebizimage/image/upload/v1748412836/white_amk5jh.jpg'),
+                    this.fetchImage('https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/footer_yzecvl.png'),
+                ]);
+                doc.image(coverImage, coverImageX, coverImageY, {
                     width: coverImageWidth,
                     height: coverImageHeight,
                 });
-                doc.image(this.rootPathImageJAP + '/white.jpg', 575, 450, {
+                doc.image(whiteImage, 575, 450, {
                     width: 200,
                     height: 150,
                 });
@@ -1237,7 +1246,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     doc.addPage();
                     const headerImageX = doc.page.width - doc.page.margins.right - 150;
                     const headerImageY = 20;
-                    doc.image(this.rootPathImageJAP + '/logo-new.png', headerImageX, headerImageY, {
+                    doc.image(logoNew, headerImageX, headerImageY, {
                         width: 80,
                         height: 40,
                     });
@@ -1266,7 +1275,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                                     const imgHeight = rectCell.height;
                                     const xPos = rectCell.x + (rectCell.width - imgWidth) / 2;
                                     const yPos = rectCell.y + (rectCell.height - imgHeight) / 2;
-                                    doc.image(this.rootPathImageJAP + '/logo-jap.png', xPos, yPos, {
+                                    doc.image(logo, xPos, yPos, {
                                         width: rectCell.width,
                                         height: rectCell.height,
                                     });
@@ -1300,7 +1309,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                                         });
                                     }
                                     else {
-                                        doc.image(this.rootPathImageJAP + '/no-image.jpg', xPos, yPos, {
+                                        doc.image(noImage, xPos, yPos, {
                                             width: imgWidth,
                                             height: imgHeight,
                                         });
@@ -1337,7 +1346,6 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                             },
                         });
                     }
-                    console.log('headers', headers);
                     const rowCell1 = [
                         'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry,s standard dummy text ever since the 1500s',
                         'bold:Location',
@@ -1367,7 +1375,6 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     const row4 = databuilding.map((dt) => {
                         return dt.property_size;
                     });
-                    console.log('property size', row4);
                     const row5 = databuilding.map((dt) => {
                         return dt.total_floor;
                     });
@@ -1438,7 +1445,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                             if (iHeader !== 0) {
                                 if (iRow === 4 || iRow === 5) {
                                     if (rows[iRow][iHeader - 1].length > 25) {
-                                        textPositionYEstimateNego = 400;
+                                        textPositionYEstimateNego = 410;
                                     }
                                 }
                                 if (iRow === 10) {
@@ -1472,7 +1479,6 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         }
                         datas.push(data);
                     }
-                    console.log('datas', datas);
                     const table = {
                         headers: headers,
                         datas: datas,
@@ -1531,7 +1537,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     });
                     const imageFooterX = (doc.page.width - 720) / 2;
                     const imageFooterY = doc.page.height - doc.page.margins.bottom - 70;
-                    doc.image(this.rootPathImageJAP + '/footer.png', imageFooterX, imageFooterY, {
+                    doc.image(footerImage, imageFooterX, imageFooterY, {
                         width: 700,
                         height: 70,
                     });
@@ -1554,11 +1560,11 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                 const coverBackImageHeight = 600;
                 const coverBackImageX = (doc.page.width - 820) / 2;
                 const coverBackImageY = (doc.page.height - coverBackImageHeight) / 2;
-                doc.image(this.rootPathImageJAP + '/cover-back.png', coverBackImageX, coverBackImageY, {
+                doc.image(coverBack, coverBackImageX, coverBackImageY, {
                     width: coverBackImageWidth,
                     height: coverBackImageHeight,
                 });
-                doc.image(this.rootPathImageJAP + '/white.jpg', 85, 180, {
+                doc.image(whiteImage, 85, 180, {
                     width: 250,
                     height: 200,
                 });
@@ -1587,7 +1593,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     align: 'left',
                     width: 150,
                 });
-                doc.image(this.rootPathImageJAP + '/white.jpg', 500, 250, {
+                doc.image(whiteImage, 500, 250, {
                     width: 250,
                     height: 200,
                 });
@@ -1679,28 +1685,28 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         },
                     };
                     const getData = await this.repository.findOne(query);
+                    const [logoNew, footerImage] = await Promise.all([
+                        this.fetchImage('https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/footer2_s7vkbt.png'),
+                        this.fetchImage('https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/logo-new_hk3vvn.png'),
+                    ]);
                     const headerImageX = doc.page.width - doc.page.margins.right - 150;
                     const headerImageY = 20;
-                    doc.image(this.rootPathImageJAP + '/logo-new.png', headerImageX, headerImageY, {
+                    doc.image(logoNew, headerImageX, headerImageY, {
                         width: 70,
                         height: 50,
                     });
                     const imageFooterX = 25;
                     const imageFooterY = 690;
-                    doc.image(this.rootPathImageJAP + '/footer2.png', imageFooterX, imageFooterY, {
+                    doc.image(footerImage, imageFooterX, imageFooterY, {
                         width: 550,
                         height: 40,
                     });
+                    console.log('get data images', getData.images);
                     if (getData.images.length > 0) {
                         const imagePropertyPath = getData.images[0].path + '/' + getData.images[0].public_id;
                         console.log('imae', getData.images[0]);
-                        const response = await fetch(getData.images[0].full_url);
-                        if (!response.ok) {
-                            throw new Error(`Failed to fetch image: ${response.statusText}`);
-                        }
-                        console.log('respo', response);
-                        const imageBuffer = await response.buffer();
-                        doc.image(getData.images[0].full_url, 25, 70, {
+                        const logo = await this.fetchImage(getData.images[0].full_url);
+                        doc.image(logo, 25, 70, {
                             width: 138,
                             height: 188,
                         });
@@ -2169,6 +2175,13 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                 reject(error);
             }
         });
+    }
+    async fetchImage(src) {
+        const image = await axios_1.default.get(src, {
+            responseType: 'arraybuffer',
+        });
+        console.log('image data', image);
+        return image.data;
     }
 };
 exports.DashboardPropertiesGenerateFileService = DashboardPropertiesGenerateFileService;

@@ -11,4 +11,5 @@ export declare class DashboardPropertiesGenerateFileService {
     generatePDFDetailProperty(property_slug: string): Promise<Buffer>;
     generatePDFComparissonNew(propertiesData: PdfComparisonDTO, admin: IJwtUser): Promise<Buffer>;
     generatePDFDetailPropertyDetail(propertiesData: PdfDetailDTO): Promise<Buffer>;
+    fetchImage(src: any): Promise<any>;
 }

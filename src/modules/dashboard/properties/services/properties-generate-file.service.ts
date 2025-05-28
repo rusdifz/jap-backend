@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 const PDFDocument = require('pdfkit-table');
 // import PDFDocument from 'pdfkit';
 const PDFDocumentHolland = require('@hollandjake/pdfkit-table');
+import axios from 'axios';
 
 import { existsSync, mkdirSync } from 'fs';
 import { FindManyOptions, FindOneOptions, In } from 'typeorm';
@@ -517,7 +518,7 @@ export class DashboardPropertiesGenerateFileService {
             row18,
           ];
 
-          let textPositionYEstimateNego: number = 390;
+          let textPositionYEstimateNego: number = 500;
 
           for (let iRow = 0; iRow < 17; iRow++) {
             // const element = array[index];
@@ -1484,20 +1485,6 @@ export class DashboardPropertiesGenerateFileService {
         const propertiesNew: any = getData.map((dt) => {
           let size = dt.size ?? dt.property.property_size ?? 0;
 
-          // propertiesData.properties_download.forEach((property) => {
-          //   if (property.property_id == dt.property_id) {
-          //     //find unit
-
-          //     const findUnit = dt.units.find(
-          //       (id) => id.unit_id == property.unit_id,
-          //     );
-
-          //     if (findUnit) {
-          //       size = findUnit.size;
-          //     }
-          //   }
-          // });
-
           const priceRent = dt.property.price_rent_sqm ?? 0;
           const serviceCharge = dt.property.service_charge ?? 0;
 
@@ -1542,7 +1529,6 @@ export class DashboardPropertiesGenerateFileService {
                 : formatCurrency(0),
           };
         });
-        console.log('florr', propertiesNew);
 
         const dataPerPage = 5;
         const page = Math.ceil(propertiesNew.length / dataPerPage);
@@ -1553,8 +1539,41 @@ export class DashboardPropertiesGenerateFileService {
         const coverImageX = (doc.page.width - coverImageWidth) / 2;
         const coverImageY = (doc.page.height - coverImageHeight) / 2;
 
+        const [
+          coverImage,
+          logo,
+          logoNew,
+          noImage,
+          coverBack,
+          whiteImage,
+          footerImage,
+        ] = await Promise.all([
+          this.fetchImage(
+            'https://res.cloudinary.com/servicebizimage/image/upload/v1748412406/cover_aftuu4.png',
+          ),
+          this.fetchImage(
+            'https://res.cloudinary.com/servicebizimage/image/upload/v1748412837/logo-jap_phsabu.png',
+          ),
+          this.fetchImage(
+            'https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/logo-new_hk3vvn.png',
+          ),
+          this.fetchImage(
+            'https://res.cloudinary.com/servicebizimage/image/upload/v1748412837/no-image_bnkobg.jpg',
+          ),
+          this.fetchImage(
+            'https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/cover-back_owp7gd.png',
+          ),
+          this.fetchImage(
+            'https://res.cloudinary.com/servicebizimage/image/upload/v1748412836/white_amk5jh.jpg',
+          ),
+          this.fetchImage(
+            'https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/footer_yzecvl.png',
+          ),
+        ]);
+
         doc.image(
-          this.rootPathImageJAP + '/cover.png',
+          // this.rootPathImageJAP + '/cover.png',
+          coverImage,
           coverImageX,
           coverImageY,
           {
@@ -1563,7 +1582,7 @@ export class DashboardPropertiesGenerateFileService {
           },
         );
 
-        doc.image(this.rootPathImageJAP + '/white.jpg', 575, 450, {
+        doc.image(whiteImage, 575, 450, {
           width: 200,
           height: 150,
         });
@@ -1641,15 +1660,11 @@ export class DashboardPropertiesGenerateFileService {
 
           const headerImageX = doc.page.width - doc.page.margins.right - 150;
           const headerImageY = 20;
-          doc.image(
-            this.rootPathImageJAP + '/logo-new.png',
-            headerImageX,
-            headerImageY,
-            {
-              width: 80,
-              height: 40,
-            },
-          );
+
+          doc.image(logoNew, headerImageX, headerImageY, {
+            width: 80,
+            height: 40,
+          });
 
           let databuilding: any[];
 
@@ -1689,15 +1704,10 @@ export class DashboardPropertiesGenerateFileService {
                   const xPos = rectCell.x + (rectCell.width - imgWidth) / 2;
                   const yPos = rectCell.y + (rectCell.height - imgHeight) / 2;
 
-                  doc.image(
-                    this.rootPathImageJAP + '/logo-jap.png',
-                    xPos,
-                    yPos,
-                    {
-                      width: rectCell.width,
-                      height: rectCell.height,
-                    },
-                  );
+                  doc.image(logo, xPos, yPos, {
+                    width: rectCell.width,
+                    height: rectCell.height,
+                  });
 
                   // return value;
                   // return 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry,s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to';
@@ -1746,15 +1756,10 @@ export class DashboardPropertiesGenerateFileService {
                     });
                   } else {
                     //
-                    doc.image(
-                      this.rootPathImageJAP + '/no-image.jpg',
-                      xPos,
-                      yPos,
-                      {
-                        width: imgWidth,
-                        height: imgHeight,
-                      },
-                    );
+                    doc.image(noImage, xPos, yPos, {
+                      width: imgWidth,
+                      height: imgHeight,
+                    });
                   }
 
                   // return 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry,s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic';
@@ -1817,7 +1822,6 @@ export class DashboardPropertiesGenerateFileService {
               },
             });
           }
-          console.log('headers', headers);
 
           //list cell 1
           const rowCell1 = [
@@ -1856,7 +1860,6 @@ export class DashboardPropertiesGenerateFileService {
           const row4 = databuilding.map((dt) => {
             return dt.property_size;
           });
-          console.log('property size', row4);
 
           //row 5 total floor
           const row5 = databuilding.map((dt) => {
@@ -1963,7 +1966,7 @@ export class DashboardPropertiesGenerateFileService {
               if (iHeader !== 0) {
                 if (iRow === 4 || iRow === 5) {
                   if (rows[iRow][iHeader - 1].length > 25) {
-                    textPositionYEstimateNego = 400;
+                    textPositionYEstimateNego = 410;
                   }
                 }
 
@@ -1997,7 +2000,6 @@ export class DashboardPropertiesGenerateFileService {
 
             datas.push(data);
           }
-          console.log('datas', datas);
 
           const table = {
             headers: headers,
@@ -2075,15 +2077,10 @@ export class DashboardPropertiesGenerateFileService {
 
           const imageFooterX = (doc.page.width - 720) / 2;
           const imageFooterY = doc.page.height - doc.page.margins.bottom - 70;
-          doc.image(
-            this.rootPathImageJAP + '/footer.png',
-            imageFooterX,
-            imageFooterY,
-            {
-              width: 700,
-              height: 70,
-            },
-          );
+          doc.image(footerImage, imageFooterX, imageFooterY, {
+            width: 700,
+            height: 70,
+          });
 
           const lengthHeaders = headers.length;
           const positionX =
@@ -2114,17 +2111,12 @@ export class DashboardPropertiesGenerateFileService {
         const coverBackImageX = (doc.page.width - 820) / 2;
         const coverBackImageY = (doc.page.height - coverBackImageHeight) / 2;
 
-        doc.image(
-          this.rootPathImageJAP + '/cover-back.png',
-          coverBackImageX,
-          coverBackImageY,
-          {
-            width: coverBackImageWidth,
-            height: coverBackImageHeight,
-          },
-        );
+        doc.image(coverBack, coverBackImageX, coverBackImageY, {
+          width: coverBackImageWidth,
+          height: coverBackImageHeight,
+        });
 
-        doc.image(this.rootPathImageJAP + '/white.jpg', 85, 180, {
+        doc.image(whiteImage, 85, 180, {
           width: 250,
           height: 200,
         });
@@ -2157,7 +2149,7 @@ export class DashboardPropertiesGenerateFileService {
             width: 150, // Lebar maksimum teks
           });
 
-        doc.image(this.rootPathImageJAP + '/white.jpg', 500, 250, {
+        doc.image(whiteImage, 500, 250, {
           width: 250,
           height: 200,
         });
@@ -2275,30 +2267,30 @@ export class DashboardPropertiesGenerateFileService {
 
           const getData = await this.repository.findOne(query);
 
+          const [logoNew, footerImage] = await Promise.all([
+            this.fetchImage(
+              'https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/footer2_s7vkbt.png',
+            ),
+            this.fetchImage(
+              'https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/logo-new_hk3vvn.png',
+            ),
+          ]);
+
           const headerImageX = doc.page.width - doc.page.margins.right - 150;
           const headerImageY = 20;
-          doc.image(
-            this.rootPathImageJAP + '/logo-new.png',
-            headerImageX,
-            headerImageY,
-            {
-              width: 70,
-              height: 50,
-            },
-          );
+          doc.image(logoNew, headerImageX, headerImageY, {
+            width: 70,
+            height: 50,
+          });
 
           const imageFooterX = 25;
           const imageFooterY = 690;
 
-          doc.image(
-            this.rootPathImageJAP + '/footer2.png',
-            imageFooterX,
-            imageFooterY,
-            {
-              width: 550,
-              height: 40,
-            },
-          );
+          doc.image(footerImage, imageFooterX, imageFooterY, {
+            width: 550,
+            height: 40,
+          });
+          console.log('get data images', getData.images);
 
           if (getData.images.length > 0) {
             const imagePropertyPath =
@@ -2317,14 +2309,16 @@ export class DashboardPropertiesGenerateFileService {
             //         "110e3e59-c35a-4d1f-bada-8e895c979de9"
             //     ]
             // }
-            const response: any = await fetch(getData.images[0].full_url);
-            if (!response.ok) {
-              throw new Error(`Failed to fetch image: ${response.statusText}`);
-            }
-            console.log('respo', response);
+            // const response: any = await fetch(getData.images[0].full_url);
+            // if (!response.ok) {
+            //   throw new Error(`Failed to fetch image: ${response.statusText}`);
+            // }
+            // console.log('respo', response);
 
-            const imageBuffer = await response.buffer();
-            doc.image(getData.images[0].full_url, 25, 70, {
+            // const imageBuffer = await response.buffer();
+            const logo = await this.fetchImage(getData.images[0].full_url);
+
+            doc.image(logo, 25, 70, {
               width: 138,
               height: 188,
             });
@@ -2865,5 +2859,14 @@ export class DashboardPropertiesGenerateFileService {
         reject(error);
       }
     });
+  }
+
+  async fetchImage(src) {
+    const image = await axios.get(src, {
+      responseType: 'arraybuffer',
+    });
+    console.log('image data', image);
+
+    return image.data;
   }
 }
