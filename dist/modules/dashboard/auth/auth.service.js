@@ -19,9 +19,10 @@ let AuthService = class AuthService {
         this.repository = repository;
     }
     async login(payload) {
-        const user = await this.repository.findOneBy({
-            username: payload.username,
-        });
+        let queryWhere = payload.email
+            ? { email: payload.email }
+            : { username: payload.username };
+        const user = await this.repository.findOneBy(queryWhere);
         if (user) {
             const isMatchPassword = await bcrypt.compare(payload.password, user.password);
             if (isMatchPassword) {

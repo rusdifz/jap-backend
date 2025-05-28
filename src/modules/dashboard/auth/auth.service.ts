@@ -13,9 +13,11 @@ export class AuthService {
   constructor(private readonly repository: AuthRepository) {}
 
   async login(payload: AuthDTO): Promise<JsonWebKey> {
-    const user = await this.repository.findOneBy({
-      username: payload.username,
-    });
+    let queryWhere = payload.email
+      ? { email: payload.email }
+      : { username: payload.username };
+
+    const user = await this.repository.findOneBy(queryWhere);
 
     if (user) {
       const isMatchPassword = await bcrypt.compare(

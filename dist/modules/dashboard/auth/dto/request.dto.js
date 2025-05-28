@@ -18,10 +18,16 @@ class AuthDTO {
 exports.AuthDTO = AuthDTO;
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'rusdifz' }),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], AuthDTO.prototype, "username", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'fauzanrusdi20@gmail.com' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEmail)(),
+    __metadata("design:type", String)
+], AuthDTO.prototype, "email", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'Testpass98_' }),
     (0, class_validator_1.IsOptional)(),
