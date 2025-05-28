@@ -1686,8 +1686,8 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     };
                     const getData = await this.repository.findOne(query);
                     const [logoNew, footerImage] = await Promise.all([
-                        this.fetchImage('https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/footer2_s7vkbt.png'),
                         this.fetchImage('https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/logo-new_hk3vvn.png'),
+                        this.fetchImage('https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/footer2_s7vkbt.png'),
                     ]);
                     const headerImageX = doc.page.width - doc.page.margins.right - 150;
                     const headerImageY = 20;
@@ -1712,10 +1712,13 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         });
                     }
                     let address = getData.location;
-                    const start = getData.address.toLowerCase().indexOf('jl');
-                    if (start !== -1) {
-                        const end = getData.address.indexOf(',', start);
-                        address = getData.address.substring(start, end).trim();
+                    if (getData.address) {
+                        const start = getData.address.toLowerCase().indexOf('jl');
+                        console.log('satr', start);
+                        if (start !== -1) {
+                            const end = getData.address.indexOf(',', start);
+                            address = getData.address.substring(start, end).trim();
+                        }
                     }
                     doc
                         .font('Helvetica-Bold')

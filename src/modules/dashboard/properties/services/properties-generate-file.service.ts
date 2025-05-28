@@ -868,6 +868,7 @@ export class DashboardPropertiesGenerateFileService {
         }
 
         let address: any = getData.location;
+
         // 1. Cari posisi "Jl"
         const start = getData.address.toLowerCase().indexOf('jl');
 
@@ -2269,10 +2270,10 @@ export class DashboardPropertiesGenerateFileService {
 
           const [logoNew, footerImage] = await Promise.all([
             this.fetchImage(
-              'https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/footer2_s7vkbt.png',
+              'https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/logo-new_hk3vvn.png',
             ),
             this.fetchImage(
-              'https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/logo-new_hk3vvn.png',
+              'https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/footer2_s7vkbt.png',
             ),
           ]);
 
@@ -2325,15 +2326,19 @@ export class DashboardPropertiesGenerateFileService {
           }
 
           let address: any = getData.location;
-          // 1. Cari posisi "Jl"
-          const start = getData.address.toLowerCase().indexOf('jl');
 
-          if (start !== -1) {
-            // 2. Cari koma pertama setelah posisi tersebut
-            const end = getData.address.indexOf(',', start);
+          if (getData.address) {
+            // 1. Cari posisi "Jl"
+            const start = getData.address.toLowerCase().indexOf('jl');
+            console.log('satr', start);
 
-            // 3. Ambil substring dari "Jl" hingga sebelum koma
-            address = getData.address.substring(start, end).trim();
+            if (start !== -1) {
+              // 2. Cari koma pertama setelah posisi tersebut
+              const end = getData.address.indexOf(',', start);
+
+              // 3. Ambil substring dari "Jl" hingga sebelum koma
+              address = getData.address.substring(start, end).trim();
+            }
           }
           doc
             .font('Helvetica-Bold')
