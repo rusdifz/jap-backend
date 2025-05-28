@@ -1966,7 +1966,7 @@ export class DashboardPropertiesGenerateFileService {
               if (iHeader !== 0) {
                 if (iRow === 4 || iRow === 5) {
                   if (rows[iRow][iHeader - 1].length > 25) {
-                    textPositionYEstimateNego = 410;
+                    textPositionYEstimateNego = 405;
                   }
                 }
 
