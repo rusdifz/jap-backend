@@ -21,10 +21,15 @@ export class CloudinaryFileService {
         {
           folder: 'jardine-asia-pasific/' + folder_name,
           transformation: [{ quality: 'auto', fetch_format: 'auto' }],
+          eager: [{ width: 1200, quality: 'auto', fetch_format: 'auto' }],
+          eager_async: true,
         },
         (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
+          if (error) {
+            console.log('error', error);
+
+            reject(error);
+          } else resolve(result);
         },
       );
       stream.end(resizedBuffer);

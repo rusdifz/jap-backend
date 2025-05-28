@@ -41,7 +41,7 @@ export class ReqCreateUserDTO {
   @ApiProperty({ example: 'Testpass98_' })
   @IsNotEmpty()
   @IsString()
-  @IsStrongPassword()
+  // @IsStrongPassword()
   password: string;
 
   @ApiPropertyOptional({ example: RoleEnum.ADMIN })

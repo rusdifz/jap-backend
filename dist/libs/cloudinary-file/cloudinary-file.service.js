@@ -20,9 +20,13 @@ let CloudinaryFileService = class CloudinaryFileService {
             const stream = cloudinary_1.v2.uploader.upload_stream({
                 folder: 'jardine-asia-pasific/' + folder_name,
                 transformation: [{ quality: 'auto', fetch_format: 'auto' }],
+                eager: [{ width: 1200, quality: 'auto', fetch_format: 'auto' }],
+                eager_async: true,
             }, (error, result) => {
-                if (error)
+                if (error) {
+                    console.log('error', error);
                     reject(error);
+                }
                 else
                     resolve(result);
             });

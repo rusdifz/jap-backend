@@ -78,5 +78,5 @@ export const uploadImageInterceptor = {
 
 export const validateImageInterceptor = {
   fileFilter: filterImage,
-  limits: { fileSize: 50 * 1024 * 1024 }, //max 50 mb
+  limits: { fileSize: 10 * 1024 * 1024 }, //max 10 mb
 };
