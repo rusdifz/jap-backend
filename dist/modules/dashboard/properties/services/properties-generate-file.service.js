@@ -1085,6 +1085,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
     async generatePDFComparissonNew(propertiesData, admin) {
         return new Promise(async (resolve, reject) => {
             try {
+                console.log('admin', admin);
                 const queryUnit = {
                     select: {
                         unit_id: true,
@@ -1312,7 +1313,6 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                                             height: imgHeight,
                                         });
                                     }
-                                    console.log('value doc', value);
                                 }
                                 else {
                                     const cellHeight = rectCell.height;
@@ -1567,7 +1567,10 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     width: 250,
                     height: 200,
                 });
-                const adminName = admin.user.first_name + ' ' + admin.user.last_name;
+                const firstName = admin.user.first_name ?? '';
+                const lastName = admin.user.last_name ?? '';
+                const adminName = firstName + lastName;
+                console.log('admin', adminName);
                 doc
                     .font('Helvetica-Bold')
                     .fontSize(10)

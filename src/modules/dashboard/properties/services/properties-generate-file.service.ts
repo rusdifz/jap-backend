@@ -1399,6 +1399,8 @@ export class DashboardPropertiesGenerateFileService {
   ): Promise<Buffer> {
     return new Promise(async (resolve, reject) => {
       try {
+        console.log('admin', admin);
+
         const queryUnit: FindManyOptions<UnitsDB> = {
           select: {
             unit_id: true,
@@ -1727,7 +1729,6 @@ export class DashboardPropertiesGenerateFileService {
                       height: imgHeight,
                     });
                   }
-                  console.log('value doc', value);
 
                   // if (value) {
                   //   // const imageUp =  await this.fetchImage()
@@ -2079,7 +2080,11 @@ export class DashboardPropertiesGenerateFileService {
           height: 200,
         });
 
-        const adminName = admin.user.first_name + ' ' + admin.user.last_name;
+        const firstName = admin.user.first_name ?? '';
+        const lastName = admin.user.last_name ?? '';
+        const adminName = firstName + lastName;
+        console.log('admin', adminName);
+
         doc
           .font('Helvetica-Bold')
           .fontSize(10)
