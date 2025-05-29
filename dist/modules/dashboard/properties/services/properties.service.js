@@ -89,7 +89,9 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                 units: { rent_sqm: (0, typeorm_1.Between)(props.min_rent_sqm, props.max_rent_sqm) },
             });
         }
+        console.time('getDB');
         const search = await this.repository.findAndCount(query);
+        console.timeEnd('getDB');
         const properties = search[0].length > 0 ? await (0, view_mapping_1.mapDbToResList)(search[0]) : [];
         return { data: properties, count: search[1] };
     }

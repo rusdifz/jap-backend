@@ -138,9 +138,9 @@ export class DashboardPropertiesService {
         units: { rent_sqm: Between(props.min_rent_sqm, props.max_rent_sqm) },
       });
     }
-
+    console.time('getDB');
     const search = await this.repository.findAndCount(query);
-
+    console.timeEnd('getDB');
     const properties =
       search[0].length > 0 ? await mapDbToResList(search[0]) : [];
 
