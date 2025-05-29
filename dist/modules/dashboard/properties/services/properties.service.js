@@ -44,7 +44,7 @@ let DashboardPropertiesService = class DashboardPropertiesService {
     async getList(props) {
         let query = {
             where: {},
-            relations: { units: true },
+            relations: ['units'],
         };
         query = await this.repository.sort(query, props);
         query = await this.repository.paginate(query, props);
@@ -89,11 +89,8 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                 units: { rent_sqm: (0, typeorm_1.Between)(props.min_rent_sqm, props.max_rent_sqm) },
             });
         }
-        console.time('getDB');
         const search = await this.repository.findAndCount(query);
-        console.timeEnd('getDB');
-        const properties = search[0].length > 0 ? await (0, view_mapping_1.mapDbToResList)(search[0]) : [];
-        return { data: properties, count: search[1] };
+        return { data: search[0], count: search[1] };
     }
     async getListCustom(queryOptions) {
         return await this.repository.find(queryOptions);

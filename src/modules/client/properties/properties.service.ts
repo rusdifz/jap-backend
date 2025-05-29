@@ -36,10 +36,11 @@ export class ClientPropertiesService {
       where: {
         status_publish: StatusPublishEnum.PUBLISH,
       },
-      // order: {
-      //   created_at: 'desc',
-      // },
-      relations: { units: true, images: true },
+      order: {
+        updated_at: 'desc',
+      },
+      // relations: { units: true, images: true },
+      relations: ['units', 'images'],
     };
 
     // sort & order query

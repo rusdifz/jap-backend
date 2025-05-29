@@ -39,7 +39,10 @@ let ClientPropertiesService = class ClientPropertiesService {
             where: {
                 status_publish: common_2.StatusPublishEnum.PUBLISH,
             },
-            relations: { units: true, images: true },
+            order: {
+                updated_at: 'desc',
+            },
+            relations: ['units', 'images'],
         };
         query = await this.repository.sort(query, props);
         query = await this.repository.paginate(query, props);

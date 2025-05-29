@@ -2,7 +2,6 @@ import { FindManyOptions, FindOptionsWhere } from 'typeorm';
 import { IJwtUser, PropertiesDB } from 'src/common';
 import { PropertiesDTO, ReqCreatePropertyPicDTO, ReqGetPicListDTO, ReqUpdatePropertyPicDTO } from '../dto/request.dto';
 import { ReqCreatePropertyDTO, ReqUpdatePropertyDTO } from '../dto/request.dto';
-import { ResProperty } from '../dto/response.dto';
 import { DashboardUnitsService } from '../../units/units.service';
 import { DashboardPropertiesRepository } from '../properties.repository';
 import { DashboardImagesService } from '../../images/images.service';
@@ -13,7 +12,7 @@ export declare class DashboardPropertiesService {
     constructor(repository: DashboardPropertiesRepository, unitService: DashboardUnitsService, imageService: DashboardImagesService);
     get(property_id: number | string): Promise<any>;
     getList(props: PropertiesDTO): Promise<{
-        data: ResProperty[];
+        data: any[];
         count: number;
     }>;
     getListCustom(queryOptions: FindManyOptions<PropertiesDB>): Promise<PropertiesDB[]>;

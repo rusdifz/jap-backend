@@ -75,13 +75,11 @@ export class DashboardPropertiesService {
     return property ? await mapDbToResDetail(property, images) : null;
   }
 
-  async getList(
-    props: PropertiesDTO,
-  ): Promise<{ data: ResProperty[]; count: number }> {
+  async getList(props: PropertiesDTO): Promise<{ data: any[]; count: number }> {
     // initiate empty where query
     let query: FindManyOptions<PropertiesDB> = {
       where: {},
-      relations: { units: true },
+      relations: ['units'],
     };
 
     // sort & order query
@@ -138,13 +136,13 @@ export class DashboardPropertiesService {
         units: { rent_sqm: Between(props.min_rent_sqm, props.max_rent_sqm) },
       });
     }
-    console.time('getDB');
-    const search = await this.repository.findAndCount(query);
-    console.timeEnd('getDB');
-    const properties =
-      search[0].length > 0 ? await mapDbToResList(search[0]) : [];
 
-    return { data: properties, count: search[1] };
+    const search = await this.repository.findAndCount(query);
+
+    // const properties =
+    //   search[0].length > 0 ? await mapDbToResList(search[0]) : [];
+
+    return { data: search[0], count: search[1] };
   }
 
   async getListCustom(queryOptions: FindManyOptions<PropertiesDB>) {

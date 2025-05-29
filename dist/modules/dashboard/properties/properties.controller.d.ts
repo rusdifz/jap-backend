@@ -9,7 +9,7 @@ export declare class DashboardPropertiesController {
     constructor(service: DashboardPropertiesService, serviceGenerateFile: DashboardPropertiesGenerateFileService);
     getDetail(id: number | string): Promise<any>;
     getList(query: PropertiesDTO): Promise<{
-        data: import("./dto/response.dto").ResProperty[];
+        data: any[];
         count: number;
     }>;
     create(user: IJwtUser, body: ReqCreatePropertyDTO): Promise<ReqCreatePropertyDTO>;

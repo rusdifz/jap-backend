@@ -20,8 +20,7 @@ export const dbConfig = (): DbConfigInterface => ({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    autoLoadEntities: false,
-    // synchronize: true, // disabled for auto migration syncronize
+    autoLoadEntities: true,
     synchronize: false, // disabled for auto migration syncronize
     logging: false,
     entities: [
@@ -38,6 +37,6 @@ export const dbConfig = (): DbConfigInterface => ({
     // ssl: {
     //   rejectUnauthorized: false,
     // },
-    // charset: 'utf8mb4_unicode_ci',
+    charset: 'utf8mb4_unicode_ci',
   },
 });

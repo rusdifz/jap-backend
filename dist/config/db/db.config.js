@@ -10,7 +10,7 @@ const dbConfig = () => ({
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
-        autoLoadEntities: false,
+        autoLoadEntities: true,
         synchronize: false,
         logging: false,
         entities: [
@@ -24,6 +24,7 @@ const dbConfig = () => ({
             common_1.MasterLocationDB,
             common_1.PropertyPicDB,
         ],
+        charset: 'utf8mb4_unicode_ci',
     },
 });
 exports.dbConfig = dbConfig;
