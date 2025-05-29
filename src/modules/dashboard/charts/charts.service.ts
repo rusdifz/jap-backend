@@ -42,13 +42,24 @@ export class ChartsService {
       });
     }
 
-    return { charts };
+    return charts;
   }
 
   async chartStatisticProperty() {
+    const optionQuery: FindManyOptions<PropertiesDB> = {
+      select: {
+        property_id: true,
+        location: true,
+      },
+      order: {
+        updated_at: 'desc',
+      },
+      take: 500,
+    };
+
     const [locations, properties] = await Promise.all([
       this.masterLocationService.getList({ page: 1, limit: 500 }),
-      this.propertiesService.getList({ page: 1, limit: 1000 }),
+      this.propertiesService.getListCustom(optionQuery),
     ]);
 
     const charts = [];
@@ -59,7 +70,7 @@ export class ChartsService {
         count: 0,
       };
 
-      properties.data.forEach((property) => {
+      properties.forEach((property) => {
         if (property.location === location.location_name) {
           dataChart.count += 1;
         }
@@ -68,7 +79,7 @@ export class ChartsService {
       charts.push(dataChart);
     });
 
-    return { charts: charts };
+    return charts;
   }
 
   async tabelProperty() {
@@ -134,7 +145,8 @@ export class ChartsService {
     return charts;
   }
 
-  async homeDashboard(): Promise<ResDashboardHomeDTO> {
+  // async homeDashboard(): Promise<ResDashboardHomeDTO> {
+  async homeDashboard(): Promise<any> {
     const [
       hasBeenUpdated,
       listPropertyLastUpdated,
@@ -169,7 +181,7 @@ export class ChartsService {
 
     return {
       charts: {
-        hasBeenUpdated: hasBeenUpdated.charts,
+        hasBeenUpdated: hasBeenUpdated,
         pieCharts: {
           statisctisUpdated: {
             olderOneMonth: propertiesOlderOneMonth,
@@ -196,7 +208,7 @@ export class ChartsService {
             d: sumSizeD,
           },
         },
-        jumlahProperty: statisticProperty.charts,
+        jumlahProperty: statisticProperty,
       },
       tabels: listPropertyLastUpdated,
     };

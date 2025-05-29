@@ -16,41 +16,11 @@ let ChartsController = class ChartsController {
     constructor(service) {
         this.service = service;
     }
-    async getChartHasBeenUpdatedOneMonth() {
-        return await this.service.chartPropertyHasBeenUpdatedOneMonth();
-    }
-    async getChartStatistic() {
-        return await this.service.chartStatisticProperty();
-    }
-    async getTabelLastUpdated() {
-        return await this.service.tabelProperty();
-    }
     async getHomeDashboard() {
         return await this.service.homeDashboard();
     }
 };
 exports.ChartsController = ChartsController;
-__decorate([
-    (0, common_1.Version)('1'),
-    (0, common_1.Get)('/has-been-updated-one-month'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], ChartsController.prototype, "getChartHasBeenUpdatedOneMonth", null);
-__decorate([
-    (0, common_1.Version)('1'),
-    (0, common_1.Get)('/statistic'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], ChartsController.prototype, "getChartStatistic", null);
-__decorate([
-    (0, common_1.Version)('1'),
-    (0, common_1.Get)('/table'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], ChartsController.prototype, "getTabelLastUpdated", null);
 __decorate([
     (0, common_1.Version)('1'),
     (0, common_1.Get)('/home'),

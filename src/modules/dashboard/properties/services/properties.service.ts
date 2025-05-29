@@ -78,8 +78,6 @@ export class DashboardPropertiesService {
   async getList(
     props: PropertiesDTO,
   ): Promise<{ data: ResProperty[]; count: number }> {
-    console.log('props', props);
-
     // initiate empty where query
     let query: FindManyOptions<PropertiesDB> = {
       where: {},

@@ -38,12 +38,22 @@ let ChartsService = class ChartsService {
                 count: countData,
             });
         }
-        return { charts };
+        return charts;
     }
     async chartStatisticProperty() {
+        const optionQuery = {
+            select: {
+                property_id: true,
+                location: true,
+            },
+            order: {
+                updated_at: 'desc',
+            },
+            take: 500,
+        };
         const [locations, properties] = await Promise.all([
             this.masterLocationService.getList({ page: 1, limit: 500 }),
-            this.propertiesService.getList({ page: 1, limit: 1000 }),
+            this.propertiesService.getListCustom(optionQuery),
         ]);
         const charts = [];
         locations.data.forEach((location) => {
@@ -51,14 +61,14 @@ let ChartsService = class ChartsService {
                 location: location.location_name,
                 count: 0,
             };
-            properties.data.forEach((property) => {
+            properties.forEach((property) => {
                 if (property.location === location.location_name) {
                     dataChart.count += 1;
                 }
             });
             charts.push(dataChart);
         });
-        return { charts: charts };
+        return charts;
     }
     async tabelProperty() {
         const optionQuery = {
@@ -134,7 +144,7 @@ let ChartsService = class ChartsService {
         ]);
         return {
             charts: {
-                hasBeenUpdated: hasBeenUpdated.charts,
+                hasBeenUpdated: hasBeenUpdated,
                 pieCharts: {
                     statisctisUpdated: {
                         olderOneMonth: propertiesOlderOneMonth,
@@ -161,7 +171,7 @@ let ChartsService = class ChartsService {
                         d: sumSizeD,
                     },
                 },
-                jumlahProperty: statisticProperty.charts,
+                jumlahProperty: statisticProperty,
             },
             tabels: listPropertyLastUpdated,
         };

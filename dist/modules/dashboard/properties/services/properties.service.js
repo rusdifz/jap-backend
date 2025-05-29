@@ -42,7 +42,6 @@ let DashboardPropertiesService = class DashboardPropertiesService {
         return property ? await (0, view_mapping_1.mapDbToResDetail)(property, images) : null;
     }
     async getList(props) {
-        console.log('props', props);
         let query = {
             where: {},
             relations: { units: true },
