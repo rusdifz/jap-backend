@@ -90,7 +90,7 @@ export declare class ReqUpdatePropertyDTO extends ReqUpdatePropertyDTO_base {
 }
 export declare class PropertiesDTO extends PaginationDTO {
     location?: LocationEnum;
-    property_type?: PropertyTypeEnum;
+    property_type?: PropertyTypeEnum[];
     property_status?: PropertyStatusEnum;
     amenities?: string[];
     search_keyword?: string;

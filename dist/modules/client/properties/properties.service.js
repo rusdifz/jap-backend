@@ -53,7 +53,9 @@ let ClientPropertiesService = class ClientPropertiesService {
             Object.assign(query.where, { location: props.location.toLowerCase() });
         }
         if (props.property_type) {
-            Object.assign(query.where, { property_type: props.property_type });
+            Object.assign(query.where, {
+                property_type: (0, typeorm_1.Like)(`%${props.property_type.toLowerCase()}%`),
+            });
         }
         if (props.property_status) {
         }

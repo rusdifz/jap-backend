@@ -433,7 +433,7 @@ __decorate([
 ], PropertiesDTO.prototype, "location", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
+    __metadata("design:type", Array)
 ], PropertiesDTO.prototype, "property_type", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),

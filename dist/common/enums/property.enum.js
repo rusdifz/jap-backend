@@ -38,10 +38,11 @@ var PropertyStatusEnum;
 var PropertyTypeEnum;
 (function (PropertyTypeEnum) {
     PropertyTypeEnum["OFFICE"] = "Office";
-    PropertyTypeEnum["RESIDENTIAL"] = "Residential";
-    PropertyTypeEnum["lANDED"] = "Landed";
+    PropertyTypeEnum["SERVICED_OFFICED"] = "Serviced Office";
+    PropertyTypeEnum["VIRTUAL_OFFICE"] = "Virtual Office";
+    PropertyTypeEnum["COWORKING"] = "Coworking Space";
     PropertyTypeEnum["RETAIL"] = "Retail";
-    PropertyTypeEnum["COMMERCIAL"] = "Commercial";
+    PropertyTypeEnum["RESIDENTIAL"] = "Residential";
 })(PropertyTypeEnum || (exports.PropertyTypeEnum = PropertyTypeEnum = {}));
 var ConditionUnitEnum;
 (function (ConditionUnitEnum) {
