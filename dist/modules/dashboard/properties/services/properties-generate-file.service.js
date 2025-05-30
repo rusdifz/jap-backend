@@ -2164,7 +2164,9 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         getData.amenities[4],
                         '',
                     ]);
-                    if (index !== propertiesData.properties_download.length) {
+                    console.log('index', index);
+                    console.log('asas', propertiesData.properties_download.length);
+                    if (index + 1 !== propertiesData.properties_download.length) {
                         doc.addPage();
                     }
                 }
