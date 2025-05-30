@@ -80,4 +80,7 @@ export declare class ResProperty implements IProperty {
     created_at?: string;
     updated_at?: string;
     pic: any[];
+    ac_info: string;
+    electricity_info: string;
+    lighting_info: string;
 }

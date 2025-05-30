@@ -48,6 +48,7 @@ let AdminService = class AdminService {
     }
     async update(payload, admin) {
         const user = await (0, upsert_mapping_1.mapReqUpdateToDB)(payload, admin);
+        console.log('update user', user);
         await this.repository.update({ id: user.id }, { ...user });
         return payload;
     }

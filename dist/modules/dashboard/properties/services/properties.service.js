@@ -90,7 +90,8 @@ let DashboardPropertiesService = class DashboardPropertiesService {
             });
         }
         const search = await this.repository.findAndCount(query);
-        return { data: search[0], count: search[1] };
+        const properties = search[0].length > 0 ? await (0, view_mapping_1.mapDbToResList)(search[0]) : [];
+        return { data: properties, count: search[1] };
     }
     async getListCustom(queryOptions) {
         return await this.repository.find(queryOptions);
@@ -112,7 +113,9 @@ let DashboardPropertiesService = class DashboardPropertiesService {
         return body;
     }
     async update(body, admin) {
+        console.log('body', body);
         const mapProperty = await (0, upsert_mapping_1.mapReqUpdateToDB)(body, admin);
+        console.log('map', mapProperty);
         await this.repository.update({ property_id: mapProperty.property_id }, mapProperty);
         return body;
     }

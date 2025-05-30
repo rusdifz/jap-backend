@@ -15,7 +15,7 @@ export async function mapReqUpdateToDB(
     profile_picture: body.profile_picture,
     role: body.role,
     address: body.address,
-    join_date: body.join_date,
+    // join_date: body.join_date,
     updated_by: admin.user.username,
   };
 }

@@ -1461,6 +1461,8 @@ export class DashboardPropertiesGenerateFileService {
           const totalCostBargain =
             negoRent > 0 ? size * (negoRent + serviceCharge) : 0;
 
+          console.log('dada', dt);
+
           return {
             unit_id: dt.unit_id,
             name: dt.property.name,
@@ -1470,16 +1472,8 @@ export class DashboardPropertiesGenerateFileService {
                 : '',
             location: dt.property.location,
             property_size: size === 0 ? 'TBA' : size,
-            // total_floor: dt.property.total_floor ?? 'TBA',
             total_floor: dt.floor ?? 'TBA',
-            // price_overtime_ac: dt.property.price_overtime_ac
-            //   ? dt.property.price_overtime_ac.length > 42
-            //     ? dt.property.price_overtime_ac.toString().substring(0, 42)
-            //     : dt.property.price_overtime_ac
-            //   : 'TBA',
             price_overtime_ac: dt.property.ac_info ?? 'TBA',
-            // price_overtime_electricity:
-            //   dt.property.price_overtime_electricity ?? 'TBA',
             price_overtime_electricity: dt.property.electricity_info ?? 'TBA',
             condition: dt.condition ?? 'Bare',
             price_rent_sqm: formatCurrency(priceRent),
@@ -1515,6 +1509,7 @@ export class DashboardPropertiesGenerateFileService {
           coverBack,
           whiteImage,
           footerImage,
+          // imageBuilding,
         ] = await Promise.all([
           this.fetchImage(
             'https://res.cloudinary.com/servicebizimage/image/upload/v1748412406/cover_aftuu4.png',
@@ -1537,6 +1532,7 @@ export class DashboardPropertiesGenerateFileService {
           this.fetchImage(
             'https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/footer_yzecvl.png',
           ),
+          // this.fetchImage(propertiesNew.image),
         ]);
 
         doc.image(
@@ -1687,6 +1683,14 @@ export class DashboardPropertiesGenerateFileService {
           ];
 
           for (const dt of databuilding) {
+            let image = noImage;
+
+            if (dt.image) {
+              image = await this.fetchImage(dt.image);
+            }
+            console.log('dt', dt.image);
+            console.log('image', image);
+
             headers.push({
               label: dt.name,
               property: dt.name + '-' + dt.unit_id,
@@ -1713,22 +1717,22 @@ export class DashboardPropertiesGenerateFileService {
                   const yPos = rectCell.y + (rectCell.height - imgHeight) / 2;
 
                   //pengecekan image exist or not
-                  if (existsSync(value)) {
-                    // console.log('Directory Image Not Exist.');
-                    // mkdirSync(dirname, { recursive: true });
-                    // callback(null, dirname);
-                    // Gambar image menggunakan instance doc (gunakan variabel global 'doc')
-                    doc.image(value, xPos, yPos, {
-                      width: imgWidth,
-                      height: imgHeight,
-                    });
-                  } else {
-                    //
-                    doc.image(noImage, xPos, yPos, {
-                      width: imgWidth,
-                      height: imgHeight,
-                    });
-                  }
+                  // if (existsSync(value)) {
+                  //   // console.log('Directory Image Not Exist.');
+                  //   // mkdirSync(dirname, { recursive: true });
+                  //   // callback(null, dirname);
+                  //   // Gambar image menggunakan instance doc (gunakan variabel global 'doc')
+                  //   doc.image(value, xPos, yPos, {
+                  //     width: imgWidth,
+                  //     height: imgHeight,
+                  //   });
+                  // } else {
+                  //   //
+                  doc.image(image, xPos, yPos, {
+                    width: imgWidth,
+                    height: imgHeight,
+                  });
+                  // }
 
                   // if (value) {
                   //   // const imageUp =  await this.fetchImage()
@@ -1909,7 +1913,7 @@ export class DashboardPropertiesGenerateFileService {
           ];
           // console.log('rows', rows);
 
-          let textPositionYEstimateNego: number = 400;
+          let textPositionYEstimateNego: number = 390;
 
           for (let iRow = 0; iRow < 17; iRow++) {
             // const element = array[index];

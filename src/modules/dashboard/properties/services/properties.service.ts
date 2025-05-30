@@ -139,10 +139,10 @@ export class DashboardPropertiesService {
 
     const search = await this.repository.findAndCount(query);
 
-    // const properties =
-    //   search[0].length > 0 ? await mapDbToResList(search[0]) : [];
+    const properties =
+      search[0].length > 0 ? await mapDbToResList(search[0]) : [];
 
-    return { data: search[0], count: search[1] };
+    return { data: properties, count: search[1] };
   }
 
   async getListCustom(queryOptions: FindManyOptions<PropertiesDB>) {
@@ -180,7 +180,11 @@ export class DashboardPropertiesService {
     body: ReqUpdatePropertyDTO,
     admin: IJwtUser,
   ): Promise<ReqUpdatePropertyDTO> {
+    console.log('body', body);
+
     const mapProperty = await mapReqUpdateToDB(body, admin);
+    console.log('map', mapProperty);
+
     await this.repository.update(
       { property_id: mapProperty.property_id },
       mapProperty,

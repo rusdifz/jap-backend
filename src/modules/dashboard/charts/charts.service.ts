@@ -66,13 +66,13 @@ export class ChartsService {
 
     locations.data.forEach((location) => {
       const dataChart = {
-        location: location.location_name,
-        count: 0,
+        key: location.location_name,
+        data: 0,
       };
 
       properties.forEach((property) => {
         if (property.location === location.location_name) {
-          dataChart.count += 1;
+          dataChart.data += 1;
         }
       });
 

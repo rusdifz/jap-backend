@@ -78,6 +78,12 @@ export interface PropertyAbstract {
   units?: Unit[];
   images?: IMedia[];
 
+  pic?: any[];
+
+  ac_info: string;
+  electricity_info: string;
+  lighting_info: string;
+
   //etc
   created_at?: Date;
   updated_at?: Date;
@@ -174,4 +180,8 @@ export interface IProperty {
   updated_by?: string;
   deleted_by?: string;
   pic: any[];
+
+  ac_info: string;
+  electricity_info: string;
+  lighting_info: string;
 }

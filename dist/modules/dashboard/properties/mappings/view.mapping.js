@@ -83,6 +83,9 @@ async function mapDbToResDetail(db, images) {
         units: db.units,
         pic: db.pic,
         images: images ?? [],
+        ac_info: db.ac_info,
+        electricity_info: db.electricity_info,
+        lighting_info: db.lighting_info,
         created_at: (0, common_1.dayjs)(db.created_at).format('MMMM D, YYYY'),
         updated_at: (0, common_1.dayjs)(db.updated_at).format('MMMM D, YYYY'),
     };
@@ -166,6 +169,9 @@ async function mapDbToResList(dbs) {
             },
             units: db.units,
             pic: db.pic,
+            ac_info: db.ac_info,
+            electricity_info: db.electricity_info,
+            lighting_info: db.lighting_info,
             images: db.images ?? [],
             created_at: (0, common_1.dayjs)(db.created_at).format('MMMM D, YYYY'),
             updated_at: db.updated_at

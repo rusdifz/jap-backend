@@ -63,6 +63,7 @@ export class AdminService {
     admin: IJwtUser,
   ): Promise<ReqUpdateUserDTO> {
     const user = await mapReqUpdateToDB(payload, admin);
+    console.log('update user', user);
 
     await this.repository.update({ id: user.id }, { ...user });
 

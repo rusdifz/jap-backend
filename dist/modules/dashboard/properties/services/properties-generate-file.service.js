@@ -1137,6 +1137,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     const costTotal = priceRent > 0 ? size * (priceRent + serviceCharge) : 0;
                     const negoRent = priceRent > 0 ? priceRent - 10000 : 0;
                     const totalCostBargain = negoRent > 0 ? size * (negoRent + serviceCharge) : 0;
+                    console.log('dada', dt);
                     return {
                         unit_id: dt.unit_id,
                         name: dt.property.name,
@@ -1286,6 +1287,12 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         },
                     ];
                     for (const dt of databuilding) {
+                        let image = noImage;
+                        if (dt.image) {
+                            image = await this.fetchImage(dt.image);
+                        }
+                        console.log('dt', dt.image);
+                        console.log('image', image);
                         headers.push({
                             label: dt.name,
                             property: dt.name + '-' + dt.unit_id,
@@ -1301,18 +1308,10 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                                     const imgHeight = rectCell.height;
                                     const xPos = rectCell.x + (rectCell.width - imgWidth) / 2;
                                     const yPos = rectCell.y + (rectCell.height - imgHeight) / 2;
-                                    if ((0, fs_1.existsSync)(value)) {
-                                        doc.image(value, xPos, yPos, {
-                                            width: imgWidth,
-                                            height: imgHeight,
-                                        });
-                                    }
-                                    else {
-                                        doc.image(noImage, xPos, yPos, {
-                                            width: imgWidth,
-                                            height: imgHeight,
-                                        });
-                                    }
+                                    doc.image(image, xPos, yPos, {
+                                        width: imgWidth,
+                                        height: imgHeight,
+                                    });
                                 }
                                 else {
                                     const cellHeight = rectCell.height;
@@ -1431,7 +1430,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         row17,
                         row18,
                     ];
-                    let textPositionYEstimateNego = 400;
+                    let textPositionYEstimateNego = 390;
                     for (let iRow = 0; iRow < 17; iRow++) {
                         const data = {
                             building: {
