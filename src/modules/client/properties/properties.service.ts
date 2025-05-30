@@ -4,7 +4,7 @@ import { PropertiesDTO } from './dto/request.dto';
 import { mapDbToResDetail, mapDbToResList } from './mappings/view.mapping';
 import { ResProperties, ResProperty } from './dto/response.dto';
 import { ClientPropertiesRepository } from './properties.repository';
-import { PropertiesDB, StatusPublishEnum } from 'src/common';
+import { LocationEnum, PropertiesDB, StatusPublishEnum } from 'src/common';
 
 @Injectable()
 export class ClientPropertiesService {
@@ -55,6 +55,10 @@ export class ClientPropertiesService {
     }
 
     if (props.location) {
+      if (props.location == 'PIM, Kebayoran & Blok M') {
+        props.location = LocationEnum.PBK;
+      }
+
       Object.assign(query.where, { location: props.location.toLowerCase() });
     }
 

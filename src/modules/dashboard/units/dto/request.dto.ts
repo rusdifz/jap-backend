@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   IsBoolean,
   IsOptional,
+  IsNumberString,
 } from 'class-validator';
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 
@@ -23,8 +24,8 @@ export class ReqCreateUnitDTO implements Partial<Unit> {
 
   @ApiProperty({ example: 26370 })
   @IsOptional()
-  @IsNumber()
-  size: number = 0;
+  // @IsNumberString()
+  size: string;
 
   @ApiProperty({ example: '10' })
   @IsOptional()

@@ -718,7 +718,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         const size = unit.size;
                         const rentalPrice = getData.price_rent_sqm;
                         const serviceCharge = getData.service_charge;
-                        const priceMonth = (rentalPrice + serviceCharge) * size;
+                        const priceMonth = (rentalPrice + serviceCharge) * parseFloat(size);
                         dynamicRows.push({
                             content: [
                                 unit.floor,
@@ -1131,7 +1131,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     layout: 'landscape',
                 });
                 const propertiesNew = getData.map((dt) => {
-                    let size = dt.size ?? dt.property.property_size ?? 0;
+                    let size = parseFloat(dt.size) ?? dt.property.property_size ?? 0;
                     const priceRent = dt.property.price_rent_sqm ?? 0;
                     const serviceCharge = dt.property.service_charge ?? 0;
                     const costTotal = priceRent > 0 ? size * (priceRent + serviceCharge) : 0;
@@ -1804,7 +1804,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                             const size = unit.size;
                             const rentalPrice = getData.price_rent_sqm;
                             const serviceCharge = getData.service_charge;
-                            const priceMonth = (rentalPrice + serviceCharge) * size;
+                            const priceMonth = (rentalPrice + serviceCharge) * parseFloat(size);
                             dynamicRows.push({
                                 content: [
                                     unit.floor,

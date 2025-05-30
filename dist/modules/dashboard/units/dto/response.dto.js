@@ -25,7 +25,7 @@ __decorate([
 ], ResUnit.prototype, "property_id", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], ResUnit.prototype, "size", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),

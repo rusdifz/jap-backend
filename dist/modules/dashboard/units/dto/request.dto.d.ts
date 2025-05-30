@@ -1,7 +1,7 @@
 import { ConditionUnitEnum, PaginationDTO, PropertyStatusEnum, Unit } from 'src/common';
 export declare class ReqCreateUnitDTO implements Partial<Unit> {
     property_id: number;
-    size: number;
+    size: string;
     floor: string;
     condition: ConditionUnitEnum;
     available: boolean;

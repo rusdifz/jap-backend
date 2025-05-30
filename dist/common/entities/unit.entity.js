@@ -37,8 +37,8 @@ __decorate([
     __metadata("design:type", String)
 ], UnitsDB.prototype, "floor", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'int', nullable: true }),
-    __metadata("design:type", Number)
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: true }),
+    __metadata("design:type", String)
 ], UnitsDB.prototype, "size", void 0);
 __decorate([
     (0, typeorm_1.Column)({

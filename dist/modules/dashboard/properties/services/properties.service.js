@@ -345,7 +345,7 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                 }
                 const unit = {
                     property_id: propertyId,
-                    size: unitSize,
+                    size: unitSize.toString(),
                     floor: dt.unit_floor,
                     condition: dt.unit_condition
                         ? Object.values(dt.unit_condition).includes(common_2.ConditionUnitEnum)
@@ -368,7 +368,7 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                 }
                 const unit = {
                     property_id: propertyId,
-                    size: unitSize,
+                    size: unitSize.toString(),
                     floor: dt.unit_floor ?? '',
                     condition: dt.unit_condition
                         ? Object.values(dt.unit_condition).includes(common_2.ConditionUnitEnum)

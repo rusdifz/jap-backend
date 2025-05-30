@@ -32,8 +32,8 @@ export class UnitsDB implements Unit {
   @Column({ type: 'varchar', length: 100, nullable: true })
   floor: string;
 
-  @Column({ type: 'int', nullable: true })
-  size: number;
+  @Column({ type: 'varchar', nullable: true })
+  size: string;
 
   @Column({
     type: 'enum',

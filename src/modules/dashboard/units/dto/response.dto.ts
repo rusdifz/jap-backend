@@ -10,7 +10,7 @@ export class ResUnit implements Partial<Unit> {
   property_id: number;
 
   @ApiProperty()
-  size: number;
+  size: string;
 
   @ApiProperty()
   floor: string;

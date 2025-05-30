@@ -6,7 +6,7 @@ export declare class UnitsDB implements Unit {
     property_id: number;
     status: PropertyStatusEnum;
     floor: string;
-    size: number;
+    size: string;
     condition: ConditionUnitEnum;
     available: boolean;
     rent_sqm: number;

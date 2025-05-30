@@ -505,7 +505,7 @@ export class DashboardPropertiesService {
 
         const unit: ReqCreateUnitDTO = {
           property_id: propertyId,
-          size: unitSize,
+          size: unitSize.toString(),
           floor: dt.unit_floor,
           condition: dt.unit_condition
             ? Object.values(dt.unit_condition).includes(ConditionUnitEnum)
@@ -535,7 +535,7 @@ export class DashboardPropertiesService {
 
         const unit: ReqCreateUnitDTO = {
           property_id: propertyId,
-          size: unitSize,
+          size: unitSize.toString(),
           floor: dt.unit_floor ?? '',
           condition: dt.unit_condition
             ? Object.values(dt.unit_condition).includes(ConditionUnitEnum)

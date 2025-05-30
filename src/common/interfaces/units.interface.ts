@@ -3,7 +3,7 @@ import { ConditionUnitEnum, PropertyStatusEnum } from '../enums';
 export interface Unit {
   unit_id: string;
   property_id: number;
-  size: number;
+  size: string;
   floor: string;
   condition: ConditionUnitEnum;
   available: boolean;

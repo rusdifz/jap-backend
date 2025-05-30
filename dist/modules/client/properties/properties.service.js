@@ -50,6 +50,9 @@ let ClientPropertiesService = class ClientPropertiesService {
             Object.assign(query.where, { amenities: (0, typeorm_1.Like)(`%${props.amenities}%`) });
         }
         if (props.location) {
+            if (props.location == 'PIM, Kebayoran & Blok M') {
+                props.location = common_2.LocationEnum.PBK;
+            }
             Object.assign(query.where, { location: props.location.toLowerCase() });
         }
         if (props.property_type) {

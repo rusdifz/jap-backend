@@ -2,7 +2,7 @@ import { ConditionUnitEnum, PropertyStatusEnum, Unit } from 'src/common';
 export declare class ResUnit implements Partial<Unit> {
     unit_id: string;
     property_id: number;
-    size: number;
+    size: string;
     floor: string;
     condition: ConditionUnitEnum;
     available: boolean;

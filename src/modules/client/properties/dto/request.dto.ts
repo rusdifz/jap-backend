@@ -16,7 +16,7 @@ import {
 
 export class PropertiesDTO extends PaginationDTO {
   @IsOptional()
-  location?: LocationEnum;
+  location?: LocationEnum | string;
 
   @IsOptional()
   property_type?: PropertyTypeEnum;
