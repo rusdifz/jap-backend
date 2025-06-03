@@ -43,9 +43,9 @@ export class PropertyPicDB {
   @Column({ type: 'varchar', length: 100, nullable: true })
   deleted_by: string;
 
-  @ManyToOne(() => PropertiesDB, (office) => office.pic, {
-    createForeignKeyConstraints: true,
-  })
-  @JoinColumn({ name: 'property_id', referencedColumnName: 'property_id' })
-  property?: PropertiesDB;
+  // @ManyToOne(() => PropertiesDB, (office) => office.pic, {
+  //   createForeignKeyConstraints: true,
+  // })
+  // @JoinColumn({ name: 'property_id', referencedColumnName: 'property_id' })
+  // property?: PropertiesDB;
 }

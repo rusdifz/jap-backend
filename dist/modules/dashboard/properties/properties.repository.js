@@ -23,30 +23,6 @@ let DashboardPropertiesRepository = class DashboardPropertiesRepository extends 
         super(common_2.PropertiesDB, dataSource);
         this.picEntity = picEntity;
     }
-    async findListPic(props) {
-        let query = {
-            where: {
-                property_id: props.property_id,
-            },
-        };
-        query = await this.sort(query, props);
-        query = await this.paginate(query, props);
-        const findData = await this.picEntity.findAndCount(query);
-        const resp = {
-            data: findData[0],
-            count: findData[1],
-        };
-        return resp;
-    }
-    async savePic(data) {
-        return await this.picEntity.save(data);
-    }
-    async updatePic(data, pic_id) {
-        return await this.picEntity.update({ id: pic_id }, data);
-    }
-    async deletePic(pic_id) {
-        return await this.picEntity.delete({ id: pic_id });
-    }
 };
 exports.DashboardPropertiesRepository = DashboardPropertiesRepository;
 exports.DashboardPropertiesRepository = DashboardPropertiesRepository = __decorate([

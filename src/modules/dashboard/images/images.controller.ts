@@ -36,8 +36,6 @@ export class DashboardImagesController {
     @Body() body: ReqUploadImages,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
-    console.log('updaload', files);
-
     body.files = files;
     return await this.service.uploadImages(body);
   }

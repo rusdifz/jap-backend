@@ -15,7 +15,7 @@ export async function mapReqCreateToDb(
     address: payload.address,
     location: payload.location,
     url_youtube: payload.url_youtube,
-
+    thumbnail: payload.thumbnail,
     koordinat_map: payload.koordinat_map,
     status_publish: payload.status_publish,
     property_type: payload.property_type,
@@ -27,11 +27,11 @@ export async function mapReqCreateToDb(
     price_overtime_ac: payload.price?.overtime?.ac,
     price_overtime_electricity: payload.price?.overtime?.electricity,
     price_overtime_lighting: payload.price?.overtime?.lighting,
-    price_ground_floor_sqm: payload.price?.ground_floor_sqm,
-    price_rent_sqm: payload.price?.rent_sqm,
+    price_ground_floor: payload.price?.ground_floor,
+    price_rent_average: payload.price?.rent_average,
 
-    service_charge: payload.price.service_charge.price,
-    service_charge_info: payload.price.service_charge.info,
+    // service_charge: payload.price.service_charge.price,
+    // service_charge_info: payload.price.service_charge.info,
     parking_charge_reserved_car: payload.price.parking_charge.reserved.car,
     parking_charge_reserved_motorcycle:
       payload.price.parking_charge.reserved.motorcycle,
@@ -87,7 +87,7 @@ export async function mapReqUpdateToDB(
     address: payload.address,
     location: payload.location,
     url_youtube: payload.url_youtube,
-
+    thumbnail: payload.thumbnail,
     koordinat_map: payload.koordinat_map,
     status_publish: payload.status_publish,
     property_type: payload.property_type,
@@ -98,10 +98,10 @@ export async function mapReqUpdateToDB(
     price_overtime_ac: payload.price?.overtime?.ac,
     price_overtime_electricity: payload.price?.overtime?.electricity,
     price_overtime_lighting: payload.price?.overtime?.lighting,
-    price_ground_floor_sqm: payload.price?.ground_floor_sqm,
-    price_rent_sqm: payload.price?.rent_sqm,
-    service_charge: payload.price?.service_charge?.price,
-    service_charge_info: payload.price?.service_charge?.info,
+    price_ground_floor: payload.price?.ground_floor,
+    price_rent_average: payload.price?.rent_average,
+    // service_charge: payload.price?.service_charge?.price,
+    // service_charge_info: payload.price?.service_charge?.info,
     parking_charge_reserved_car: payload.price?.parking_charge?.reserved.car,
     parking_charge_reserved_motorcycle:
       payload.price.parking_charge?.reserved?.motorcycle,

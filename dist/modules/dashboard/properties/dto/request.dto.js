@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ReqGetPicListDTO = exports.ReqUpdatePropertyPicDTO = exports.ReqCreatePropertyPicDTO = exports.PdfDetailDTO = exports.PdfComparisonDTO = exports.GeneratePDFDTO = exports.PropertyDetailDTO = exports.PropertiesDTO = exports.ReqUpdatePropertyDTO = exports.ReqCreatePropertyDTO = void 0;
+exports.PdfDetailDTO = exports.PdfComparisonDTO = exports.GeneratePDFDTO = exports.PropertyDetailDTO = exports.PropertiesDTO = exports.ReqUpdatePropertyDTO = exports.ReqCreatePropertyDTO = void 0;
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 const swagger_1 = require("@nestjs/swagger");
@@ -94,24 +94,13 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], Price.prototype, "ground_floor_sqm", void 0);
+], Price.prototype, "ground_floor", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ example: 210000 }),
+    (0, swagger_1.ApiPropertyOptional)({ example: 300000 }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], Price.prototype, "rent_sqm", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({
-        example: {
-            price: 127500.0,
-            info: 'Include AC during office hour, Lighting & Electricity is separately metered',
-        },
-    }),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsObject)(),
-    __metadata("design:type", Object)
-], Price.prototype, "service_charge", void 0);
+], Price.prototype, "rent_average", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsOptional)(),
@@ -146,10 +135,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Spesification.prototype, "total_floor", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 900.0 }),
+    (0, swagger_1.ApiProperty)({ example: '900.0' }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], Spesification.prototype, "size_floor", void 0);
 class Nearby {
 }
@@ -300,7 +289,7 @@ __decorate([
     (0, class_validator_1.IsEnum)(common_1.LocationEnum, {
         message: 'Value status must be list in enum',
     }),
-    __metadata("design:type", String)
+    __metadata("design:type", Object)
 ], ReqCreatePropertyDTO.prototype, "location", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
@@ -343,6 +332,11 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], ReqCreatePropertyDTO.prototype, "url_youtube", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ReqCreatePropertyDTO.prototype, "thumbnail", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({
         example: ['A/C & Heating', 'Garages', 'Garden', 'Disabled Access'],
@@ -516,42 +510,4 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Array)
 ], PdfDetailDTO.prototype, "properties_download", void 0);
-class ReqCreatePropertyPicDTO {
-}
-exports.ReqCreatePropertyPicDTO = ReqCreatePropertyPicDTO;
-__decorate([
-    (0, swagger_1.ApiProperty)({ example: 1 }),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], ReqCreatePropertyPicDTO.prototype, "property_id", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Fauzan' }),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], ReqCreatePropertyPicDTO.prototype, "pic_name", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ example: '087870702538' }),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], ReqCreatePropertyPicDTO.prototype, "pic_phone", void 0);
-class ReqUpdatePropertyPicDTO extends (0, swagger_1.PartialType)(ReqCreatePropertyPicDTO) {
-}
-exports.ReqUpdatePropertyPicDTO = ReqUpdatePropertyPicDTO;
-__decorate([
-    (0, swagger_1.ApiHideProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], ReqUpdatePropertyPicDTO.prototype, "pic_id", void 0);
-class ReqGetPicListDTO extends common_1.PaginationDTO {
-}
-exports.ReqGetPicListDTO = ReqGetPicListDTO;
-__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], ReqGetPicListDTO.prototype, "property_id", void 0);
 //# sourceMappingURL=request.dto.js.map

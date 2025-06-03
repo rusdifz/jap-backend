@@ -40,10 +40,6 @@ export async function mapDbToResDetail(db: PropertiesDB): Promise<ResProperty> {
           title: 'Typical Floor Size',
           value: db.size_floor,
         },
-        // {
-        //   title: 'Component Service Charge',
-        //   value: db.service_charge_info,
-        // },
       ],
     },
     {
@@ -90,12 +86,12 @@ export async function mapDbToResDetail(db: PropertiesDB): Promise<ResProperty> {
         lighting: db.price_overtime_lighting,
         ac: db.price_overtime_ac,
       },
-      ground_floor_sqm: db.price_ground_floor_sqm,
-      rent_sqm: db.price_rent_sqm,
-      service_charge: {
-        price: db.service_charge,
-        info: db.service_charge_info,
-      },
+      ground_floor: db.price_ground_floor,
+      rent_average: db.price_rent_average,
+      // service_charge: {
+      //   price: db.service_charge,
+      //   info: db.service_charge_info,
+      // },
       parking_charge: {
         reserved: {
           car: db.parking_charge_reserved_car,
@@ -124,6 +120,7 @@ export async function mapDbToResDetail(db: PropertiesDB): Promise<ResProperty> {
     },
     property_feature: propertyFeature,
     units: db.units.length > 0 ? db.units.slice(0, 5) : [],
+    thumbnail: db.thumbnail,
     images: db.images,
     created_at: dayjs(db.created_at).format('MMMM D, YYYY'),
     updated_at: dayjs(db.updated_at).format('MMMM D, YYYY'),
@@ -141,13 +138,14 @@ export async function mapDbToResList(
       location: db.location,
       property_type: db.property_type,
       property_status: db.property_status,
-      price: {
-        rent_sqm: db.price_rent_sqm,
-      },
       spesification: {
         property_size: db.property_size,
       },
-      images: db.images,
+      price: {
+        rent_average: db.price_rent_average,
+      },
+      thumbnail: db.thumbnail,
+      units: db.units.length > 0 ? db.units.slice(0, 1) : [],
       created_at: dayjs(db.created_at).format('MMMM D, YYYY'),
       updated_at: dayjs(db.updated_at).format('MMMM D, YYYY'),
     };

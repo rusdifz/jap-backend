@@ -49,6 +49,9 @@ export class PropertiesDB implements PropertyAbstract {
   status_publish: StatusPublishEnum;
 
   @Column({ type: 'varchar', length: 250, nullable: true })
+  thumbnail: string;
+
+  @Column({ type: 'varchar', length: 250, nullable: true })
   url_youtube?: string;
 
   @Column({
@@ -61,26 +64,20 @@ export class PropertiesDB implements PropertyAbstract {
   @Column({ type: 'int', default: 0 })
   total_unit: number;
 
-  @Column({ type: 'varchar', length: 400, nullable: true })
+  @Column({ type: 'bigint', default: 0 })
+  price_rent_average: number;
+
+  @Column({ type: 'text', nullable: true })
   price_overtime_electricity: string;
 
-  @Column({ type: 'varchar', length: 400, nullable: true })
+  @Column({ type: 'text', nullable: true })
   price_overtime_lighting: string;
 
-  @Column({ type: 'varchar', length: 400, nullable: true })
+  @Column({ type: 'text', nullable: true })
   price_overtime_ac: string;
 
   @Column({ type: 'int', nullable: true })
-  price_ground_floor_sqm: number;
-
-  @Column({ type: 'int', nullable: true })
-  price_rent_sqm: number;
-
-  @Column({ type: 'int', nullable: true })
-  service_charge: number;
-
-  @Column({ type: 'varchar', length: 250, nullable: true })
-  service_charge_info: string;
+  price_ground_floor: number;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
   parking_charge_reserved_car: string;
@@ -153,8 +150,8 @@ export class PropertiesDB implements PropertyAbstract {
   @Column({ type: 'int', nullable: true })
   total_floor: number;
 
-  @Column({ type: 'int', nullable: true })
-  size_floor: number;
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  size_floor: string;
 
   @Column({ type: 'varchar', length: 200, nullable: true })
   address: string;
@@ -238,9 +235,9 @@ export class PropertiesDB implements PropertyAbstract {
   @JoinColumn({ name: 'property_id', referencedColumnName: 'reference_id' })
   images?: MediaDB[];
 
-  @OneToMany(() => UnitsDB, (unit) => unit.property, {
-    createForeignKeyConstraints: false,
-  })
-  @JoinColumn({ name: 'property_id', referencedColumnName: 'property_id' })
-  pic?: PropertyPicDB[];
+  // @OneToMany(() => PropertyPicDB, (pic) => pic.property, {
+  //   createForeignKeyConstraints: false,
+  // })
+  // @JoinColumn({ name: 'property_id', referencedColumnName: 'property_id' })
+  // pic?: PropertyPicDB[];
 }

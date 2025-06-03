@@ -22,7 +22,6 @@ const dbConfig = () => ({
             common_1.UsersDB,
             common_1.MasterAmenitiesDB,
             common_1.MasterLocationDB,
-            common_1.PropertyPicDB,
         ],
         charset: 'utf8mb4_unicode_ci',
     },

@@ -16,7 +16,7 @@ import {
   Unit,
 } from 'src/common';
 
-export class ReqCreateUnitDTO implements Partial<Unit> {
+export class ReqCreateUnitDTO implements Unit {
   @ApiProperty({ example: 1 })
   @IsNotEmpty()
   @IsNumber()
@@ -47,7 +47,7 @@ export class ReqCreateUnitDTO implements Partial<Unit> {
   @ApiProperty({ example: 26370 })
   @IsNotEmpty()
   @IsNumber()
-  rent_sqm: number;
+  rent_price: number;
 
   @ApiProperty({ example: PropertyStatusEnum.LEASE })
   @IsOptional()
@@ -56,9 +56,21 @@ export class ReqCreateUnitDTO implements Partial<Unit> {
   })
   status: PropertyStatusEnum;
 
-  pic_name?: string;
+  @IsOptional()
+  @IsString()
+  pic_name: string;
 
-  pic_phone?: string;
+  @IsOptional()
+  @IsString()
+  pic_phone: string;
+
+  @IsOptional()
+  @IsString()
+  service_charge_info: string;
+
+  @IsOptional()
+  @IsNumber()
+  service_charge_price: number;
 }
 
 export class ReqUpdateUnitDTO extends ReqCreateUnitDTO {

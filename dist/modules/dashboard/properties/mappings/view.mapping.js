@@ -12,6 +12,7 @@ async function mapDbToResDetail(db, images) {
         slug: db.slug,
         description: db.description,
         address: db.address,
+        thumbnail: db.thumbnail,
         url_youtube: db.url_youtube,
         location: db.location,
         koordinat_map: db.koordinat_map,
@@ -26,12 +27,8 @@ async function mapDbToResDetail(db, images) {
                 lighting: db.price_overtime_lighting,
                 ac: db.price_overtime_ac,
             },
-            ground_floor_sqm: db.price_ground_floor_sqm,
-            rent_sqm: db.price_rent_sqm,
-            service_charge: {
-                price: db.service_charge,
-                info: db.service_charge_info,
-            },
+            ground_floor: db.price_ground_floor,
+            rent_average: db.price_rent_average,
             parking_charge: {
                 reserved: {
                     car: db.parking_charge_reserved_car,
@@ -81,7 +78,6 @@ async function mapDbToResDetail(db, images) {
             power_unit: db.other_info_power_unit,
         },
         units: db.units,
-        pic: db.pic,
         images: images ?? [],
         ac_info: db.ac_info,
         electricity_info: db.electricity_info,
@@ -113,12 +109,8 @@ async function mapDbToResList(dbs) {
                     lighting: db.price_overtime_lighting,
                     ac: db.price_overtime_ac,
                 },
-                ground_floor_sqm: db.price_ground_floor_sqm,
-                rent_sqm: db.price_rent_sqm,
-                service_charge: {
-                    price: db.service_charge,
-                    info: db.service_charge_info,
-                },
+                ground_floor: db.price_ground_floor,
+                rent_average: db.price_rent_average,
                 parking_charge: {
                     reserved: {
                         car: db.parking_charge_reserved_car,
@@ -168,7 +160,6 @@ async function mapDbToResList(dbs) {
                 power_unit: db.other_info_power_unit,
             },
             units: db.units,
-            pic: db.pic,
             ac_info: db.ac_info,
             electricity_info: db.electricity_info,
             lighting_info: db.lighting_info,

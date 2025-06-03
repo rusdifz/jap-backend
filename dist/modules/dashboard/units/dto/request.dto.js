@@ -56,7 +56,7 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], ReqCreateUnitDTO.prototype, "rent_sqm", void 0);
+], ReqCreateUnitDTO.prototype, "rent_price", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: common_1.PropertyStatusEnum.LEASE }),
     (0, class_validator_1.IsOptional)(),
@@ -65,6 +65,26 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], ReqCreateUnitDTO.prototype, "status", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ReqCreateUnitDTO.prototype, "pic_name", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ReqCreateUnitDTO.prototype, "pic_phone", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ReqCreateUnitDTO.prototype, "service_charge_info", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], ReqCreateUnitDTO.prototype, "service_charge_price", void 0);
 class ReqUpdateUnitDTO extends ReqCreateUnitDTO {
 }
 exports.ReqUpdateUnitDTO = ReqUpdateUnitDTO;

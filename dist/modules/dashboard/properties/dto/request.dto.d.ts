@@ -17,12 +17,8 @@ declare class Price {
     booking_deposit: string;
     security_deposit: string;
     overtime: OvertimePrice;
-    ground_floor_sqm: number;
-    rent_sqm: number;
-    service_charge: {
-        price: number;
-        info: string;
-    };
+    ground_floor: number;
+    rent_average: number;
     parking_charge: ParkingCharge;
 }
 declare class Spesification {
@@ -30,7 +26,7 @@ declare class Spesification {
     office_hours_weekday: string;
     office_hours_weekend: string;
     total_floor: number;
-    size_floor: number;
+    size_floor: string;
     provider_internet: string;
 }
 declare class Nearby {
@@ -65,13 +61,14 @@ export declare class ReqCreatePropertyDTO implements Partial<IProperty> {
     popular: number;
     description: string;
     address: string;
-    location: LocationEnum;
+    location: LocationEnum | any;
     koordinat_map: string;
     status_publish: StatusPublishEnum;
     property_status?: PropertyStatusEnum;
     property_type: string[];
     completion: string;
     url_youtube: string;
+    thumbnail?: string;
     amenities: string[];
     price: Price;
     spesification: Spesification;
@@ -116,17 +113,5 @@ export declare class PdfDetailDTO {
         property_id: number;
         unit_id: string[];
     }[];
-}
-export declare class ReqCreatePropertyPicDTO {
-    property_id: number;
-    pic_name: string;
-    pic_phone: string;
-}
-declare const ReqUpdatePropertyPicDTO_base: import("@nestjs/common").Type<Partial<ReqCreatePropertyPicDTO>>;
-export declare class ReqUpdatePropertyPicDTO extends ReqUpdatePropertyPicDTO_base {
-    pic_id: string;
-}
-export declare class ReqGetPicListDTO extends PaginationDTO {
-    property_id: number;
 }
 export {};

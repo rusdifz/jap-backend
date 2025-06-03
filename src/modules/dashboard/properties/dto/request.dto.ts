@@ -98,25 +98,24 @@ class Price {
   @ApiPropertyOptional({ example: 300000 })
   @IsOptional()
   @IsNumber()
-  ground_floor_sqm: number;
+  ground_floor: number;
 
-  @ApiPropertyOptional({ example: 210000 })
+  @ApiPropertyOptional({ example: 300000 })
   @IsOptional()
   @IsNumber()
-  rent_sqm: number;
-
-  @ApiProperty({
-    example: {
-      price: 127500.0,
-      info: 'Include AC during office hour, Lighting & Electricity is separately metered',
-    },
-  })
-  @IsOptional()
-  @IsObject()
-  service_charge: {
-    price: number;
-    info: string;
-  };
+  rent_average: number;
+  // @ApiProperty({
+  //   example: {
+  //     price: 127500.0,
+  //     info: 'Include AC during office hour, Lighting & Electricity is separately metered',
+  //   },
+  // })
+  // @IsOptional()
+  // @IsObject()
+  // service_charge: {
+  //   price: number;
+  //   info: string;
+  // };
 
   @ApiProperty()
   @IsOptional()
@@ -146,10 +145,10 @@ class Spesification {
   @IsNumber()
   total_floor: number;
 
-  @ApiProperty({ example: 900.0 })
+  @ApiProperty({ example: '900.0' })
   @IsOptional()
   @IsNumber()
-  size_floor: number;
+  size_floor: string;
 
   provider_internet: string;
 }
@@ -280,7 +279,7 @@ export class ReqCreatePropertyDTO implements Partial<IProperty> {
   @IsEnum(LocationEnum, {
     message: 'Value status must be list in enum',
   })
-  location: LocationEnum;
+  location: LocationEnum | any;
 
   @ApiProperty({
     example: 'QRPC+48 Karet Kuningan, South Jakarta City, Jakarta',
@@ -320,6 +319,10 @@ export class ReqCreatePropertyDTO implements Partial<IProperty> {
   @IsOptional()
   @IsString()
   url_youtube: string;
+
+  @IsOptional()
+  @IsString()
+  thumbnail?: string;
 
   @ApiPropertyOptional({
     example: ['A/C & Heating', 'Garages', 'Garden', 'Disabled Access'],
@@ -462,34 +465,34 @@ export class PdfDetailDTO {
   }[];
 }
 
-export class ReqCreatePropertyPicDTO {
-  @ApiProperty({ example: 1 })
-  @IsNotEmpty()
-  @IsNumber()
-  property_id: number;
+// export class ReqCreatePropertyPicDTO {
+//   @ApiProperty({ example: 1 })
+//   @IsNotEmpty()
+//   @IsNumber()
+//   property_id: number;
 
-  @ApiProperty({ example: 'Fauzan' })
-  @IsNotEmpty()
-  @IsString()
-  pic_name: string;
+//   @ApiProperty({ example: 'Fauzan' })
+//   @IsNotEmpty()
+//   @IsString()
+//   pic_name: string;
 
-  @ApiProperty({ example: '087870702538' })
-  @IsNotEmpty()
-  @IsString()
-  pic_phone: string;
-}
+//   @ApiProperty({ example: '087870702538' })
+//   @IsNotEmpty()
+//   @IsString()
+//   pic_phone: string;
+// }
 
-export class ReqUpdatePropertyPicDTO extends PartialType(
-  ReqCreatePropertyPicDTO,
-) {
-  @ApiHideProperty()
-  @IsNotEmpty()
-  @IsString()
-  pic_id: string;
-}
+// export class ReqUpdatePropertyPicDTO extends PartialType(
+//   ReqCreatePropertyPicDTO,
+// ) {
+//   @ApiHideProperty()
+//   @IsNotEmpty()
+//   @IsString()
+//   pic_id: string;
+// }
 
-export class ReqGetPicListDTO extends PaginationDTO {
-  @IsOptional()
-  @IsNumber()
-  property_id: number;
-}
+// export class ReqGetPicListDTO extends PaginationDTO {
+//   @IsOptional()
+//   @IsNumber()
+//   property_id: number;
+// }

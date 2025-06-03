@@ -19,6 +19,7 @@ var MediaReferenceType;
 (function (MediaReferenceType) {
     MediaReferenceType["ARTICLE"] = "article";
     MediaReferenceType["PROPERTY"] = "property";
+    MediaReferenceType["PROPERTY_THUMBNAIL"] = "property-thumbnail";
     MediaReferenceType["FEEDBACK"] = "feedback";
     MediaReferenceType["USER"] = "user";
     MediaReferenceType["MASTER_LOCATION"] = "master location";

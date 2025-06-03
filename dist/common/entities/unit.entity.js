@@ -53,9 +53,17 @@ __decorate([
     __metadata("design:type", Boolean)
 ], UnitsDB.prototype, "available", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'bigint', nullable: true }),
+    __metadata("design:type", Number)
+], UnitsDB.prototype, "rent_price", void 0);
+__decorate([
     (0, typeorm_1.Column)({ type: 'int', nullable: true }),
     __metadata("design:type", Number)
-], UnitsDB.prototype, "rent_sqm", void 0);
+], UnitsDB.prototype, "service_charge_price", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 250, nullable: true }),
+    __metadata("design:type", String)
+], UnitsDB.prototype, "service_charge_info", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 250, nullable: true }),
     __metadata("design:type", String)

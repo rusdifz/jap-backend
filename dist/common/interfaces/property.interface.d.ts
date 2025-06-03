@@ -16,10 +16,8 @@ export interface PropertyAbstract {
     price_overtime_electricity: string;
     price_overtime_lighting: string;
     price_overtime_ac: string;
-    price_ground_floor_sqm: number;
-    price_rent_sqm: number;
-    service_charge: number;
-    service_charge_info: string;
+    price_ground_floor: number;
+    price_rent_average: number;
     parking_charge_reserved_car: string;
     parking_charge_reserved_motorcycle: string;
     parking_charge_unreserved_car: string;
@@ -31,7 +29,7 @@ export interface PropertyAbstract {
     office_hours_weekday: string;
     office_hours_weekend: string;
     total_floor: number;
-    size_floor: number;
+    size_floor: string;
     provider_internet: string;
     minimum_lease_term: string;
     payment_term: string;
@@ -54,9 +52,9 @@ export interface PropertyAbstract {
     nearby_police: string;
     nearby_mall: string;
     url_youtube?: string;
+    thumbnail: string;
     units?: Unit[];
     images?: IMedia[];
-    pic?: any[];
     ac_info: string;
     electricity_info: string;
     lighting_info: string;
@@ -88,12 +86,8 @@ export interface IProperty {
             lighting: string;
             ac: string;
         };
-        ground_floor_sqm?: number;
-        rent_sqm: number;
-        service_charge?: {
-            price: number;
-            info: string;
-        };
+        ground_floor?: number;
+        rent_average: number;
         parking_charge?: {
             reserved: {
                 car: string;
@@ -112,7 +106,7 @@ export interface IProperty {
         office_hours_weekday?: string;
         office_hours_weekend?: string;
         total_floor?: number;
-        size_floor?: number;
+        size_floor?: string;
         provider_internet?: string;
     };
     nearby: {
@@ -142,18 +136,18 @@ export interface IProperty {
         electricity: string;
         power_unit: string;
     };
+    thumbnail: string;
     url_youtube?: string;
     property_feature?: any[];
     units: Unit[];
     images: IMedia[];
+    ac_info: string;
+    electricity_info: string;
+    lighting_info: string;
     created_at?: string;
     updated_at?: string;
     deleted_at?: string;
     created_by?: string;
     updated_by?: string;
     deleted_by?: string;
-    pic: any[];
-    ac_info: string;
-    electricity_info: string;
-    lighting_info: string;
 }

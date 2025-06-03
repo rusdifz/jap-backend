@@ -11,6 +11,7 @@ import {
   LessThanOrEqual,
   Like,
   MoreThanOrEqual,
+  UpdateResult,
 } from 'typeorm';
 
 import {
@@ -24,13 +25,14 @@ import {
   dayjs,
   MediaReferenceType,
   monthAgo,
+  PropertyPicDB,
 } from 'src/common';
 
 import {
   PropertiesDTO,
-  ReqCreatePropertyPicDTO,
-  ReqGetPicListDTO,
-  ReqUpdatePropertyPicDTO,
+  // ReqCreatePropertyPicDTO,
+  // ReqGetPicListDTO,
+  // ReqUpdatePropertyPicDTO,
 } from '../dto/request.dto';
 // import { MasterPropertiesService } from 'apps/master/src/modules/properties/properties.service';
 
@@ -61,7 +63,7 @@ export class DashboardPropertiesService {
       where: queryWhere,
       relations: {
         units: true,
-        pic: true,
+        // pic: true,
         // images: true,
       },
     };
@@ -75,7 +77,9 @@ export class DashboardPropertiesService {
     return property ? await mapDbToResDetail(property, images) : null;
   }
 
-  async getList(props: PropertiesDTO): Promise<{ data: any[]; count: number }> {
+  async getList(
+    props: PropertiesDTO,
+  ): Promise<{ data: ResProperty[]; count: number }> {
     // initiate empty where query
     let query: FindManyOptions<PropertiesDB> = {
       where: {},
@@ -104,7 +108,7 @@ export class DashboardPropertiesService {
     }
 
     if (props.property_status) {
-      // Object.assign(query.where, { property_type: props.property_status });
+      Object.assign(query.where, { units: { status: props.property_status } });
     }
 
     if (props.search_keyword) {
@@ -133,7 +137,7 @@ export class DashboardPropertiesService {
 
     if (props.min_rent_sqm && props.max_rent_sqm) {
       Object.assign(query.where, {
-        units: { rent_sqm: Between(props.min_rent_sqm, props.max_rent_sqm) },
+        units: { rent_price: Between(props.min_rent_sqm, props.max_rent_sqm) },
       });
     }
 
@@ -173,6 +177,7 @@ export class DashboardPropertiesService {
     const saveData = await this.repository.save(mapProperty);
 
     body['property_id'] = saveData.property_id;
+    body['slug'] = saveData.slug;
     return body;
   }
 
@@ -180,10 +185,8 @@ export class DashboardPropertiesService {
     body: ReqUpdatePropertyDTO,
     admin: IJwtUser,
   ): Promise<ReqUpdatePropertyDTO> {
-    console.log('body', body);
-
     const mapProperty = await mapReqUpdateToDB(body, admin);
-    console.log('map', mapProperty);
+    body['slug'] = mapProperty.slug;
 
     await this.repository.update(
       { property_id: mapProperty.property_id },
@@ -205,51 +208,61 @@ export class DashboardPropertiesService {
     return {};
   }
 
-  async getListPic(
-    props: ReqGetPicListDTO,
-  ): Promise<{ data: any[]; count: number }> {
-    const searchData = await this.repository.findListPic(props);
+  // async getListPic(
+  //   props: ReqGetPicListDTO,
+  // ): Promise<{ data: PropertyPicDB[]; count: number }> {
+  //   const searchData = await this.repository.findListPic(props);
 
-    return searchData;
-  }
+  //   return searchData;
+  // }
 
-  async createPic(
-    body: ReqCreatePropertyPicDTO,
-    admin: IJwtUser,
-  ): Promise<ReqCreatePropertyPicDTO> {
-    console.log('body', body);
+  // async createPic(
+  //   body: ReqCreatePropertyPicDTO,
+  //   admin: IJwtUser,
+  // ): Promise<ReqCreatePropertyPicDTO> {
+  //   console.log('body', body);
 
-    const mapPic = {
-      pic_name: body.pic_name ?? '',
-      pic_phone: body.pic_phone ?? '',
-      property_id: body.property_id,
-      created_by: admin.user.username,
-    };
-    console.log('map', mapPic);
+  //   const mapPic = {
+  //     pic_name: body.pic_name ?? '',
+  //     pic_phone: body.pic_phone ?? '',
+  //     property_id: body.property_id,
+  //     created_by: admin.user.username,
+  //   };
+  //   console.log('map', mapPic);
 
-    const saveData = await this.repository.savePic(mapPic);
+  //   const saveData = await this.repository.savePic(mapPic);
 
-    body['id'] = saveData.id;
-    return body;
-  }
+  //   body['id'] = saveData.id;
+  //   return body;
+  // }
 
-  async updatePic(
-    body: ReqUpdatePropertyPicDTO,
-    admin: IJwtUser,
-  ): Promise<ReqUpdatePropertyPicDTO> {
-    const mapPic = {
-      pic_name: body.pic_name ?? '',
-      pic_phone: body.pic_phone ?? '',
-      updated_by: admin.user.username,
-    };
+  // async updatePic(
+  //   body: ReqUpdatePropertyPicDTO,
+  //   admin: IJwtUser,
+  // ): Promise<ReqUpdatePropertyPicDTO> {
+  //   const mapPic = {
+  //     pic_name: body.pic_name ?? '',
+  //     pic_phone: body.pic_phone ?? '',
+  //     updated_by: admin.user.username,
+  //   };
 
-    await this.repository.updatePic(mapPic, body.pic_id);
+  //   await this.repository.updatePic(mapPic, body.pic_id);
 
-    return body;
-  }
+  //   return body;
+  // }
 
-  async deletePic(pic_id: string, admin: IJwtUser): Promise<Object> {
-    return await this.repository.deletePic(pic_id);
+  // async deletePic(pic_id: string, admin: IJwtUser): Promise<Object> {
+  //   return await this.repository.deletePic(pic_id);
+  // }
+
+  async updateThumbnail(
+    id: number,
+    thumbnail_url: string,
+  ): Promise<UpdateResult> {
+    return await this.repository.update(
+      { property_id: id },
+      { thumbnail: thumbnail_url },
+    );
   }
 
   async updateTotalUnit(property_id: number): Promise<number> {
@@ -332,228 +345,277 @@ export class DashboardPropertiesService {
     });
 
     // Ambil sheet pertama
-    // console.log('work', workbook.SheetNames);
-
-    const sheetName = workbook.SheetNames[1];
-
-    const worksheet = workbook.Sheets[sheetName];
-
-    // // Konversi data sheet ke JSON
-    const jsonData: any = XLSX.utils.sheet_to_json(worksheet);
-
-    let key = 0;
-
-    let propertyId = 0;
+    console.log('work', workbook.SheetNames);
 
     const arr = [];
-    // console.log('cuy', jsonData);
 
-    for (const dt of jsonData) {
-      // console.log('dt', dt);
+    for (const sheetName of workbook.SheetNames) {
+      // const sheetName = workbook.SheetNames[1];
+      if (sheetName === 'Sudirman' || sheetName == 'Gatot Subroto') {
+        const worksheet = workbook.Sheets[sheetName];
+        // // Konversi data sheet ke JSON
+        const jsonData: any = XLSX.utils.sheet_to_json(worksheet);
 
-      if (dt.no && typeof dt.no === 'number') {
-        console.log('dt', dt);
-
-        key = dt.no;
-
-        const description = dt.description
-          ? dt.description.trim()
-          : dt.nama_gedung +
-            ' adalah gedung perkantoran dengan lokasi yang strategis, akses mudah, serta kapasitas parkir yang luas. Gedung ini memiliki luas bangunan sekitar 25.386 meter persegi dan total 30 lantai, serta dilengkapi fasilitas gedung mulai dari 7 lift dalam dua zona (low zone dan high zone), 1 service lift, kantin, ATM, bank, parkir untuk total sekitar  1000 unit kendaraan, keamanan selama 24 jam, system back-up power dan internet berkecepatan tinggi. Wisma Nusantara adalah gedung grade B yang lokasinya berada di jalan M.H. Thamrin No. 59 Jakarta Pusat. Gedung ini berdekatan dengan jalan Sudirman, tanah abang, menteng. Sarana transportasi umum  mudah didapatkan di area gedung ini mulai dari bus kota (Metro Mini, Mayasari Bakti, PPD, Agung Bhakti, dan Kopaja), TransJakarta , taksi, transportasi online, stasiun KRL sudirman dan MRT.';
-
-        const property: ReqCreatePropertyDTO = {
-          name: dt.nama_gedung.trim(),
-          popular: 0,
-          description: description,
-          url_youtube: '',
-          address: dt.address ? dt.address.trim() : '',
-          location: LocationEnum.JAKARTA_TIMUR,
-          koordinat_map: dt.koordinat_map
-            ? dt.koordinat_map.trim()
-            : dt.address
-              ? dt.address.trim()
-              : dt.nama_gedung.trim(),
-          property_type: dt.property_type ?? PropertyTypeEnum.OFFICE,
-          completion: dt.completion,
-          status_publish: StatusPublishEnum.PUBLISH,
-          amenities: [
-            'A/C & Heating',
-            'Bank & ATM Centre',
-            'Minimarket',
-            'Restaurants',
-            'Cafe & Coffee Shop',
-          ],
-          ac_info: '',
-          lighting_info: '',
-          electricity_info: '',
-          price: {
-            phone_deposit: dt.phone_deposit ?? 'tba',
-            booking_deposit: 'tba',
-            security_deposit: 'tba',
-            ground_floor_sqm: dt.ground_floor ?? 0,
-            rent_sqm: dt.rent_price
-              ? typeof dt.rent_price === 'string'
-                ? isNaN(Number(dt.rent_price))
-                  ? 0
-                  : dt.rent_price.replace(/\D/g, '')
-                : dt.rent_price
-              : 0,
-            overtime: {
-              electricity: dt.overtime_electricity
-                ? typeof dt.overtime_electric === 'string'
-                  ? dt.overtime_electric.substring(0, 300)
-                  : dt.overtime_electric
-                : 'tba',
-              lighting: dt.overtime_lighting
-                ? typeof dt.overtime_lighting === 'string'
-                  ? dt.overtime_lighting.substring(0, 300)
-                  : dt.overtime_lighting
-                : 'tba',
-              ac: dt.overtime_ac
-                ? typeof dt.overtime_ac === 'string'
-                  ? dt.overtime_ac.substring(0, 400)
-                  : dt.overtime_ac
-                : 'tba',
-            },
-            service_charge: {
-              price: dt.service_charge
-                ? typeof dt.service_charge === 'string'
-                  ? dt.service_charge.replace(/\D/g, '')
-                  : dt.service_charge.trim()
-                : 0,
-              info: dt.service_charge_info,
-            },
-            parking_charge: {
-              reserved: {
-                car: dt?.reserved_car,
-                motorcycle: dt?.reserved_motor,
+        let key = 0;
+        let propertyId = 0;
+        // console.log('cuy', jsonData);
+        for (const dt of jsonData) {
+          // console.log('dt', dt);
+          if (dt.no && typeof dt.no === 'number') {
+            console.log('dt', dt);
+            key = dt.no;
+            const description = dt.description
+              ? dt.description.trim()
+              : dt.nama_gedung +
+                ' adalah gedung perkantoran dengan lokasi yang strategis, akses mudah, serta kapasitas parkir yang luas. Gedung ini memiliki luas bangunan sekitar 25.386 meter persegi dan total 30 lantai, serta dilengkapi fasilitas gedung mulai dari 7 lift dalam dua zona (low zone dan high zone), 1 service lift, kantin, ATM, bank, parkir untuk total sekitar  1000 unit kendaraan, keamanan selama 24 jam, system back-up power dan internet berkecepatan tinggi. Wisma Nusantara adalah gedung grade B yang lokasinya berada di jalan M.H. Thamrin No. 59 Jakarta Pusat. Gedung ini berdekatan dengan jalan Sudirman, tanah abang, menteng. Sarana transportasi umum  mudah didapatkan di area gedung ini mulai dari bus kota (Metro Mini, Mayasari Bakti, PPD, Agung Bhakti, dan Kopaja), TransJakarta , taksi, transportasi online, stasiun KRL sudirman dan MRT.';
+            let rentPriceAverage = 0;
+            if (dt.rent_price) {
+              rentPriceAverage = isNaN(
+                Number(dt.rent_price.toString().replace(/,/g, '')),
+              )
+                ? 0
+                : Number(dt.rent_price.toString().replace(/,/g, ''));
+            }
+            const property: ReqCreatePropertyDTO = {
+              name: dt.nama_gedung.trim(),
+              popular: 0,
+              description: description,
+              url_youtube: '',
+              address: dt.address ? dt.address.trim() : '',
+              // location: LocationEnum.THAMRIN,
+              location: sheetName,
+              koordinat_map: dt.koordinat_map
+                ? dt.koordinat_map.trim()
+                : dt.address
+                  ? dt.address.trim()
+                  : dt.nama_gedung.trim(),
+              property_type: dt.property_type ?? PropertyTypeEnum.OFFICE,
+              completion: dt.completion,
+              status_publish: StatusPublishEnum.PUBLISH,
+              amenities: [
+                'A/C & Heating',
+                'Bank & ATM Centre',
+                'Minimarket',
+                'Restaurants',
+                'Cafe & Coffee Shop',
+              ],
+              ac_info: '',
+              lighting_info: '',
+              electricity_info: '',
+              price: {
+                phone_deposit: dt.phone_deposit ?? 'tba',
+                booking_deposit: 'tba',
+                security_deposit: 'tba',
+                ground_floor: dt.ground_floor ?? 0,
+                rent_average: rentPriceAverage,
+                // rent_sqm: dt.rent_price
+                //   ? typeof dt.rent_price === 'string'
+                //     ? isNaN(Number(dt.rent_price))
+                //       ? 0
+                //       : dt.rent_price.replace(/\D/g, '')
+                //     : dt.rent_price
+                //   : 0,
+                overtime: {
+                  electricity: dt.overtime_electric ?? 'tba',
+                  lighting: dt.overtime_lighting ?? 'tba',
+                  ac: dt.overtime_ac ?? 'tba',
+                },
+                // service_charge: {
+                //   price: dt.service_charge
+                //     ? typeof dt.service_charge === 'string'
+                //       ? dt.service_charge.replace(/\D/g, '')
+                //       : dt.service_charge.trim()
+                //     : 0,
+                //   info: dt.service_charge_info,
+                // },
+                parking_charge: {
+                  reserved: {
+                    car: dt?.reserved_car,
+                    motorcycle: dt?.reserved_motor,
+                  },
+                  unreserved: {
+                    car: dt?.unreserved_car,
+                    motorcycle: dt?.unreserved_motor,
+                  },
+                },
               },
-              unreserved: {
-                car: dt?.unreserved_car,
-                motorcycle: dt?.unreserved_motor,
+              spesification: {
+                property_size: dt.total_size
+                  ? typeof dt.total_size === 'string'
+                    ? dt.total_size === 'tba'
+                    : 0
+                  : dt.total_size,
+                office_hours_weekday: dt.office_hours_weekdays,
+                office_hours_weekend: dt.office_hours_weekend,
+                total_floor: dt.floor_total,
+                size_floor: dt.floor_size
+                  ? typeof dt.floor_size === 'string'
+                    ? dt.floor_size === 'tba'
+                      ? 0
+                      : dt.floor_size.replace(/\D/g, '')
+                    : dt.floor_size
+                  : 0,
+                provider_internet: dt.internet,
               },
-            },
-          },
-          spesification: {
-            property_size: dt.total_size
-              ? typeof dt.total_size === 'string'
-                ? dt.total_size === 'tba'
-                : 0
-              : dt.total_size,
-            office_hours_weekday: dt.office_hours_weekdays,
-            office_hours_weekend: dt.office_hours_weekend,
-            total_floor: dt.floor_total,
-            size_floor: dt.floor_size
-              ? typeof dt.floor_size === 'string'
-                ? dt.floor_size === 'tba'
-                  ? 0
-                  : dt.floor_size.replace(/\D/g, '')
-                : dt.floor_size
-              : 0,
-            provider_internet: dt.internet,
-          },
-          nearby: {
-            bus_station: '',
-            hospital: '',
-            police: '',
-            mall: '',
-          },
-          telecommunication: {
-            isp: true,
-            fiber_optic: true,
-            wifi: true,
-          },
-          fire_safety: {
-            sprinkle: true,
-            heat_detector: true,
-            smoke_detector: true,
-          },
-          terms: {
-            minium_lease: '',
-            payment: '',
-          },
-          other_info: {
-            loading_capacity: '',
-            ac_system: '',
-            ac_zoning: '',
-            electricity: '',
-            power_unit: '',
-          },
-        };
-
-        console.log('create', property);
-
-        const insertProperty: any = await this.create(property, null);
-
-        propertyId = insertProperty.property_id;
-
-        // if (dt.unit_size && dt.unit_floor) {
-        // const unitSize = isNaN(
-        //   Number(dt.unit_size.toString().replace(/,/g, '')),
-        // )
-        //   ? 0
-        //   : Number(dt.unit_size.toString().replace(/,/g, ''));
-        // console.log('unit size', unitSize);
-
-        let unitSize = 0;
-
-        if (dt.unitSize) {
-          unitSize = isNaN(Number(dt.unit_size.toString().replace(/,/g, '')))
-            ? 0
-            : Number(dt.unit_size.toString().replace(/,/g, ''));
+              nearby: {
+                bus_station: '',
+                hospital: '',
+                police: '',
+                mall: '',
+              },
+              telecommunication: {
+                isp: true,
+                fiber_optic: true,
+                wifi: true,
+              },
+              fire_safety: {
+                sprinkle: true,
+                heat_detector: true,
+                smoke_detector: true,
+              },
+              terms: {
+                minium_lease: '',
+                payment: '',
+              },
+              other_info: {
+                loading_capacity: '',
+                ac_system: '',
+                ac_zoning: '',
+                electricity: '',
+                power_unit: '',
+              },
+            };
+            console.log('create', property);
+            const insertProperty: any = await this.create(property, null);
+            propertyId = insertProperty.property_id;
+            // if (dt.unit_size && dt.unit_floor) {
+            // const unitSize = isNaN(
+            //   Number(dt.unit_size.toString().replace(/,/g, '')),
+            // )
+            //   ? 0
+            //   : Number(dt.unit_size.toString().replace(/,/g, ''));
+            // console.log('unit size', unitSize);
+            let unitSize = 0;
+            let scPrice = 0;
+            let rentPrice = 0;
+            if (dt.unit_size) {
+              unitSize = isNaN(
+                Number(dt.unit_size.toString().replace(/,/g, '')),
+              )
+                ? 0
+                : Number(dt.unit_size.toString().replace(/,/g, ''));
+            }
+            if (dt.rent_price) {
+              rentPrice = isNaN(
+                Number(dt.rent_price.toString().replace(/,/g, '')),
+              )
+                ? 0
+                : Number(dt.rent_price.toString().replace(/,/g, ''));
+            }
+            if (dt.service_charge_price) {
+              scPrice = isNaN(
+                Number(dt.service_charge_price.toString().replace(/,/g, '')),
+              )
+                ? 0
+                : Number(dt.service_charge_price.toString().replace(/,/g, ''));
+            }
+            const unit: ReqCreateUnitDTO = {
+              property_id: propertyId,
+              size: unitSize.toString(),
+              floor: dt.unit_floor,
+              condition: dt.unit_condition
+                ? Object.values(dt.unit_condition).includes(ConditionUnitEnum)
+                  ? dt.unit_condition
+                  : ConditionUnitEnum.BARE
+                : ConditionUnitEnum.BARE,
+              rent_price: rentPrice,
+              service_charge_info: dt.service_charge_info ?? '',
+              service_charge_price: scPrice,
+              available: true,
+              pic_name: dt.pic_name,
+              pic_phone: dt.phone_pic,
+              status: PropertyStatusEnum.LEASE,
+            };
+            await this.unitService.create(unit, null);
+            // }
+            arr.push(property);
+          } else {
+            // if (dt.unit_size && dt.unit_floor) {
+            let unitSize = 0;
+            let scPrice = 0;
+            let rentPrice = 0;
+            if (dt.unit_size) {
+              unitSize = isNaN(
+                Number(dt.unit_size.toString().replace(/,/g, '')),
+              )
+                ? 0
+                : Number(dt.unit_size.toString().replace(/,/g, ''));
+            }
+            if (dt.rent_price) {
+              rentPrice = isNaN(
+                Number(dt.rent_price.toString().replace(/,/g, '')),
+              )
+                ? 0
+                : Number(dt.rent_price.toString().replace(/,/g, ''));
+            }
+            if (dt.service_charge_price) {
+              scPrice = isNaN(
+                Number(dt.service_charge_price.toString().replace(/,/g, '')),
+              )
+                ? 0
+                : Number(dt.service_charge_price.toString().replace(/,/g, ''));
+            }
+            const unit: ReqCreateUnitDTO = {
+              property_id: propertyId,
+              size: unitSize.toString(),
+              floor: dt.unit_floor ?? '',
+              condition: dt.unit_condition
+                ? Object.values(dt.unit_condition).includes(ConditionUnitEnum)
+                  ? dt.unit_condition
+                  : ConditionUnitEnum.BARE
+                : ConditionUnitEnum.BARE,
+              available: true,
+              rent_price: rentPrice,
+              service_charge_info: dt.service_charge_info ?? '',
+              service_charge_price: scPrice,
+              pic_name: dt.pic_name,
+              pic_phone: dt.phone_pic,
+              status: PropertyStatusEnum.LEASE,
+            };
+            await this.unitService.create(unit, null);
+            // }
+          }
         }
-
-        const unit: ReqCreateUnitDTO = {
-          property_id: propertyId,
-          size: unitSize.toString(),
-          floor: dt.unit_floor,
-          condition: dt.unit_condition
-            ? Object.values(dt.unit_condition).includes(ConditionUnitEnum)
-              ? dt.unit_condition
-              : ConditionUnitEnum.BARE
-            : ConditionUnitEnum.BARE,
-          rent_sqm: dt.unit_rent,
-          available: true,
-          // pic_name: dt.pic_name,
-          // pic_phone: dt.pic_phone,
-          status: PropertyStatusEnum.LEASE,
-        };
-
-        await this.unitService.create(unit, null);
-        // }
-
-        arr.push(property);
-      } else {
-        // if (dt.unit_size && dt.unit_floor) {
-        let unitSize = 0;
-
-        if (dt.unitSize) {
-          unitSize = isNaN(Number(dt.unit_size.toString().replace(/,/g, '')))
-            ? 0
-            : Number(dt.unit_size.toString().replace(/,/g, ''));
-        }
-
-        const unit: ReqCreateUnitDTO = {
-          property_id: propertyId,
-          size: unitSize.toString(),
-          floor: dt.unit_floor ?? '',
-          condition: dt.unit_condition
-            ? Object.values(dt.unit_condition).includes(ConditionUnitEnum)
-              ? dt.unit_condition
-              : ConditionUnitEnum.BARE
-            : ConditionUnitEnum.BARE,
-          available: true,
-          rent_sqm: dt.unit_rent ?? 0,
-          // pic_name: dt.pic_name,
-          // pic_phone: dt.pic_phone,
-          status: PropertyStatusEnum.RENT,
-        };
-
-        await this.unitService.create(unit, null);
-        // }
       }
     }
 
     return arr;
   }
 }
+
+// work [
+//   'inputdb1',
+//   'Thamrin(DONE)',
+//   'Sudirman',
+//   'Mega Kuningan',
+//   'SCBD',
+//   'Gatot Subroto',
+//   'Kuningan(DONE)',
+//   'Satrio(DONE)',
+//   'MT Haryono(DONE)',
+//   'Senayan(DONE)',
+//   'Pondok Indah & Blok M, Kebayora',
+//   'Mampang(DONE)',
+//   'Pasar Minggu(DONE)',
+//   'Tb Simatupang(DONE)',
+//   'Jakarta Pusat(DONE)',
+//   'Kemang & Ampera(DONE)',
+//   'Slipi & Grogol(DONE)',
+//   'Puri Kembangan & Kebon Jeruk(DO',
+//   'PIK & Pluit(DONE)',
+//   'Kelapa Gading & Sunter(DONE)',
+//   'Jakarta Timur',
+//   'Detabek(DONE)',
+//   'Bali(DONE)',
+//   'Bandung(DONE)',
+//   'Surabaya(DONE)'

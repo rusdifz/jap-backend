@@ -32,7 +32,7 @@ export const dbConfig = (): DbConfigInterface => ({
       UsersDB,
       MasterAmenitiesDB,
       MasterLocationDB,
-      PropertyPicDB,
+      // PropertyPicDB,
     ],
     // ssl: {
     //   rejectUnauthorized: false,

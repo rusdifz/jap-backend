@@ -20,6 +20,7 @@ const master_location_service_1 = require("../master-location/master-location.se
 const images_repository_1 = require("./images.repository");
 const upsert_mapping_1 = require("./mappings/upsert.mapping");
 const common_2 = require("../../../common");
+const typeorm_1 = require("typeorm");
 let DashboardImagesService = class DashboardImagesService {
     constructor(repository, articleService, adminService, feedbackService, masterLocationService, cdnService) {
         this.repository = repository;
@@ -31,11 +32,18 @@ let DashboardImagesService = class DashboardImagesService {
     }
     async uploadImages(body) {
         console.log('before check', body);
+        const queryDataExist = {
+            reference_id: body.reference_id,
+            reference_type: body.reference_type,
+        };
+        if (body.files_old) {
+            const ids = body.files_old.split(/,/g);
+            console.log('ids', ids);
+            Object.assign(queryDataExist, { media_id: (0, typeorm_1.Not)((0, typeorm_1.In)(ids)) });
+        }
+        console.log('query', queryDataExist);
         const checkDataExist = await this.repository.find({
-            where: {
-                reference_id: body.reference_id,
-                reference_type: body.reference_type,
-            },
+            where: queryDataExist,
         });
         console.log('after check');
         if (checkDataExist.length > 0) {
@@ -48,27 +56,31 @@ let DashboardImagesService = class DashboardImagesService {
         }
         console.log('check exist', checkDataExist);
         if (body.files.length > 0) {
-            console.log('yes');
             const resp = [];
             for (const file of body.files) {
                 const folderName = `${body.reference_type}/${body.folder_name}`;
                 const uploadFile = await this.cdnService.FileUpload(file, folderName);
                 console.log('upload file', uploadFile);
                 const mapData = await (0, upsert_mapping_1.mapInsertDB)(file, body.reference_id, body.reference_type, uploadFile);
-                const saveData = await this.repository.save(mapData);
-                if (body.reference_type === common_2.MediaReferenceType.ARTICLE) {
-                    await this.articleService.updateImage(body.reference_id, mapData.full_url);
+                if (body.reference_type !== common_2.MediaReferenceType.PROPERTY_THUMBNAIL) {
+                    const saveData = await this.repository.save(mapData);
+                    if (body.reference_type === common_2.MediaReferenceType.ARTICLE) {
+                        await this.articleService.updateImage(body.reference_id, mapData.full_url);
+                    }
+                    else if (body.reference_type === common_2.MediaReferenceType.FEEDBACK) {
+                        await this.feedbackService.updateImage(body.reference_id, mapData.full_url);
+                    }
+                    else if (body.reference_type === common_2.MediaReferenceType.MASTER_LOCATION) {
+                        await this.masterLocationService.updateImage(body.reference_id, mapData.full_url);
+                    }
+                    else if (body.reference_type === common_2.MediaReferenceType.USER) {
+                        await this.adminService.updateImage(body.reference_id, mapData.full_url);
+                    }
+                    resp.push(saveData);
                 }
-                else if (body.reference_type === common_2.MediaReferenceType.FEEDBACK) {
-                    await this.feedbackService.updateImage(body.reference_id, mapData.full_url);
+                else {
+                    resp.push(mapData);
                 }
-                else if (body.reference_type === common_2.MediaReferenceType.MASTER_LOCATION) {
-                    await this.masterLocationService.updateImage(body.reference_id, mapData.full_url);
-                }
-                else if (body.reference_type === common_2.MediaReferenceType.USER) {
-                    await this.adminService.updateImage(body.reference_id, mapData.full_url);
-                }
-                resp.push(saveData);
             }
             return resp;
         }

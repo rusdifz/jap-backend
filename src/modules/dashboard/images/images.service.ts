@@ -12,6 +12,8 @@ import { DashboardImageRepository } from './images.repository';
 import { mapInsertDB } from './mappings/upsert.mapping';
 import { IMedia, MediaReferenceType } from 'src/common';
 import { ReqUploadImages } from './dto/request.dto';
+import { DashboardPropertiesService } from '../properties/services/properties.service';
+import { In, Not } from 'typeorm';
 
 @Injectable()
 export class DashboardImagesService {
@@ -29,11 +31,21 @@ export class DashboardImagesService {
 
     console.log('before check', body);
 
+    const queryDataExist = {
+      reference_id: body.reference_id,
+      reference_type: body.reference_type,
+    };
+
+    if (body.files_old) {
+      const ids = body.files_old.split(/,/g);
+      console.log('ids', ids);
+      Object.assign(queryDataExist, { media_id: Not(In(ids)) });
+    }
+
+    console.log('query', queryDataExist);
+
     const checkDataExist = await this.repository.find({
-      where: {
-        reference_id: body.reference_id,
-        reference_type: body.reference_type,
-      },
+      where: queryDataExist,
     });
     console.log('after check');
 
@@ -49,8 +61,6 @@ export class DashboardImagesService {
     console.log('check exist', checkDataExist);
 
     if (body.files.length > 0) {
-      console.log('yes');
-
       const resp = [];
       for (const file of body.files) {
         const folderName = `${body.reference_type}/${body.folder_name}`;
@@ -65,37 +75,43 @@ export class DashboardImagesService {
           uploadFile,
         );
 
-        const saveData = await this.repository.save(mapData);
+        if (body.reference_type !== MediaReferenceType.PROPERTY_THUMBNAIL) {
+          const saveData = await this.repository.save(mapData);
 
-        //selain type propety dan activity upload ke tabel masing2
-        //update data profile, article and image
-        //sebenernya ini buat make sure aja data urlnya sudah yang terbaru di masing2 image profile, article and feedback
+          //selain type propety dan activity upload ke tabel masing2
+          //update data profile, article and image
+          //sebenernya ini buat make sure aja data urlnya sudah yang terbaru di masing2 image profile, article and feedback
 
-        if (body.reference_type === MediaReferenceType.ARTICLE) {
-          await this.articleService.updateImage(
-            body.reference_id,
-            mapData.full_url,
-          );
-        } else if (body.reference_type === MediaReferenceType.FEEDBACK) {
-          await this.feedbackService.updateImage(
-            body.reference_id,
-            mapData.full_url,
-          );
-        } else if (body.reference_type === MediaReferenceType.MASTER_LOCATION) {
-          await this.masterLocationService.updateImage(
-            body.reference_id,
-            mapData.full_url,
-          );
-        } else if (body.reference_type === MediaReferenceType.USER) {
-          //user profile
+          if (body.reference_type === MediaReferenceType.ARTICLE) {
+            await this.articleService.updateImage(
+              body.reference_id,
+              mapData.full_url,
+            );
+          } else if (body.reference_type === MediaReferenceType.FEEDBACK) {
+            await this.feedbackService.updateImage(
+              body.reference_id,
+              mapData.full_url,
+            );
+          } else if (
+            body.reference_type === MediaReferenceType.MASTER_LOCATION
+          ) {
+            await this.masterLocationService.updateImage(
+              body.reference_id,
+              mapData.full_url,
+            );
+          } else if (body.reference_type === MediaReferenceType.USER) {
+            //user profile
 
-          await this.adminService.updateImage(
-            body.reference_id,
-            mapData.full_url,
-          );
+            await this.adminService.updateImage(
+              body.reference_id,
+              mapData.full_url,
+            );
+          }
+
+          resp.push(saveData);
+        } else {
+          resp.push(mapData);
         }
-
-        resp.push(saveData);
       }
 
       return resp;

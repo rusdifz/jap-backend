@@ -40,20 +40,11 @@ let DashboardPropertiesController = class DashboardPropertiesController {
     async update(user, bodyparam) {
         return await this.service.update(bodyparam, user);
     }
+    async updateThumbnail(user, bodyparam) {
+        return await this.service.update(bodyparam, user);
+    }
     async deleteOne(id, user) {
         return await this.service.delete(id, user);
-    }
-    async getListPic(query) {
-        return await this.service.getListPic(query);
-    }
-    async createPic(user, body) {
-        return await this.service.createPic(body, user);
-    }
-    async updatePic(user, bodyparam) {
-        return await this.service.updatePic(bodyparam, user);
-    }
-    async deleteOnePic(id, user) {
-        return await this.service.deletePic(id, user);
     }
     async checkForStaleDataOlderThanOneMonth() {
         return await this.service.checkForStaleDataOlderThanOneMonth();
@@ -61,21 +52,10 @@ let DashboardPropertiesController = class DashboardPropertiesController {
     async convertFileExcelToDB() {
         return await this.service.inputBulkFromExcel();
     }
-    async generatePdfComparisson(res, location, query, user) {
-        console.log('query comparisson', query);
-        console.log('user', user);
-        const pdfBuffer = await this.serviceGenerateFile.generatePDFComparisson(query.property_id, user);
-        const namePdf = 'Building Comparisson - ' + location;
-        res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Disposition': `attachment; filename="${namePdf}.pdf"`,
-        });
-        res.send(pdfBuffer);
-    }
     async generatePdfComparissonNew(res, body, user) {
         console.log('body pdf', body);
         console.log('user', user);
-        const pdfBuffer = await this.serviceGenerateFile.generatePDFComparissonNew(body, user);
+        const pdfBuffer = await this.serviceGenerateFile.generatePDFComparisson(body, user);
         const namePdf = 'Building Comparisson - ' + body.location;
         res.set({
             'Content-Type': 'application/pdf',
@@ -83,17 +63,9 @@ let DashboardPropertiesController = class DashboardPropertiesController {
         });
         res.send(pdfBuffer);
     }
-    async generatePdfPropertyDetail(res, slug) {
-        const pdfBuffer = await this.serviceGenerateFile.generatePDFDetailProperty(slug);
-        res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Disposition': `attachment; filename="${slug}.pdf"`,
-        });
-        res.send(pdfBuffer);
-    }
     async generatePdfPropertyDetailNew(res, body) {
         console.log('body', body);
-        const pdfBuffer = await this.serviceGenerateFile.generatePDFDetailPropertyDetail(body);
+        const pdfBuffer = await this.serviceGenerateFile.generatePDFDetailProperty(body);
         res.set({
             'Content-Type': 'application/pdf',
             'Content-Disposition': `attachment; filename="property-detail-${body.location ?? ''}.pdf"`,
@@ -164,6 +136,22 @@ __decorate([
 ], DashboardPropertiesController.prototype, "update", null);
 __decorate([
     (0, swagger_1.ApiOperation)({
+        summary: 'endpoint update office',
+        description: '',
+    }),
+    (0, swagger_1.ApiHeader)((0, common_2.AuthorizationHeader)(true)),
+    (0, swagger_1.ApiCreatedResponse)(endpoint_swagger_1.swgCreateOK),
+    (0, common_1.Version)('1'),
+    (0, throttler_1.Throttle)({ default: { limit: 10, ttl: 60000 } }),
+    (0, common_1.Put)(':id'),
+    __param(0, (0, common_2.UserAuth)()),
+    __param(1, (0, common_2.BodyParam)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, request_dto_1.ReqUpdatePropertyDTO]),
+    __metadata("design:returntype", Promise)
+], DashboardPropertiesController.prototype, "updateThumbnail", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({
         summary: 'endpoint delete office',
         description: '',
     }),
@@ -177,64 +165,6 @@ __decorate([
     __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], DashboardPropertiesController.prototype, "deleteOne", null);
-__decorate([
-    (0, swagger_1.ApiOperation)({
-        summary: 'endpoint get office list',
-        description: '',
-    }),
-    (0, swagger_1.ApiHeader)((0, common_2.AuthorizationHeader)(true)),
-    (0, common_1.Version)('1'),
-    (0, common_1.Get)('prop/pic'),
-    __param(0, (0, common_1.Query)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [request_dto_1.ReqGetPicListDTO]),
-    __metadata("design:returntype", Promise)
-], DashboardPropertiesController.prototype, "getListPic", null);
-__decorate([
-    (0, swagger_1.ApiOperation)({
-        summary: 'endpoint create pic property',
-        description: '',
-    }),
-    (0, swagger_1.ApiHeader)((0, common_2.AuthorizationHeader)(true)),
-    (0, common_1.Version)('1'),
-    (0, throttler_1.Throttle)({ default: { limit: 10, ttl: 60000 } }),
-    (0, common_1.Post)('prop/pic'),
-    __param(0, (0, common_2.UserAuth)()),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, request_dto_1.ReqCreatePropertyPicDTO]),
-    __metadata("design:returntype", Promise)
-], DashboardPropertiesController.prototype, "createPic", null);
-__decorate([
-    (0, swagger_1.ApiOperation)({
-        summary: 'endpoint update property pic',
-        description: '',
-    }),
-    (0, swagger_1.ApiHeader)((0, common_2.AuthorizationHeader)(true)),
-    (0, common_1.Version)('1'),
-    (0, throttler_1.Throttle)({ default: { limit: 10, ttl: 60000 } }),
-    (0, common_1.Put)('prop/pic/:id'),
-    __param(0, (0, common_2.UserAuth)()),
-    __param(1, (0, common_2.BodyParam)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, request_dto_1.ReqUpdatePropertyPicDTO]),
-    __metadata("design:returntype", Promise)
-], DashboardPropertiesController.prototype, "updatePic", null);
-__decorate([
-    (0, swagger_1.ApiOperation)({
-        summary: 'endpoint delete office',
-        description: '',
-    }),
-    (0, swagger_1.ApiHeader)((0, common_2.AuthorizationHeader)(true)),
-    (0, common_1.Version)('1'),
-    (0, throttler_1.Throttle)({ default: { limit: 5, ttl: 60000 } }),
-    (0, common_1.Delete)('prop/pic/:id'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_2.UserAuth)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
-    __metadata("design:returntype", Promise)
-], DashboardPropertiesController.prototype, "deleteOnePic", null);
 __decorate([
     (0, common_1.Version)('1'),
     (0, common_1.Get)('older-data/one-month'),
@@ -251,17 +181,6 @@ __decorate([
 ], DashboardPropertiesController.prototype, "convertFileExcelToDB", null);
 __decorate([
     (0, common_1.Version)('1'),
-    (0, common_1.Get)('pdf/comparisson/:location'),
-    __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Param)('location')),
-    __param(2, (0, common_1.Query)()),
-    __param(3, (0, common_2.UserAuth)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, request_dto_1.GeneratePDFDTO, Object]),
-    __metadata("design:returntype", Promise)
-], DashboardPropertiesController.prototype, "generatePdfComparisson", null);
-__decorate([
-    (0, common_1.Version)('1'),
     (0, common_1.Post)('pdf/comparison'),
     __param(0, (0, common_1.Res)()),
     __param(1, (0, common_1.Body)()),
@@ -270,15 +189,6 @@ __decorate([
     __metadata("design:paramtypes", [Object, request_dto_1.PdfComparisonDTO, Object]),
     __metadata("design:returntype", Promise)
 ], DashboardPropertiesController.prototype, "generatePdfComparissonNew", null);
-__decorate([
-    (0, common_1.Version)('1'),
-    (0, common_1.Get)('pdf/detail/:slug'),
-    __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Param)('slug')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
-    __metadata("design:returntype", Promise)
-], DashboardPropertiesController.prototype, "generatePdfPropertyDetail", null);
 __decorate([
     (0, common_1.Version)('1'),
     (0, common_1.Post)('pdf/detail'),

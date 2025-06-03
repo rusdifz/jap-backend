@@ -7,16 +7,12 @@ import {
   DeleteDateColumn,
   ManyToOne,
   Entity,
-  OneToOne,
 } from 'typeorm';
 
 import { MediaReferenceType, MediaTypeEnum, MimeTypeEnum } from '../enums';
 
 import { IMedia } from '../interfaces/media.interface';
 import { PropertiesDB } from './property.entity';
-import { FeedbackDB } from './feedback.entity';
-import { UsersDB } from './user.entity';
-import { ArticleDB } from './article.entity';
 
 @Entity({ name: 'media' })
 export class MediaDB implements IMedia {
@@ -76,22 +72,4 @@ export class MediaDB implements IMedia {
   })
   @JoinColumn({ name: 'reference_id', referencedColumnName: 'property_id' })
   property: PropertiesDB;
-
-  // @OneToOne(() => ArticleDB, (article) => article.image, {
-  //   createForeignKeyConstraints: false,
-  // })
-  // @JoinColumn({ name: 'reference_id', referencedColumnName: 'article_id' })
-  // article: ArticleDB;
-
-  // @OneToOne(() => FeedbackDB, (feedback) => feedback.image, {
-  //   createForeignKeyConstraints: false,
-  // })
-  // @JoinColumn({ name: 'reference_id', referencedColumnName: 'feedback_id' })
-  // feedback: FeedbackDB;
-
-  // @OneToOne(() => UsersDB, (user) => user.image, {
-  //   createForeignKeyConstraints: false,
-  // })
-  // @JoinColumn({ name: 'reference_id', referencedColumnName: 'id' })
-  // user: UsersDB;
 }

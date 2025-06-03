@@ -6,7 +6,9 @@ export declare class ResUnit implements Partial<Unit> {
     floor: string;
     condition: ConditionUnitEnum;
     available: boolean;
-    rent_sqm: number;
+    rent_price: number;
+    service_charge_info?: string;
+    service_charge_price?: number;
     status: PropertyStatusEnum;
     created_at: Date;
     updated_at: Date;

@@ -1,4 +1,3 @@
-import { PropertiesDB } from 'src/common';
 export declare class PropertyPicDB {
     id: string;
     property_id: number;
@@ -10,5 +9,4 @@ export declare class PropertyPicDB {
     created_by: string;
     updated_by: string;
     deleted_by: string;
-    property?: PropertiesDB;
 }

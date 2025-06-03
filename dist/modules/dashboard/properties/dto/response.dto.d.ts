@@ -1,9 +1,10 @@
 import { IProperty, LocationEnum, StatusPublishEnum, IMedia, Unit, PropertyStatusEnum } from 'src/common';
-export declare class ResProperty implements IProperty {
+export declare class ResProperty implements Partial<IProperty> {
     property_id: number;
     popular: number;
     property_status: PropertyStatusEnum;
     name: string;
+    thumbnail?: string;
     url_youtube?: string;
     slug: string;
     description: string;
@@ -21,12 +22,8 @@ export declare class ResProperty implements IProperty {
             lighting: string;
             ac: string;
         };
-        ground_floor_sqm: number;
-        rent_sqm: number;
-        service_charge: {
-            price: number;
-            info: string;
-        };
+        ground_floor: number;
+        rent_average: number;
         parking_charge: {
             reserved: {
                 car: string;
@@ -45,7 +42,7 @@ export declare class ResProperty implements IProperty {
         office_hours_weekday: string;
         office_hours_weekend: string;
         total_floor: number;
-        size_floor: number;
+        size_floor: string;
         provider_internet: string;
     };
     nearby: {
@@ -79,7 +76,6 @@ export declare class ResProperty implements IProperty {
     images: IMedia[];
     created_at?: string;
     updated_at?: string;
-    pic: any[];
     ac_info: string;
     electricity_info: string;
     lighting_info: string;

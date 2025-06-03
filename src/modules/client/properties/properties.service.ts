@@ -16,6 +16,11 @@ export class ClientPropertiesService {
         slug,
         status_publish: StatusPublishEnum.PUBLISH,
       },
+      order: {
+        units: {
+          created_at: 'ASC',
+        },
+      },
       relations: {
         units: true,
         images: true,
@@ -37,10 +42,11 @@ export class ClientPropertiesService {
         status_publish: StatusPublishEnum.PUBLISH,
       },
       order: {
-        updated_at: 'desc',
+        updated_at: 'DESC',
       },
-      // relations: { units: true, images: true },
-      relations: ['units', 'images'],
+      // relations: {
+      //   units: true,
+      // },
     };
 
     // sort & order query
@@ -70,7 +76,7 @@ export class ClientPropertiesService {
     }
 
     if (props.property_status) {
-      // Object.assign(query.where, { property_type: props.property_status });
+      Object.assign(query.where, { units: { status: props.property_status } });
     }
 
     if (props.search_keyword) {

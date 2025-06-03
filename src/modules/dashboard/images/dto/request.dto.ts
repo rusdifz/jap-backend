@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
-import { MediaReferenceType } from 'src/common';
+import { IMedia, MediaReferenceType } from 'src/common';
 
 export class ReqUploadImages {
   @IsNotEmpty()
@@ -13,6 +13,9 @@ export class ReqUploadImages {
 
   @IsOptional()
   files?: Express.Multer.File[];
+
+  @IsOptional()
+  files_old?: string; // for data image yang sudah di upload
 }
 
 // export class ReqUploadImage {

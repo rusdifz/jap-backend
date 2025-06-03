@@ -24,7 +24,6 @@ let DashboardImagesController = class DashboardImagesController {
         this.service = service;
     }
     async uploadImages(body, files) {
-        console.log('updaload', files);
         body.files = files;
         return await this.service.uploadImages(body);
     }

@@ -25,6 +25,11 @@ let ClientPropertiesService = class ClientPropertiesService {
                 slug,
                 status_publish: common_2.StatusPublishEnum.PUBLISH,
             },
+            order: {
+                units: {
+                    created_at: 'ASC',
+                },
+            },
             relations: {
                 units: true,
                 images: true,
@@ -40,9 +45,8 @@ let ClientPropertiesService = class ClientPropertiesService {
                 status_publish: common_2.StatusPublishEnum.PUBLISH,
             },
             order: {
-                updated_at: 'desc',
+                updated_at: 'DESC',
             },
-            relations: ['units', 'images'],
         };
         query = await this.repository.sort(query, props);
         query = await this.repository.paginate(query, props);
@@ -61,6 +65,7 @@ let ClientPropertiesService = class ClientPropertiesService {
             });
         }
         if (props.property_status) {
+            Object.assign(query.where, { units: { status: props.property_status } });
         }
         if (props.search_keyword) {
             Object.assign(query.where, { name: (0, typeorm_1.Like)(`%${props.search_keyword}%`) });

@@ -67,10 +67,7 @@ let DashboardMasterLocationService = class DashboardMasterLocationService {
         return { data: respData, count: findData[1] };
     }
     async updateImage(id, url_image) {
-        console.log('id', id);
-        console.log('url', url_image);
         const data = await this.repository.update({ id }, { url_image });
-        console.log('data', data);
         return data;
     }
     async getListPosition() {

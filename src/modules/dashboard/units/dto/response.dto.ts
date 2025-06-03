@@ -22,7 +22,11 @@ export class ResUnit implements Partial<Unit> {
   available: boolean;
 
   @ApiProperty()
-  rent_sqm: number;
+  rent_price: number;
+
+  service_charge_info?: string;
+
+  service_charge_price?: number;
 
   @ApiProperty()
   status: PropertyStatusEnum;

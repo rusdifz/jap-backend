@@ -48,6 +48,10 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 250, nullable: true }),
     __metadata("design:type", String)
+], PropertiesDB.prototype, "thumbnail", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 250, nullable: true }),
+    __metadata("design:type", String)
 ], PropertiesDB.prototype, "url_youtube", void 0);
 __decorate([
     (0, typeorm_1.Column)({
@@ -62,33 +66,25 @@ __decorate([
     __metadata("design:type", Number)
 ], PropertiesDB.prototype, "total_unit", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 400, nullable: true }),
+    (0, typeorm_1.Column)({ type: 'bigint', default: 0 }),
+    __metadata("design:type", Number)
+], PropertiesDB.prototype, "price_rent_average", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
     __metadata("design:type", String)
 ], PropertiesDB.prototype, "price_overtime_electricity", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 400, nullable: true }),
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
     __metadata("design:type", String)
 ], PropertiesDB.prototype, "price_overtime_lighting", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 400, nullable: true }),
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
     __metadata("design:type", String)
 ], PropertiesDB.prototype, "price_overtime_ac", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'int', nullable: true }),
     __metadata("design:type", Number)
-], PropertiesDB.prototype, "price_ground_floor_sqm", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'int', nullable: true }),
-    __metadata("design:type", Number)
-], PropertiesDB.prototype, "price_rent_sqm", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'int', nullable: true }),
-    __metadata("design:type", Number)
-], PropertiesDB.prototype, "service_charge", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 250, nullable: true }),
-    __metadata("design:type", String)
-], PropertiesDB.prototype, "service_charge_info", void 0);
+], PropertiesDB.prototype, "price_ground_floor", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 100, nullable: true }),
     __metadata("design:type", String)
@@ -178,8 +174,8 @@ __decorate([
     __metadata("design:type", Number)
 ], PropertiesDB.prototype, "total_floor", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'int', nullable: true }),
-    __metadata("design:type", Number)
+    (0, typeorm_1.Column)({ type: 'varchar', length: 200, nullable: true }),
+    __metadata("design:type", String)
 ], PropertiesDB.prototype, "size_floor", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 200, nullable: true }),
@@ -287,13 +283,6 @@ __decorate([
     (0, typeorm_1.JoinColumn)({ name: 'property_id', referencedColumnName: 'reference_id' }),
     __metadata("design:type", Array)
 ], PropertiesDB.prototype, "images", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => unit_entity_1.UnitsDB, (unit) => unit.property, {
-        createForeignKeyConstraints: false,
-    }),
-    (0, typeorm_1.JoinColumn)({ name: 'property_id', referencedColumnName: 'property_id' }),
-    __metadata("design:type", Array)
-], PropertiesDB.prototype, "pic", void 0);
 exports.PropertiesDB = PropertiesDB = __decorate([
     (0, typeorm_1.Entity)({ name: 'properties' })
 ], PropertiesDB);

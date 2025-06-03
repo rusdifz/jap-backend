@@ -8,9 +8,10 @@ import {
   Unit,
   PropertyStatusEnum,
   PropertyTypeEnum,
+  PropertyPicDB,
 } from 'src/common';
 
-export class ResProperty implements IProperty {
+export class ResProperty implements Partial<IProperty> {
   @ApiProperty({ example: 1 })
   property_id: number;
 
@@ -19,6 +20,8 @@ export class ResProperty implements IProperty {
 
   @ApiProperty({ example: 'nana' })
   name: string;
+
+  thumbnail?: string;
 
   url_youtube?: string;
 
@@ -39,12 +42,12 @@ export class ResProperty implements IProperty {
       lighting: string;
       ac: string;
     };
-    ground_floor_sqm: number;
-    rent_sqm: number;
-    service_charge: {
-      price: number;
-      info: string;
-    };
+    ground_floor: number;
+    rent_average: number;
+    // service_charge: {
+    //   price: number;
+    //   info: string;
+    // };
     parking_charge: {
       reserved: {
         car: string;
@@ -63,7 +66,7 @@ export class ResProperty implements IProperty {
     office_hours_weekday: string;
     office_hours_weekend: string;
     total_floor: number;
-    size_floor: number;
+    size_floor: string;
     provider_internet: string;
   };
   nearby: {
@@ -97,7 +100,7 @@ export class ResProperty implements IProperty {
   images: IMedia[];
   created_at?: string;
   updated_at?: string;
-  pic: any[];
+  // pic: PropertyPicDB[];
   ac_info: string;
   electricity_info: string;
   lighting_info: string;

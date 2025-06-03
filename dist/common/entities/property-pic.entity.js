@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PropertyPicDB = void 0;
 const typeorm_1 = require("typeorm");
-const common_1 = require("..");
 let PropertyPicDB = class PropertyPicDB {
 };
 exports.PropertyPicDB = PropertyPicDB;
@@ -55,13 +54,6 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 100, nullable: true }),
     __metadata("design:type", String)
 ], PropertyPicDB.prototype, "deleted_by", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => common_1.PropertiesDB, (office) => office.pic, {
-        createForeignKeyConstraints: true,
-    }),
-    (0, typeorm_1.JoinColumn)({ name: 'property_id', referencedColumnName: 'property_id' }),
-    __metadata("design:type", common_1.PropertiesDB)
-], PropertyPicDB.prototype, "property", void 0);
 exports.PropertyPicDB = PropertyPicDB = __decorate([
     (0, typeorm_1.Entity)({ name: 'property_pic' })
 ], PropertyPicDB);

@@ -86,12 +86,8 @@ async function mapDbToResDetail(db) {
                 lighting: db.price_overtime_lighting,
                 ac: db.price_overtime_ac,
             },
-            ground_floor_sqm: db.price_ground_floor_sqm,
-            rent_sqm: db.price_rent_sqm,
-            service_charge: {
-                price: db.service_charge,
-                info: db.service_charge_info,
-            },
+            ground_floor: db.price_ground_floor,
+            rent_average: db.price_rent_average,
             parking_charge: {
                 reserved: {
                     car: db.parking_charge_reserved_car,
@@ -120,6 +116,7 @@ async function mapDbToResDetail(db) {
         },
         property_feature: propertyFeature,
         units: db.units.length > 0 ? db.units.slice(0, 5) : [],
+        thumbnail: db.thumbnail,
         images: db.images,
         created_at: (0, common_1.dayjs)(db.created_at).format('MMMM D, YYYY'),
         updated_at: (0, common_1.dayjs)(db.updated_at).format('MMMM D, YYYY'),
@@ -134,13 +131,14 @@ async function mapDbToResList(dbs) {
             location: db.location,
             property_type: db.property_type,
             property_status: db.property_status,
-            price: {
-                rent_sqm: db.price_rent_sqm,
-            },
             spesification: {
                 property_size: db.property_size,
             },
-            images: db.images,
+            price: {
+                rent_average: db.price_rent_average,
+            },
+            thumbnail: db.thumbnail,
+            units: db.units.length > 0 ? db.units.slice(0, 1) : [],
             created_at: (0, common_1.dayjs)(db.created_at).format('MMMM D, YYYY'),
             updated_at: (0, common_1.dayjs)(db.updated_at).format('MMMM D, YYYY'),
         };

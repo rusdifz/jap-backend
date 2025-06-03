@@ -42,7 +42,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
-], ResUnit.prototype, "rent_sqm", void 0);
+], ResUnit.prototype, "rent_price", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)

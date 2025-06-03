@@ -31,4 +31,8 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Array)
 ], ReqUploadImages.prototype, "files", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], ReqUploadImages.prototype, "files_old", void 0);
 //# sourceMappingURL=request.dto.js.map

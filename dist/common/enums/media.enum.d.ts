@@ -13,6 +13,7 @@ export declare enum MimeTypeEnum {
 export declare enum MediaReferenceType {
     ARTICLE = "article",
     PROPERTY = "property",
+    PROPERTY_THUMBNAIL = "property-thumbnail",
     FEEDBACK = "feedback",
     USER = "user",
     MASTER_LOCATION = "master location",

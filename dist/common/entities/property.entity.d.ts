@@ -2,7 +2,6 @@ import { LocationEnum, PropertyStatusEnum, StatusPublishEnum } from 'src/common'
 import { PropertyAbstract } from '../interfaces/property.interface';
 import { UnitsDB } from './unit.entity';
 import { MediaDB } from './media.entity';
-import { PropertyPicDB } from './property-pic.entity';
 export declare class PropertiesDB implements PropertyAbstract {
     property_id: number;
     popular: number;
@@ -10,16 +9,15 @@ export declare class PropertiesDB implements PropertyAbstract {
     slug: string;
     description: string;
     status_publish: StatusPublishEnum;
+    thumbnail: string;
     url_youtube?: string;
     property_status: PropertyStatusEnum;
     total_unit: number;
+    price_rent_average: number;
     price_overtime_electricity: string;
     price_overtime_lighting: string;
     price_overtime_ac: string;
-    price_ground_floor_sqm: number;
-    price_rent_sqm: number;
-    service_charge: number;
-    service_charge_info: string;
+    price_ground_floor: number;
     parking_charge_reserved_car: string;
     parking_charge_reserved_motorcycle: string;
     parking_charge_unreserved_car: string;
@@ -42,7 +40,7 @@ export declare class PropertiesDB implements PropertyAbstract {
     office_hours_weekday: string;
     office_hours_weekend: string;
     total_floor: number;
-    size_floor: number;
+    size_floor: string;
     address: string;
     location: LocationEnum | any;
     ac_info: string;
@@ -67,5 +65,4 @@ export declare class PropertiesDB implements PropertyAbstract {
     deleted_by: string;
     units?: UnitsDB[];
     images?: MediaDB[];
-    pic?: PropertyPicDB[];
 }
