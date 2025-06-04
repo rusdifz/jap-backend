@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PdfDetailDTO = exports.PdfComparisonDTO = exports.GeneratePDFDTO = exports.PropertyDetailDTO = exports.PropertiesDTO = exports.ReqUpdatePropertyDTO = exports.ReqCreatePropertyDTO = void 0;
+exports.BulkImageDTO = exports.PdfDetailDTO = exports.PdfComparisonDTO = exports.GeneratePDFDTO = exports.PropertyDetailDTO = exports.PropertiesDTO = exports.ReqUpdatePropertyDTO = exports.ReqCreatePropertyDTO = void 0;
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 const swagger_1 = require("@nestjs/swagger");
@@ -515,4 +515,15 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Array)
 ], PdfDetailDTO.prototype, "properties_download", void 0);
+class BulkImageDTO {
+}
+exports.BulkImageDTO = BulkImageDTO;
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], BulkImageDTO.prototype, "location", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], BulkImageDTO.prototype, "type", void 0);
 //# sourceMappingURL=request.dto.js.map

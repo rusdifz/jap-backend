@@ -1,4 +1,4 @@
-import { PdfComparisonDTO, PdfDetailDTO, ReqCreatePropertyDTO, ReqUpdatePropertyDTO } from './dto/request.dto';
+import { BulkImageDTO, PdfComparisonDTO, PdfDetailDTO, ReqCreatePropertyDTO, ReqUpdatePropertyDTO } from './dto/request.dto';
 import { IJwtUser } from 'src/common';
 import { PropertiesDTO } from './dto/request.dto';
 import { DashboardPropertiesService } from './services/properties.service';
@@ -20,4 +20,6 @@ export declare class DashboardPropertiesController {
     convertFileExcelToDB(): Promise<any[]>;
     generatePdfComparissonNew(res: any, body: PdfComparisonDTO, user: IJwtUser): Promise<void>;
     generatePdfPropertyDetailNew(res: any, body: PdfDetailDTO): Promise<void>;
+    bulkImage(query: BulkImageDTO): Promise<any[]>;
+    bulkImageThumbail(query: BulkImageDTO): Promise<any[]>;
 }

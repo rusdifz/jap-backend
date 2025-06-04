@@ -7,10 +7,12 @@ import {
   FindManyOptions,
   FindOneOptions,
   FindOptionsWhere,
+  In,
   LessThan,
   LessThanOrEqual,
   Like,
   MoreThanOrEqual,
+  Not,
   UpdateResult,
 } from 'typeorm';
 
@@ -603,6 +605,65 @@ export class DashboardPropertiesService {
     }
 
     return arr;
+  }
+
+  async inputImageBulkByLocation(
+    location: LocationEnum,
+    type: MediaReferenceType,
+  ) {
+    const query: FindManyOptions<PropertiesDB> = {
+      select: {
+        property_id: true,
+        slug: true,
+        location: true,
+      },
+      where: {
+        location,
+        // property_id: Not(In([87, 88, 89, 90, 91, 92, 93, 94, 95, 96])),
+      },
+    };
+
+    const properties = await this.getListCustom(query);
+
+    let resp = [];
+
+    if (properties.length > 0) {
+      resp = await this.imageService.uploadImageBulk(properties, type);
+    }
+
+    return resp;
+  }
+
+  async inputImageBulkThumbnailByLocation(location: LocationEnum) {
+    const query: FindManyOptions<PropertiesDB> = {
+      select: {
+        property_id: true,
+        name: true,
+        location: true,
+      },
+      where: {
+        location,
+        property_id: Not(In([87, 88, 89, 90, 91, 92, 93, 94, 95, 96])),
+      },
+    };
+
+    const properties = await this.getListCustom(query);
+    // console.log('pr', properties);
+
+    let resp = [];
+
+    if (properties.length > 0) {
+      resp = await this.imageService.uploadImageThumbnailBulk(properties);
+      console.log('res', resp);
+
+      if (resp.length > 0) {
+        resp.forEach((dt) => {
+          this.updateThumbnail(dt.reference_id, dt.full_url);
+        });
+      }
+    }
+
+    return resp;
   }
 }
 

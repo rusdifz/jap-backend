@@ -72,6 +72,12 @@ let DashboardPropertiesController = class DashboardPropertiesController {
         });
         res.send(pdfBuffer);
     }
+    async bulkImage(query) {
+        return await this.service.inputImageBulkByLocation(query.location, query.type);
+    }
+    async bulkImageThumbail(query) {
+        return await this.service.inputImageBulkThumbnailByLocation(query.location);
+    }
 };
 exports.DashboardPropertiesController = DashboardPropertiesController;
 __decorate([
@@ -198,6 +204,22 @@ __decorate([
     __metadata("design:paramtypes", [Object, request_dto_1.PdfDetailDTO]),
     __metadata("design:returntype", Promise)
 ], DashboardPropertiesController.prototype, "generatePdfPropertyDetailNew", null);
+__decorate([
+    (0, common_1.Version)('1'),
+    (0, common_1.Get)('bulk/image'),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [request_dto_1.BulkImageDTO]),
+    __metadata("design:returntype", Promise)
+], DashboardPropertiesController.prototype, "bulkImage", null);
+__decorate([
+    (0, common_1.Version)('1'),
+    (0, common_1.Get)('bulk/image/thumbnail'),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [request_dto_1.BulkImageDTO]),
+    __metadata("design:returntype", Promise)
+], DashboardPropertiesController.prototype, "bulkImageThumbail", null);
 exports.DashboardPropertiesController = DashboardPropertiesController = __decorate([
     (0, common_1.Controller)('dashboard/properties'),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),

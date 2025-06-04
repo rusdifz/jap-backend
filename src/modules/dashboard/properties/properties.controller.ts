@@ -20,6 +20,7 @@ import {
 } from '@nestjs/swagger';
 
 import {
+  BulkImageDTO,
   GeneratePDFDTO,
   PdfComparisonDTO,
   PdfDetailDTO,
@@ -257,5 +258,20 @@ export class DashboardPropertiesController {
       'Content-Disposition': `attachment; filename="property-detail-${body.location ?? ''}.pdf"`,
     });
     res.send(pdfBuffer);
+  }
+
+  @Version('1')
+  @Get('bulk/image')
+  async bulkImage(@Query() query: BulkImageDTO) {
+    return await this.service.inputImageBulkByLocation(
+      query.location,
+      query.type,
+    );
+  }
+
+  @Version('1')
+  @Get('bulk/image/thumbnail')
+  async bulkImageThumbail(@Query() query: BulkImageDTO) {
+    return await this.service.inputImageBulkThumbnailByLocation(query.location);
   }
 }

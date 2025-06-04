@@ -10,7 +10,12 @@ import { DashboardMasterLocationService } from '../master-location/master-locati
 
 import { DashboardImageRepository } from './images.repository';
 import { mapInsertDB } from './mappings/upsert.mapping';
-import { IMedia, MediaReferenceType } from 'src/common';
+import {
+  IMedia,
+  LocationEnum,
+  MediaReferenceType,
+  PropertiesDB,
+} from 'src/common';
 import { ReqUploadImages } from './dto/request.dto';
 import { DashboardPropertiesService } from '../properties/services/properties.service';
 import { In, Not } from 'typeorm';
@@ -63,7 +68,10 @@ export class DashboardImagesService {
     if (body.files.length > 0) {
       const resp = [];
       for (const file of body.files) {
-        const folderName = `${body.reference_type}/${body.folder_name}`;
+        const folderName = `${body.reference_type}/${body.folder_name
+          .toLowerCase()
+          .replace(/,/g, '')
+          .replace(/\s/g, '-')}`;
         //upload to cloudinary
         const uploadFile = await this.cdnService.FileUpload(file, folderName);
         console.log('upload file', uploadFile);
@@ -157,5 +165,96 @@ export class DashboardImagesService {
     return await this.repository.find({
       where: { reference_id, reference_type },
     });
+  }
+
+  async uploadImageBulk(properties: PropertiesDB[], type: MediaReferenceType) {
+    //folder name
+
+    //get image
+
+    const paths = [
+      'public/Lobby.png',
+      'public/Lift.png',
+      'public/Kantin.png',
+      'public/Toilet.png',
+    ];
+
+    const resp = [];
+
+    for (const property of properties) {
+      const loc = property.location
+        .toLowerCase()
+        .replace(',', '')
+        .replace(/[\s&]+/g, '-');
+      console.log('loc', loc);
+
+      const folderName = `${type}/${loc}/${property.property_id}`;
+      console.log('folder', folderName);
+
+      for (const pathFile of paths) {
+        const imagesData: any = readFileSync(pathFile);
+        // console.log('images', imagesData.buffer);
+
+        const uploadFile = await this.cdnService.FileUpload(
+          imagesData,
+          folderName,
+        );
+        console.log('upload file', uploadFile);
+
+        const mapData = await mapInsertDB(
+          { mimetype: 'image/png' },
+          property.property_id,
+          type,
+          uploadFile,
+        );
+
+        const saveData = await this.repository.save(mapData);
+
+        resp.push(saveData);
+      }
+    }
+
+    return resp;
+  }
+
+  async uploadImageThumbnailBulk(properties: PropertiesDB[]) {
+    const resp = [];
+
+    for (const property of properties) {
+      console.log('pro', property);
+
+      const folderPath = `public/building/${property.location}/${property.name}.png`;
+      console.log('folder', folderPath);
+
+      if (existsSync(folderPath)) {
+        const loc = property.location
+          .toLowerCase()
+          .replace(',', '')
+          .replace(/[\s&]+/g, '-');
+        console.log('loc', loc);
+
+        const folderName = `${MediaReferenceType.PROPERTY_THUMBNAIL}/${loc}/${property.property_id}`;
+        console.log('folder', folderName);
+
+        const imagesData: any = readFileSync(folderPath);
+
+        const uploadFile = await this.cdnService.FileUpload(
+          imagesData,
+          folderName,
+        );
+        console.log('upload file', uploadFile);
+
+        const mapData = await mapInsertDB(
+          { mimetype: 'image/png' },
+          property.property_id,
+          MediaReferenceType.PROPERTY_THUMBNAIL,
+          uploadFile,
+        );
+
+        resp.push(mapData);
+      }
+    }
+
+    return resp;
   }
 }

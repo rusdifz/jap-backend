@@ -2,7 +2,7 @@ import { UploadApiResponse } from 'cloudinary';
 import { MediaDB, MediaReferenceType, MediaTypeEnum } from 'src/common';
 
 export async function mapInsertDB(
-  file: Express.Multer.File,
+  file: Express.Multer.File | any,
   reference_id: number,
   reference_type: MediaReferenceType,
   resp_cloudinary: UploadApiResponse | any,

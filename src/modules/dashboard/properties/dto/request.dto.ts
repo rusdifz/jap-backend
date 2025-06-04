@@ -28,6 +28,7 @@ import {
   PaginationDTO,
   PropertyStatusEnum,
   ConditionUnitEnum,
+  MediaReferenceType,
 } from 'src/common';
 
 class OvertimePrice {
@@ -465,6 +466,14 @@ export class PdfDetailDTO {
     property_id: number;
     unit_id: string[];
   }[];
+}
+
+export class BulkImageDTO {
+  @IsNotEmpty()
+  location: LocationEnum;
+
+  @IsNotEmpty()
+  type: MediaReferenceType;
 }
 
 // export class ReqCreatePropertyPicDTO {

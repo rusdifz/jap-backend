@@ -4,7 +4,7 @@ import { AdminService } from '../admin/admin.service';
 import { DashboardFeedbackService } from '../feedback/feedback.service';
 import { DashboardMasterLocationService } from '../master-location/master-location.service';
 import { DashboardImageRepository } from './images.repository';
-import { IMedia, MediaReferenceType } from 'src/common';
+import { IMedia, MediaReferenceType, PropertiesDB } from 'src/common';
 import { ReqUploadImages } from './dto/request.dto';
 export declare class DashboardImagesService {
     private readonly repository;
@@ -18,4 +18,6 @@ export declare class DashboardImagesService {
     deleteData(param: string): Promise<any>;
     getImage(image_name: string): Promise<string>;
     findImageJoin(reference_id: number, reference_type: MediaReferenceType): Promise<import("src/common").MediaDB[]>;
+    uploadImageBulk(properties: PropertiesDB[], type: MediaReferenceType): Promise<any[]>;
+    uploadImageThumbnailBulk(properties: PropertiesDB[]): Promise<any[]>;
 }

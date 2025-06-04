@@ -1,4 +1,4 @@
-import { IProperty, StatusPublishEnum, LocationEnum, PropertyTypeEnum, PaginationDTO, PropertyStatusEnum, ConditionUnitEnum } from 'src/common';
+import { IProperty, StatusPublishEnum, LocationEnum, PropertyTypeEnum, PaginationDTO, PropertyStatusEnum, ConditionUnitEnum, MediaReferenceType } from 'src/common';
 declare class OvertimePrice {
     electricity: string;
     lighting: string;
@@ -113,5 +113,9 @@ export declare class PdfDetailDTO {
         property_id: number;
         unit_id: string[];
     }[];
+}
+export declare class BulkImageDTO {
+    location: LocationEnum;
+    type: MediaReferenceType;
 }
 export {};

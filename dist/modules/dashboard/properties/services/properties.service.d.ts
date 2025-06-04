@@ -1,5 +1,5 @@
 import { FindManyOptions, FindOptionsWhere, UpdateResult } from 'typeorm';
-import { IJwtUser, PropertiesDB } from 'src/common';
+import { IJwtUser, LocationEnum, PropertiesDB, MediaReferenceType } from 'src/common';
 import { PropertiesDTO } from '../dto/request.dto';
 import { ReqCreatePropertyDTO, ReqUpdatePropertyDTO } from '../dto/request.dto';
 import { ResProperty } from '../dto/response.dto';
@@ -27,4 +27,6 @@ export declare class DashboardPropertiesService {
     decreaseTotalUnit(unit_id: string): Promise<number>;
     checkForStaleDataOlderThanOneMonth(): Promise<any[]>;
     inputBulkFromExcel(): Promise<any[]>;
+    inputImageBulkByLocation(location: LocationEnum, type: MediaReferenceType): Promise<any[]>;
+    inputImageBulkThumbnailByLocation(location: LocationEnum): Promise<any[]>;
 }
