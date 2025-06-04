@@ -1,28 +1,28 @@
 export enum LocationEnum {
-  KEMANG = 'Kemang & Ampera',
-  KUNINGAN = 'Kuningan',
-  MAMPANG = 'Mampang',
-  SCBD = 'SCBD',
-  SENAYAN = 'Senayan',
-  SUDIRMAN = 'Sudirman',
-  TB_SIMATUPANG = 'Tb Simatupang',
-  THAMRIN = 'Thamrin',
-  MEGA_KUNINGAN = 'Mega Kuningan',
-  SATRIO = 'Satrio',
-  MT_HARYONO = 'Mt Haryono',
-  GATSU = 'Gatot Subroto',
-  PBK = 'Pondok Indah, Blok M & Kebayoran',
-  SLIPI_GROGOL = 'Slipi & Grogol',
-  PURI_KEMBANGAN_KEBON_JERUK = 'Puri Kembangan & Kebon Jeruk',
-  PIK_PLUIT = 'PIK & Pluit',
-  KELAPA_GADING_SUNTER = 'Kelapa Gading & Sunter',
-  JAKARTA_TIMUR = 'Jakarta Timur',
-  BALI = 'Bali',
-  BANDUNG = 'Bandung',
-  SURABAYA = 'Surabaya',
-  JAKARTA_PUSAT = 'Jakarta Pusat',
-  PASAR_MINGGU = 'Pasar Minggu',
-  DETABEK = 'Depok, Tangerang & Bekasi',
+  KEMANG = 'Kemang & Ampera', //done Facility Image
+  KUNINGAN = 'Kuningan', //done all
+  MAMPANG = 'Mampang', //done all
+  SCBD = 'SCBD', //done all
+  SENAYAN = 'Senayan', //done all
+  SUDIRMAN = 'Sudirman', //done Facility Image
+  TB_SIMATUPANG = 'Tb Simatupang', //done all
+  THAMRIN = 'Thamrin', //done all
+  MEGA_KUNINGAN = 'Mega Kuningan', //done all
+  SATRIO = 'Satrio', //done all
+  MT_HARYONO = 'Mt Haryono', //done all
+  GATSU = 'Gatot Subroto', //done all
+  PBK = 'Pondok Indah, Blok M & Kebayoran', //done all
+  SLIPI_GROGOL = 'Slipi & Grogol', //done Facility Image
+  PURI_KEMBANGAN_KEBON_JERUK = 'Puri Kembangan & Kebon Jeruk', //done Facility Image
+  PIK_PLUIT = 'PIK & Pluit', //done Facility Image
+  KELAPA_GADING_SUNTER = 'Kelapa Gading & Sunter', //done Facility Image
+  JAKARTA_TIMUR = 'Jakarta Timur', //done Facility Image
+  BALI = 'Bali', //done Facility Image
+  BANDUNG = 'Bandung', //done Facility Image
+  SURABAYA = 'Surabaya', //done Facility Image
+  JAKARTA_PUSAT = 'Jakarta Pusat', //done all
+  PASAR_MINGGU = 'Pasar Minggu', //done Facility Image
+  DETABEK = 'Depok, Tangerang & Bekasi', //done Facility Image
 }
 // enum('Depok, Tangerang & Bekasi'Jakarta Barat','Kemang & Ampera','Kuningan','Mampang','SCBD','Senayan','Sudirman','Tb Simatupang','Thamrin','Mega Kuningan','Satrio','Mt Haryono', 'Gatot Subroto','Pondok Indah, Blok M & Kebayoran', 'Pasar Minggu', 'Jakarta Pusat', 'Slipi & Grogol','Puri Kembangan & Kebon Jeruk','PIK & Pluit','Kelapa Gading & Sunter','Jakarta Timur','Bali','Bandung','Surabaya')
 
