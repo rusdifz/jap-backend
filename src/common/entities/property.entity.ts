@@ -79,16 +79,16 @@ export class PropertiesDB implements PropertyAbstract {
   @Column({ type: 'int', nullable: true })
   price_ground_floor: number;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'text', nullable: true })
   parking_charge_reserved_car: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'text', nullable: true })
   parking_charge_reserved_motorcycle: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'text', nullable: true })
   parking_charge_unreserved_car: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'text', nullable: true })
   parking_charge_unreserved_motorcycle: string;
 
   @Column({ type: 'text', nullable: true })
@@ -153,7 +153,7 @@ export class PropertiesDB implements PropertyAbstract {
   @Column({ type: 'varchar', length: 200, nullable: true })
   size_floor: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   address: string;
 
   @Column({

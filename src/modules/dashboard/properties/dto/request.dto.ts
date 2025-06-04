@@ -147,9 +147,11 @@ class Spesification {
 
   @ApiProperty({ example: '900.0' })
   @IsOptional()
-  @IsNumber()
+  @IsString()
   size_floor: string;
 
+  @IsOptional()
+  @IsString()
   provider_internet: string;
 }
 

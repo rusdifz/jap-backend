@@ -86,19 +86,19 @@ __decorate([
     __metadata("design:type", Number)
 ], PropertiesDB.prototype, "price_ground_floor", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 100, nullable: true }),
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
     __metadata("design:type", String)
 ], PropertiesDB.prototype, "parking_charge_reserved_car", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 100, nullable: true }),
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
     __metadata("design:type", String)
 ], PropertiesDB.prototype, "parking_charge_reserved_motorcycle", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 100, nullable: true }),
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
     __metadata("design:type", String)
 ], PropertiesDB.prototype, "parking_charge_unreserved_car", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 100, nullable: true }),
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
     __metadata("design:type", String)
 ], PropertiesDB.prototype, "parking_charge_unreserved_motorcycle", void 0);
 __decorate([
@@ -178,7 +178,7 @@ __decorate([
     __metadata("design:type", String)
 ], PropertiesDB.prototype, "size_floor", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 200, nullable: true }),
+    (0, typeorm_1.Column)({ type: 'varchar', length: 300, nullable: true }),
     __metadata("design:type", String)
 ], PropertiesDB.prototype, "address", void 0);
 __decorate([

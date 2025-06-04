@@ -145,7 +145,6 @@ export async function mapDbToResList(
         rent_average: db.price_rent_average,
       },
       thumbnail: db.thumbnail,
-      units: db.units.length > 0 ? db.units.slice(0, 1) : [],
       created_at: dayjs(db.created_at).format('MMMM D, YYYY'),
       updated_at: dayjs(db.updated_at).format('MMMM D, YYYY'),
     };

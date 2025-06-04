@@ -178,7 +178,7 @@ let DashboardPropertiesService = class DashboardPropertiesService {
         console.log('work', workbook.SheetNames);
         const arr = [];
         for (const sheetName of workbook.SheetNames) {
-            if (sheetName === 'Sudirman' || sheetName == 'Gatot Subroto') {
+            if (sheetName == common_2.LocationEnum.SURABAYA) {
                 const worksheet = workbook.Sheets[sheetName];
                 const jsonData = XLSX.utils.sheet_to_json(worksheet);
                 let key = 0;
@@ -209,7 +209,9 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                                 : dt.address
                                     ? dt.address.trim()
                                     : dt.nama_gedung.trim(),
-                            property_type: dt.property_type ?? common_2.PropertyTypeEnum.OFFICE,
+                            property_type: dt[' property_type']
+                                ? dt[' property_type'].trim()
+                                : common_2.PropertyTypeEnum.OFFICE,
                             completion: dt.completion,
                             status_publish: common_2.StatusPublishEnum.PUBLISH,
                             amenities: [
@@ -229,37 +231,47 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                                 ground_floor: dt.ground_floor ?? 0,
                                 rent_average: rentPriceAverage,
                                 overtime: {
-                                    electricity: dt.overtime_electric ?? 'tba',
-                                    lighting: dt.overtime_lighting ?? 'tba',
-                                    ac: dt.overtime_ac ?? 'tba',
+                                    electricity: dt.overtime_electric
+                                        ? typeof dt.overtime_electric === 'string'
+                                            ? dt.overtime_electric.trim()
+                                            : dt.overtime_electric
+                                        : 'tba',
+                                    lighting: dt.overtime_lighting
+                                        ? typeof dt.overtime_lighting === 'string'
+                                            ? dt.overtime_lighting.trim()
+                                            : dt.overtime_lighting
+                                        : 'tba',
+                                    ac: dt.overtime_ac
+                                        ? typeof dt.overtime_ac === 'string'
+                                            ? dt.overtime_ac.trim()
+                                            : dt.overtime_ac
+                                        : 'tba',
                                 },
                                 parking_charge: {
                                     reserved: {
                                         car: dt?.reserved_car,
-                                        motorcycle: dt?.reserved_motor,
+                                        motorcycle: dt?.reserved_motor
+                                            ? dt.reserved_motor.trim()
+                                            : 'tba',
                                     },
                                     unreserved: {
                                         car: dt?.unreserved_car,
-                                        motorcycle: dt?.unreserved_motor,
+                                        motorcycle: dt?.unreserved_motor
+                                            ? dt.unreserved_motor.trim()
+                                            : 'tba',
                                     },
                                 },
                             },
                             spesification: {
-                                property_size: dt.total_size
-                                    ? typeof dt.total_size === 'string'
-                                        ? dt.total_size === 'tba'
-                                        : 0
-                                    : dt.total_size,
+                                property_size: dt[' total_size '],
                                 office_hours_weekday: dt.office_hours_weekdays,
                                 office_hours_weekend: dt.office_hours_weekend,
-                                total_floor: dt.floor_total,
-                                size_floor: dt.floor_size
-                                    ? typeof dt.floor_size === 'string'
-                                        ? dt.floor_size === 'tba'
-                                            ? 0
-                                            : dt.floor_size.replace(/\D/g, '')
-                                        : dt.floor_size
-                                    : 0,
+                                total_floor: dt.floor_total
+                                    ? typeof dt.floor_total === 'string'
+                                        ? dt.floor_total === 'tba'
+                                        : 0
+                                    : dt.floor_total,
+                                size_floor: dt[' floor_size '],
                                 provider_internet: dt.internet,
                             },
                             nearby: {

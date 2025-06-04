@@ -137,9 +137,14 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)({ example: '900.0' }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], Spesification.prototype, "size_floor", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], Spesification.prototype, "provider_internet", void 0);
 class Nearby {
 }
 __decorate([
