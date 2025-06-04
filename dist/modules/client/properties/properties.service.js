@@ -24,6 +24,9 @@ let ClientPropertiesService = class ClientPropertiesService {
             where: {
                 slug,
                 status_publish: common_2.StatusPublishEnum.PUBLISH,
+                images: {
+                    reference_type: common_2.MediaReferenceType.PROPERTY,
+                },
             },
             order: {
                 units: {

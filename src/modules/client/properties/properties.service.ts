@@ -4,7 +4,12 @@ import { PropertiesDTO } from './dto/request.dto';
 import { mapDbToResDetail, mapDbToResList } from './mappings/view.mapping';
 import { ResProperties, ResProperty } from './dto/response.dto';
 import { ClientPropertiesRepository } from './properties.repository';
-import { LocationEnum, PropertiesDB, StatusPublishEnum } from 'src/common';
+import {
+  LocationEnum,
+  MediaReferenceType,
+  PropertiesDB,
+  StatusPublishEnum,
+} from 'src/common';
 
 @Injectable()
 export class ClientPropertiesService {
@@ -15,6 +20,9 @@ export class ClientPropertiesService {
       where: {
         slug,
         status_publish: StatusPublishEnum.PUBLISH,
+        images: {
+          reference_type: MediaReferenceType.PROPERTY,
+        },
       },
       order: {
         units: {
