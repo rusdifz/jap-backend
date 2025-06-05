@@ -1,5 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { FindManyOptions, FindOneOptions, Like, UpdateResult } from 'typeorm';
+import {
+  FindManyOptions,
+  FindOneOptions,
+  In,
+  Like,
+  Not,
+  UpdateResult,
+} from 'typeorm';
 import { PropertiesDTO } from './dto/request.dto';
 import { mapDbToResDetail, mapDbToResList } from './mappings/view.mapping';
 import { ResProperties, ResProperty } from './dto/response.dto';
@@ -89,6 +96,12 @@ export class ClientPropertiesService {
 
     if (props.search_keyword) {
       Object.assign(query.where, { name: Like(`%${props.search_keyword}%`) });
+    }
+
+    if (props.id_except) {
+      Object.assign(query.where, {
+        property_id: Not(In([props.id_except])),
+      });
     }
 
     const search = await this.repository.findAndCount(query);

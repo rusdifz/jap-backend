@@ -73,6 +73,11 @@ let ClientPropertiesService = class ClientPropertiesService {
         if (props.search_keyword) {
             Object.assign(query.where, { name: (0, typeorm_1.Like)(`%${props.search_keyword}%`) });
         }
+        if (props.id_except) {
+            Object.assign(query.where, {
+                property_id: (0, typeorm_1.Not)((0, typeorm_1.In)([props.id_except])),
+            });
+        }
         const search = await this.repository.findAndCount(query);
         const properties = search[0].length > 0 ? await (0, view_mapping_1.mapDbToResList)(search[0]) : [];
         return { data: properties, count: search[1] };

@@ -37,6 +37,10 @@ __decorate([
     (0, class_transformer_1.Transform)(({ value }) => value?.toLowerCase()),
     __metadata("design:type", String)
 ], PropertiesDTO.prototype, "search_keyword", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Number)
+], PropertiesDTO.prototype, "id_except", void 0);
 class PropertyDetailDTO {
 }
 exports.PropertyDetailDTO = PropertyDetailDTO;

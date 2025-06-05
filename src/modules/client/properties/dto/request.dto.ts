@@ -30,6 +30,9 @@ export class PropertiesDTO extends PaginationDTO {
   @IsOptional()
   @Transform(({ value }) => value?.toLowerCase())
   search_keyword?: string;
+
+  @IsOptional()
+  id_except: number;
 }
 
 export class PropertyDetailDTO {

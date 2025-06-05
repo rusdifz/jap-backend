@@ -5,6 +5,7 @@ export declare class PropertiesDTO extends PaginationDTO {
     property_status?: PropertyStatusEnum;
     amenities?: string[];
     search_keyword?: string;
+    id_except: number;
 }
 export declare class PropertyDetailDTO {
     property_id?: number;
