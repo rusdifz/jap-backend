@@ -27,6 +27,7 @@ var LocationEnum;
     LocationEnum["JAKARTA_PUSAT"] = "Jakarta Pusat";
     LocationEnum["PASAR_MINGGU"] = "Pasar Minggu";
     LocationEnum["DETABEK"] = "Depok, Tangerang & Bekasi";
+    LocationEnum["OTHERS_AREA"] = "Others Area";
 })(LocationEnum || (exports.LocationEnum = LocationEnum = {}));
 var PropertyStatusEnum;
 (function (PropertyStatusEnum) {

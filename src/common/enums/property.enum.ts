@@ -22,7 +22,8 @@ export enum LocationEnum {
   SURABAYA = 'Surabaya', //done Facility Image
   JAKARTA_PUSAT = 'Jakarta Pusat', //done all
   PASAR_MINGGU = 'Pasar Minggu', //done Facility Image
-  DETABEK = 'Depok, Tangerang & Bekasi', //done Facility Image
+  DETABEK = 'Depok, Tangerang & Bekasi', //done Facility Image,
+  OTHERS_AREA = 'Others Area',
 }
 // enum('Depok, Tangerang & Bekasi'Jakarta Barat','Kemang & Ampera','Kuningan','Mampang','SCBD','Senayan','Sudirman','Tb Simatupang','Thamrin','Mega Kuningan','Satrio','Mt Haryono', 'Gatot Subroto','Pondok Indah, Blok M & Kebayoran', 'Pasar Minggu', 'Jakarta Pusat', 'Slipi & Grogol','Puri Kembangan & Kebon Jeruk','PIK & Pluit','Kelapa Gading & Sunter','Jakarta Timur','Bali','Bandung','Surabaya')
 

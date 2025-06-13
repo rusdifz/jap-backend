@@ -22,7 +22,8 @@ export declare enum LocationEnum {
     SURABAYA = "Surabaya",
     JAKARTA_PUSAT = "Jakarta Pusat",
     PASAR_MINGGU = "Pasar Minggu",
-    DETABEK = "Depok, Tangerang & Bekasi"
+    DETABEK = "Depok, Tangerang & Bekasi",
+    OTHERS_AREA = "Others Area"
 }
 export declare enum PropertyStatusEnum {
     LEASE = "Lease",
