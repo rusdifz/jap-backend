@@ -437,14 +437,14 @@ export class DashboardPropertiesService {
                       : dt.overtime_ac
                     : 'tba',
                 },
-                // service_charge: {
-                //   price: dt.service_charge
-                //     ? typeof dt.service_charge === 'string'
-                //       ? dt.service_charge.replace(/\D/g, '')
-                //       : dt.service_charge.trim()
-                //     : 0,
-                //   info: dt.service_charge_info,
-                // },
+                service_charge: {
+                  price: dt.service_charge_price
+                    ? typeof dt.service_charge_price === 'string'
+                      ? dt.service_charge_price.replace(/\D/g, '')
+                      : dt.service_charge_price.trim()
+                    : 0,
+                  info: dt.service_charge_info,
+                },
                 parking_charge: {
                   reserved: {
                     car: dt?.reserved_car,
@@ -544,8 +544,7 @@ export class DashboardPropertiesService {
                   : ConditionUnitEnum.BARE
                 : ConditionUnitEnum.BARE,
               rent_price: rentPrice,
-              service_charge_info: dt.service_charge_info ?? '',
-              service_charge_price: scPrice,
+
               available: true,
               pic_name: dt.pic_name,
               pic_phone: dt.phone_pic,
@@ -591,8 +590,7 @@ export class DashboardPropertiesService {
                 : ConditionUnitEnum.BARE,
               available: true,
               rent_price: rentPrice,
-              service_charge_info: dt.service_charge_info ?? '',
-              service_charge_price: scPrice,
+
               pic_name: dt.pic_name,
               pic_phone: dt.phone_pic,
               status: PropertyStatusEnum.LEASE,

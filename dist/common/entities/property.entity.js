@@ -86,6 +86,14 @@ __decorate([
     __metadata("design:type", Number)
 ], PropertiesDB.prototype, "price_ground_floor", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'int', nullable: true }),
+    __metadata("design:type", Number)
+], PropertiesDB.prototype, "service_charge_price", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], PropertiesDB.prototype, "service_charge_info", void 0);
+__decorate([
     (0, typeorm_1.Column)({ type: 'text', nullable: true }),
     __metadata("design:type", String)
 ], PropertiesDB.prototype, "parking_charge_reserved_car", void 0);
@@ -245,6 +253,10 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 200, nullable: true }),
     __metadata("design:type", String)
 ], PropertiesDB.prototype, "other_info_power_unit", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 350, nullable: true }),
+    __metadata("design:type", String)
+], PropertiesDB.prototype, "seo_key", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({ type: 'timestamp' }),
     __metadata("design:type", Date)

@@ -9,8 +9,6 @@ export declare class ReqCreateUnitDTO implements Unit {
     status: PropertyStatusEnum;
     pic_name: string;
     pic_phone: string;
-    service_charge_info: string;
-    service_charge_price: number;
 }
 export declare class ReqUpdateUnitDTO extends ReqCreateUnitDTO {
     unit_id: string;

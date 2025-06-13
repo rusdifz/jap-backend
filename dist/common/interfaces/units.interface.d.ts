@@ -8,8 +8,6 @@ export interface Unit {
     available: boolean;
     status: PropertyStatusEnum;
     rent_price: number;
-    service_charge_price: number;
-    service_charge_info: string;
     pic_name: string;
     pic_phone: string;
     created_at?: Date;

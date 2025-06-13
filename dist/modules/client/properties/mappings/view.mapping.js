@@ -114,6 +114,7 @@ async function mapDbToResDetail(db) {
             police: db.nearby_police,
             mall: db.nearby_mall,
         },
+        seo_key: db.seo_key,
         property_feature: propertyFeature,
         units: db.units.length > 0 ? db.units.slice(0, 5) : [],
         thumbnail: db.thumbnail,

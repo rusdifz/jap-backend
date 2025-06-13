@@ -64,13 +64,13 @@ export class ReqCreateUnitDTO implements Unit {
   @IsString()
   pic_phone: string;
 
-  @IsOptional()
-  @IsString()
-  service_charge_info: string;
+  // @IsOptional()
+  // @IsString()
+  // service_charge_info: string;
 
-  @IsOptional()
-  @IsNumber()
-  service_charge_price: number;
+  // @IsOptional()
+  // @IsNumber()
+  // service_charge_price: number;
 }
 
 export class ReqUpdateUnitDTO extends ReqCreateUnitDTO {

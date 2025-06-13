@@ -92,6 +92,7 @@ export async function mapDbToResDetail(db: PropertiesDB): Promise<ResProperty> {
       //   price: db.service_charge,
       //   info: db.service_charge_info,
       // },
+
       parking_charge: {
         reserved: {
           car: db.parking_charge_reserved_car,
@@ -118,6 +119,7 @@ export async function mapDbToResDetail(db: PropertiesDB): Promise<ResProperty> {
       police: db.nearby_police,
       mall: db.nearby_mall,
     },
+    seo_key: db.seo_key,
     property_feature: propertyFeature,
     units: db.units.length > 0 ? db.units.slice(0, 5) : [],
     thumbnail: db.thumbnail,
@@ -144,6 +146,7 @@ export async function mapDbToResList(
       price: {
         rent_average: db.price_rent_average,
       },
+
       thumbnail: db.thumbnail,
       created_at: dayjs(db.created_at).format('MMMM D, YYYY'),
       updated_at: dayjs(db.updated_at).format('MMMM D, YYYY'),

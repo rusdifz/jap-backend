@@ -48,11 +48,11 @@ export class UnitsDB implements Unit {
   @Column({ type: 'bigint', nullable: true })
   rent_price: number;
 
-  @Column({ type: 'int', nullable: true })
-  service_charge_price: number;
+  // @Column({ type: 'int', nullable: true })
+  // service_charge_price: number;
 
-  @Column({ type: 'varchar', length: 250, nullable: true })
-  service_charge_info: string;
+  // @Column({ type: 'varchar', length: 250, nullable: true })
+  // service_charge_info: string;
 
   @Column({ type: 'varchar', length: 250, nullable: true })
   pic_name: string;

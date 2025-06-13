@@ -18,6 +18,8 @@ export declare class PropertiesDB implements PropertyAbstract {
     price_overtime_lighting: string;
     price_overtime_ac: string;
     price_ground_floor: number;
+    service_charge_price: number;
+    service_charge_info: string;
     parking_charge_reserved_car: string;
     parking_charge_reserved_motorcycle: string;
     parking_charge_unreserved_car: string;
@@ -57,6 +59,7 @@ export declare class PropertiesDB implements PropertyAbstract {
     other_info_ac_zoning: string;
     other_info_electricity: string;
     other_info_power_unit: string;
+    seo_key: string;
     created_at: Date;
     updated_at: Date;
     deleted_at: Date;

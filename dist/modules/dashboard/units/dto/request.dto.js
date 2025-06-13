@@ -75,16 +75,6 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], ReqCreateUnitDTO.prototype, "pic_phone", void 0);
-__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], ReqCreateUnitDTO.prototype, "service_charge_info", void 0);
-__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], ReqCreateUnitDTO.prototype, "service_charge_price", void 0);
 class ReqUpdateUnitDTO extends ReqCreateUnitDTO {
 }
 exports.ReqUpdateUnitDTO = ReqUpdateUnitDTO;

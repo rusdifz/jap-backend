@@ -247,6 +247,14 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                                             : dt.overtime_ac
                                         : 'tba',
                                 },
+                                service_charge: {
+                                    price: dt.service_charge_price
+                                        ? typeof dt.service_charge_price === 'string'
+                                            ? dt.service_charge_price.replace(/\D/g, '')
+                                            : dt.service_charge_price.trim()
+                                        : 0,
+                                    info: dt.service_charge_info,
+                                },
                                 parking_charge: {
                                     reserved: {
                                         car: dt?.reserved_car,
@@ -333,8 +341,6 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                                     : common_2.ConditionUnitEnum.BARE
                                 : common_2.ConditionUnitEnum.BARE,
                             rent_price: rentPrice,
-                            service_charge_info: dt.service_charge_info ?? '',
-                            service_charge_price: scPrice,
                             available: true,
                             pic_name: dt.pic_name,
                             pic_phone: dt.phone_pic,
@@ -373,8 +379,6 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                                 : common_2.ConditionUnitEnum.BARE,
                             available: true,
                             rent_price: rentPrice,
-                            service_charge_info: dt.service_charge_info ?? '',
-                            service_charge_price: scPrice,
                             pic_name: dt.pic_name,
                             pic_phone: dt.phone_pic,
                             status: common_2.PropertyStatusEnum.LEASE,

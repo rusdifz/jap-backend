@@ -7,13 +7,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  ManyToOne,
 } from 'typeorm';
 
 import {
   LocationEnum,
   PropertyStatusEnum,
-  PropertyTypeEnum,
+  // PropertyTypeEnum,
   StatusPublishEnum,
 } from 'src/common';
 
@@ -21,7 +20,7 @@ import { PropertyAbstract } from '../interfaces/property.interface';
 
 import { UnitsDB } from './unit.entity';
 import { MediaDB } from './media.entity';
-import { PropertyPicDB } from './property-pic.entity';
+// import { PropertyPicDB } from './property-pic.entity';
 
 @Entity({ name: 'properties' })
 // @Entity({ name: 'properties_dummy' })
@@ -78,6 +77,12 @@ export class PropertiesDB implements PropertyAbstract {
 
   @Column({ type: 'int', nullable: true })
   price_ground_floor: number;
+
+  @Column({ type: 'int', nullable: true })
+  service_charge_price: number;
+
+  @Column({ type: 'text', nullable: true })
+  service_charge_info: string;
 
   @Column({ type: 'text', nullable: true })
   parking_charge_reserved_car: string;
@@ -204,6 +209,9 @@ export class PropertiesDB implements PropertyAbstract {
 
   @Column({ type: 'varchar', length: 200, nullable: true })
   other_info_power_unit: string;
+
+  @Column({ type: 'varchar', length: 350, nullable: true })
+  seo_key: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;

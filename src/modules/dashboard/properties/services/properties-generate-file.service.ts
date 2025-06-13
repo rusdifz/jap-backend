@@ -21,10 +21,10 @@ export class DashboardPropertiesGenerateFileService {
     private readonly unitService: DashboardUnitsService,
   ) {}
 
-  private rootPathImageJAP = __dirname.replace(
-    'dist/modules/dashboard/properties/services',
-    'public/images/main',
-  );
+  // private rootPathImageJAP = __dirname.replace(
+  //   'dist/modules/dashboard/properties/services',
+  //   'public/images/main',
+  // );
 
   async generatePDFComparisson(
     propertiesData: PdfComparisonDTO,
@@ -41,7 +41,7 @@ export class DashboardPropertiesGenerateFileService {
             condition: true,
             floor: true,
             rent_price: true,
-            service_charge_price: true,
+
             property: {
               property_id: true,
               name: true,
@@ -54,7 +54,7 @@ export class DashboardPropertiesGenerateFileService {
                 full_url: true,
               },
               // price_rent_sqm: true,
-              // service_charge: true,
+              service_charge_price: true,
               ac_info: true,
               electricity_info: true,
               lighting_info: true,
@@ -87,7 +87,7 @@ export class DashboardPropertiesGenerateFileService {
           let size = parseFloat(dt.size) ?? dt.property.property_size ?? 0;
 
           const priceRent = dt.rent_price ?? 0;
-          const serviceCharge = dt.service_charge_price ?? 0;
+          const serviceCharge = dt.property.service_charge_price ?? 0;
 
           const costTotal =
             priceRent > 0 ? size * (priceRent + serviceCharge) : 0;
@@ -839,10 +839,6 @@ export class DashboardPropertiesGenerateFileService {
   ): Promise<Buffer> {
     return new Promise(async (resolve, reject) => {
       try {
-        // const propertyIds = propertiesData.properties_download.map((dt) => {
-        //   return dt.property_id;
-        // });
-
         const buffers: any[] = [];
         let doc = new PDFDocumentHolland({
           margin: 20,
@@ -907,7 +903,6 @@ export class DashboardPropertiesGenerateFileService {
           if (getData.address) {
             // 1. Cari posisi "Jl"
             const start = getData.address.toLowerCase().indexOf('jl');
-            console.log('satr', start);
 
             if (start !== -1) {
               // 2. Cari koma pertama setelah posisi tersebut
@@ -1011,7 +1006,7 @@ export class DashboardPropertiesGenerateFileService {
             for (const unit of getData.units) {
               const size = unit.size;
               const rentalPrice = getData.units[0].rent_price;
-              const serviceCharge = getData.units[0].service_charge_price;
+              const serviceCharge = getData.service_charge_price;
               const priceMonth =
                 (rentalPrice + serviceCharge) * parseFloat(size);
 

@@ -25,6 +25,8 @@ export interface PropertyAbstract {
   price_overtime_ac: string;
   price_ground_floor: number;
   price_rent_average: number;
+  service_charge_price: number;
+  service_charge_info: string;
   parking_charge_reserved_car: string;
   parking_charge_reserved_motorcycle: string;
   parking_charge_unreserved_car: string;
@@ -70,6 +72,8 @@ export interface PropertyAbstract {
   //media
   url_youtube?: string;
   thumbnail: string;
+
+  seo_key: string;
 
   //join table
   units?: Unit[];
@@ -121,6 +125,10 @@ export interface IProperty {
         motorcycle: string;
       };
     };
+    service_charge?: {
+      price: number;
+      info: string;
+    };
   };
   completion: string;
   amenities: string[];
@@ -162,6 +170,7 @@ export interface IProperty {
   thumbnail: string;
   url_youtube?: string;
   property_feature?: any[];
+  seo_key: string;
 
   //join table
   units: Unit[];

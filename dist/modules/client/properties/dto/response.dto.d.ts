@@ -47,6 +47,7 @@ export declare class ResProperty implements Partial<IProperty> {
         police: string;
         mall: string;
     };
+    seo_key: string;
     property_feature?: any[];
     units: Unit[];
     thumbnail: string;

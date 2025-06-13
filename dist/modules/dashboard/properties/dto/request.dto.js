@@ -102,6 +102,17 @@ __decorate([
     __metadata("design:type", Number)
 ], Price.prototype, "rent_average", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        example: {
+            price: 127500.0,
+            info: 'Include AC during office hour, Lighting & Electricity is separately metered',
+        },
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsObject)(),
+    __metadata("design:type", Object)
+], Price.prototype, "service_charge", void 0);
+__decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)({ each: true }),
@@ -342,6 +353,11 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], ReqCreatePropertyDTO.prototype, "thumbnail", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ReqCreatePropertyDTO.prototype, "seo_key", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({
         example: ['A/C & Heating', 'Garages', 'Garden', 'Disabled Access'],

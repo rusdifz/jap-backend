@@ -105,18 +105,19 @@ class Price {
   @IsOptional()
   @IsNumber()
   rent_average: number;
-  // @ApiProperty({
-  //   example: {
-  //     price: 127500.0,
-  //     info: 'Include AC during office hour, Lighting & Electricity is separately metered',
-  //   },
-  // })
-  // @IsOptional()
-  // @IsObject()
-  // service_charge: {
-  //   price: number;
-  //   info: string;
-  // };
+
+  @ApiProperty({
+    example: {
+      price: 127500.0,
+      info: 'Include AC during office hour, Lighting & Electricity is separately metered',
+    },
+  })
+  @IsOptional()
+  @IsObject()
+  service_charge: {
+    price: number;
+    info: string;
+  };
 
   @ApiProperty()
   @IsOptional()
@@ -326,6 +327,10 @@ export class ReqCreatePropertyDTO implements Partial<IProperty> {
   @IsOptional()
   @IsString()
   thumbnail?: string;
+
+  @IsOptional()
+  @IsString()
+  seo_key?: string;
 
   @ApiPropertyOptional({
     example: ['A/C & Heating', 'Garages', 'Garden', 'Disabled Access'],

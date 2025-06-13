@@ -30,10 +30,10 @@ export async function mapDbToResDetail(
       },
       ground_floor: db.price_ground_floor,
       rent_average: db.price_rent_average,
-      // service_charge: {
-      //   price: db.service_charge,
-      //   info: db.service_charge_info,
-      // },
+      service_charge: {
+        price: db.service_charge_price,
+        info: db.service_charge_info,
+      },
       parking_charge: {
         reserved: {
           car: db.parking_charge_reserved_car,
@@ -83,6 +83,7 @@ export async function mapDbToResDetail(
       electricity: db.other_info_electricity,
       power_unit: db.other_info_power_unit,
     },
+    seo_key: db.seo_key,
     units: db.units,
     // pic: db.pic,
     images: images ?? [],
@@ -121,10 +122,10 @@ export async function mapDbToResList(
         },
         ground_floor: db.price_ground_floor,
         rent_average: db.price_rent_average,
-        // service_charge: {
-        //   price: db.service_charge,
-        //   info: db.service_charge_info,
-        // },
+        service_charge: {
+          price: db.service_charge_price,
+          info: db.service_charge_info,
+        },
         parking_charge: {
           reserved: {
             car: db.parking_charge_reserved_car,
@@ -173,6 +174,7 @@ export async function mapDbToResList(
         electricity: db.other_info_electricity,
         power_unit: db.other_info_power_unit,
       },
+      seo_key: db.seo_key,
       units: db.units,
       // pic: db.pic,
       ac_info: db.ac_info,

@@ -44,10 +44,10 @@ export class ResProperty implements Partial<IProperty> {
     };
     ground_floor: number;
     rent_average: number;
-    // service_charge: {
-    //   price: number;
-    //   info: string;
-    // };
+    service_charge: {
+      price: number;
+      info: string;
+    };
     parking_charge: {
       reserved: {
         car: string;
@@ -104,4 +104,5 @@ export class ResProperty implements Partial<IProperty> {
   ac_info: string;
   electricity_info: string;
   lighting_info: string;
+  seo_key: string;
 }

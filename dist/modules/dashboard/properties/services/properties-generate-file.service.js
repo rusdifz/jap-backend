@@ -22,7 +22,6 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
     constructor(repository, unitService) {
         this.repository = repository;
         this.unitService = unitService;
-        this.rootPathImageJAP = __dirname.replace('dist/modules/dashboard/properties/services', 'public/images/main');
     }
     async generatePDFComparisson(propertiesData, admin) {
         return new Promise(async (resolve, reject) => {
@@ -35,7 +34,6 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         condition: true,
                         floor: true,
                         rent_price: true,
-                        service_charge_price: true,
                         property: {
                             property_id: true,
                             name: true,
@@ -47,6 +45,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                             images: {
                                 full_url: true,
                             },
+                            service_charge_price: true,
                             ac_info: true,
                             electricity_info: true,
                             lighting_info: true,
@@ -75,7 +74,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                 const propertiesNew = getData.map((dt) => {
                     let size = parseFloat(dt.size) ?? dt.property.property_size ?? 0;
                     const priceRent = dt.rent_price ?? 0;
-                    const serviceCharge = dt.service_charge_price ?? 0;
+                    const serviceCharge = dt.property.service_charge_price ?? 0;
                     const costTotal = priceRent > 0 ? size * (priceRent + serviceCharge) : 0;
                     const negoRent = priceRent > 0 ? priceRent - 10000 : 0;
                     const totalCostBargain = negoRent > 0 ? size * (negoRent + serviceCharge) : 0;
@@ -654,7 +653,6 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     let address = getData.location;
                     if (getData.address) {
                         const start = getData.address.toLowerCase().indexOf('jl');
-                        console.log('satr', start);
                         if (start !== -1) {
                             const end = getData.address.indexOf(',', start);
                             address = getData.address.substring(start, end).trim();
@@ -745,7 +743,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         for (const unit of getData.units) {
                             const size = unit.size;
                             const rentalPrice = getData.units[0].rent_price;
-                            const serviceCharge = getData.units[0].service_charge_price;
+                            const serviceCharge = getData.service_charge_price;
                             const priceMonth = (rentalPrice + serviceCharge) * parseFloat(size);
                             dynamicRows.push({
                                 content: [

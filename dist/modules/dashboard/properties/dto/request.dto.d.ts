@@ -19,6 +19,10 @@ declare class Price {
     overtime: OvertimePrice;
     ground_floor: number;
     rent_average: number;
+    service_charge: {
+        price: number;
+        info: string;
+    };
     parking_charge: ParkingCharge;
 }
 declare class Spesification {
@@ -69,6 +73,7 @@ export declare class ReqCreatePropertyDTO implements Partial<IProperty> {
     completion: string;
     url_youtube: string;
     thumbnail?: string;
+    seo_key?: string;
     amenities: string[];
     price: Price;
     spesification: Spesification;

@@ -6,7 +6,6 @@ export declare class DashboardPropertiesGenerateFileService {
     private readonly repository;
     private readonly unitService;
     constructor(repository: DashboardPropertiesRepository, unitService: DashboardUnitsService);
-    private rootPathImageJAP;
     generatePDFComparisson(propertiesData: PdfComparisonDTO, admin: IJwtUser): Promise<Buffer>;
     generatePDFDetailProperty(propertiesData: PdfDetailDTO): Promise<Buffer>;
     fetchImage(src: any): Promise<any>;

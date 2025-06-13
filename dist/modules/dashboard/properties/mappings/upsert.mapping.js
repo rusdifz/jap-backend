@@ -27,6 +27,8 @@ async function mapReqCreateToDb(payload, admin) {
         price_overtime_lighting: payload.price?.overtime?.lighting,
         price_ground_floor: payload.price?.ground_floor,
         price_rent_average: payload.price?.rent_average,
+        service_charge_price: payload.price.service_charge.price,
+        service_charge_info: payload.price.service_charge.info,
         parking_charge_reserved_car: payload.price.parking_charge.reserved.car,
         parking_charge_reserved_motorcycle: payload.price.parking_charge.reserved.motorcycle,
         parking_charge_unreserved_car: payload.price.parking_charge.unreserved.car,
@@ -58,6 +60,7 @@ async function mapReqCreateToDb(payload, admin) {
         lighting_info: payload.lighting_info,
         ac_info: payload.ac_info,
         electricity_info: payload.electricity_info,
+        seo_key: payload.seo_key,
         created_by: admin?.user?.username ?? 'system',
     };
 }
@@ -84,6 +87,8 @@ async function mapReqUpdateToDB(payload, admin) {
         price_overtime_lighting: payload.price?.overtime?.lighting,
         price_ground_floor: payload.price?.ground_floor,
         price_rent_average: payload.price?.rent_average,
+        service_charge_price: payload.price?.service_charge?.price,
+        service_charge_info: payload.price?.service_charge?.info,
         parking_charge_reserved_car: payload.price?.parking_charge?.reserved.car,
         parking_charge_reserved_motorcycle: payload.price.parking_charge?.reserved?.motorcycle,
         parking_charge_unreserved_car: payload.price?.parking_charge?.unreserved?.car,
@@ -115,6 +120,7 @@ async function mapReqUpdateToDB(payload, admin) {
         lighting_info: payload.lighting_info,
         ac_info: payload.ac_info,
         electricity_info: payload.electricity_info,
+        seo_key: payload.seo_key,
         updated_by: admin?.user?.username ?? 'system',
     };
 }
