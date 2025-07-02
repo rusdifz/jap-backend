@@ -61,11 +61,15 @@ let DashboardImagesService = class DashboardImagesService {
                 const folderName = `${body.reference_type}/${body.folder_name
                     .toLowerCase()
                     .replace(/,/g, '')
-                    .replace(/\s/g, '-')}`;
+                    .replace(/\s/g, '-')
+                    .replace('-&-', '-')}`;
+                console.log('folder name', folderName);
                 const uploadFile = await this.cdnService.FileUpload(file, folderName);
                 console.log('upload file', uploadFile);
                 const mapData = await (0, upsert_mapping_1.mapInsertDB)(file, body.reference_id, body.reference_type, uploadFile);
+                console.log('map data', mapData);
                 if (body.reference_type !== common_2.MediaReferenceType.PROPERTY_THUMBNAIL) {
+                    console.log('save data not thumbnail');
                     const saveData = await this.repository.save(mapData);
                     if (body.reference_type === common_2.MediaReferenceType.ARTICLE) {
                         await this.articleService.updateImage(body.reference_id, mapData.full_url);
@@ -82,6 +86,7 @@ let DashboardImagesService = class DashboardImagesService {
                     resp.push(saveData);
                 }
                 else {
+                    console.log('is thumbnail');
                     resp.push(mapData);
                 }
             }

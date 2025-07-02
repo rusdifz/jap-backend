@@ -71,7 +71,11 @@ export class DashboardImagesService {
         const folderName = `${body.reference_type}/${body.folder_name
           .toLowerCase()
           .replace(/,/g, '')
-          .replace(/\s/g, '-')}`;
+          .replace(/\s/g, '-')
+          .replace('-&-', '-')}`;
+
+        console.log('folder name', folderName);
+
         //upload to cloudinary
         const uploadFile = await this.cdnService.FileUpload(file, folderName);
         console.log('upload file', uploadFile);
@@ -82,8 +86,11 @@ export class DashboardImagesService {
           body.reference_type,
           uploadFile,
         );
+        console.log('map data', mapData);
 
         if (body.reference_type !== MediaReferenceType.PROPERTY_THUMBNAIL) {
+          console.log('save data not thumbnail');
+
           const saveData = await this.repository.save(mapData);
 
           //selain type propety dan activity upload ke tabel masing2
@@ -118,6 +125,8 @@ export class DashboardImagesService {
 
           resp.push(saveData);
         } else {
+          console.log('is thumbnail');
+
           resp.push(mapData);
         }
       }
