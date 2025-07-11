@@ -433,6 +433,70 @@ let DashboardPropertiesService = class DashboardPropertiesService {
         }
         return resp;
     }
+    async editBulkFromExcel() {
+        const dirName = __dirname;
+        const dirExcel = dirName.replace('/dist/modules/dashboard/properties/services', '/spread.xlsx');
+        const excelData = (0, fs_1.readFileSync)(dirExcel);
+        const workbook = XLSX.read(excelData.buffer, {
+            type: 'buffer',
+        });
+        console.log('work', workbook.SheetNames);
+        const arr = [];
+        for (const sheetName of workbook.SheetNames) {
+            if (sheetName == 'Sudirman') {
+                console.log('sheet name', sheetName);
+                const worksheet = workbook.Sheets[sheetName];
+                const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                let key = 0;
+                let propertyName = '';
+                let propertyId = 0;
+                for (const dt of jsonData) {
+                    if (dt.no && typeof dt.no === 'number') {
+                        key = dt.no;
+                        propertyName = dt.nama_gedung;
+                    }
+                    console.log('por', propertyName);
+                    if (propertyName !== '') {
+                        let unitSize = 0;
+                        let rentPrice = 0;
+                        if (dt.unit_size) {
+                            unitSize = isNaN(Number(dt.unit_size.toString().replace(/,/g, '')))
+                                ? 0
+                                : Number(dt.unit_size.toString().replace(/,/g, ''));
+                        }
+                        if (dt.rent_price) {
+                            rentPrice = isNaN(Number(dt.rent_price.toString().replace(/,/g, '')))
+                                ? 0
+                                : Number(dt.rent_price.toString().replace(/,/g, ''));
+                        }
+                        const getPropertyId = await this.repository.findOneBy({
+                            name: propertyName.trim(),
+                        });
+                        if (getPropertyId) {
+                            propertyId = getPropertyId.property_id ?? 0;
+                            const unit = {
+                                property_id: propertyId,
+                                size: unitSize.toString(),
+                                floor: dt.unit_floor,
+                                condition: dt.unit_condition
+                                    ? Object.values(dt.unit_condition).includes(common_2.ConditionUnitEnum)
+                                        ? dt.unit_condition
+                                        : common_2.ConditionUnitEnum.BARE
+                                    : common_2.ConditionUnitEnum.BARE,
+                                rent_price: rentPrice,
+                                available: true,
+                                pic_name: dt.pic_name,
+                                pic_phone: dt.phone_pic,
+                                status: common_2.PropertyStatusEnum.LEASE,
+                            };
+                            await this.unitService.create(unit, null);
+                        }
+                    }
+                }
+            }
+        }
+        return arr;
+    }
 };
 exports.DashboardPropertiesService = DashboardPropertiesService;
 exports.DashboardPropertiesService = DashboardPropertiesService = __decorate([

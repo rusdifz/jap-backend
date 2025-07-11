@@ -29,4 +29,5 @@ export declare class DashboardPropertiesService {
     inputBulkFromExcel(): Promise<any[]>;
     inputImageBulkByLocation(location: LocationEnum, type: MediaReferenceType): Promise<any[]>;
     inputImageBulkThumbnailByLocation(location: LocationEnum): Promise<any[]>;
+    editBulkFromExcel(): Promise<any[]>;
 }

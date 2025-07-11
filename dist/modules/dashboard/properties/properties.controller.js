@@ -50,7 +50,7 @@ let DashboardPropertiesController = class DashboardPropertiesController {
         return await this.service.checkForStaleDataOlderThanOneMonth();
     }
     async convertFileExcelToDB() {
-        return await this.service.inputBulkFromExcel();
+        return await this.service.editBulkFromExcel();
     }
     async generatePdfComparissonNew(res, body, user) {
         console.log('body pdf', body);
