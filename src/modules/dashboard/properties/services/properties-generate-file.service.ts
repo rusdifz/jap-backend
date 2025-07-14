@@ -850,221 +850,190 @@ export class DashboardPropertiesGenerateFileService {
           index,
           property,
         ] of propertiesData.properties_download.entries()) {
-          const query: FindManyOptions<PropertiesDB> = {
-            where: {
-              property_id: property.property_id,
-              units: {
-                unit_id: In(property.unit_id),
+          if (property.unit_id.length > 0) {
+            const query: FindManyOptions<PropertiesDB> = {
+              where: {
+                property_id: property.property_id,
+                units: {
+                  unit_id: In(property.unit_id),
+                },
               },
-            },
-            relations: {
-              units: true,
-              images: true,
-            },
-          };
+              relations: {
+                units: true,
+                images: true,
+              },
+            };
 
-          const getData = await this.repository.findOne(query);
+            const getData = await this.repository.findOne(query);
 
-          const [logoNew, footerImage] = await Promise.all([
-            this.fetchImage(
-              'https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/logo-new_hk3vvn.png',
-            ),
-            this.fetchImage(
-              'https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/footer2_s7vkbt.png',
-            ),
-          ]);
+            const [logoNew, footerImage] = await Promise.all([
+              this.fetchImage(
+                'https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/logo-new_hk3vvn.png',
+              ),
+              this.fetchImage(
+                'https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/footer2_s7vkbt.png',
+              ),
+            ]);
 
-          const headerImageX = doc.page.width - doc.page.margins.right - 150;
-          const headerImageY = 20;
-          doc.image(logoNew, headerImageX, headerImageY, {
-            width: 70,
-            height: 50,
-          });
-
-          const imageFooterX = 25;
-          const imageFooterY = 690;
-
-          doc.image(footerImage, imageFooterX, imageFooterY, {
-            width: 550,
-            height: 40,
-          });
-
-          if (getData.images.length > 0) {
-            const logo = await this.fetchImage(getData.images[0].full_url);
-
-            doc.image(logo, 25, 70, {
-              width: 138,
-              height: 188,
+            const headerImageX = doc.page.width - doc.page.margins.right - 150;
+            const headerImageY = 20;
+            doc.image(logoNew, headerImageX, headerImageY, {
+              width: 70,
+              height: 50,
             });
-          }
 
-          let address: any = getData.location;
+            const imageFooterX = 25;
+            const imageFooterY = 690;
 
-          if (getData.address) {
-            // 1. Cari posisi "Jl"
-            const start = getData.address.toLowerCase().indexOf('jl');
+            doc.image(footerImage, imageFooterX, imageFooterY, {
+              width: 550,
+              height: 40,
+            });
 
-            if (start !== -1) {
-              // 2. Cari koma pertama setelah posisi tersebut
-              const end = getData.address.indexOf(',', start);
+            if (getData.images.length > 0) {
+              const logo = await this.fetchImage(getData.thumbnail);
 
-              // 3. Ambil substring dari "Jl" hingga sebelum koma
-              address = getData.address.substring(start, end).trim();
-            }
-          }
-          doc
-            .font('Helvetica-Bold')
-            .fontSize(13)
-            .text('OFFICE FOR LEASE', 210, 35)
-            .fillColor('black');
-
-          doc
-            .font('Helvetica-Bold')
-            .fontSize(13)
-            .text(getData.name, 35, 15)
-            .fillColor('black');
-
-          doc
-            .font('Helvetica')
-            .fontSize(10)
-            .text(address, 35, 40)
-            .fillColor('black');
-
-          const positionXTable = 25;
-          const positionYTable = 70;
-          const widthTable = 530;
-          const fontSize = 7;
-          const fontSizeHeader = 8;
-          const fontSizeHeaderBlack = 9;
-          const heightCell = 17;
-          const moveDown = 0.3;
-          // Data dinamis (contoh: array of rows)
-          let dynamicRows: any = [
-            // Header 1
-            {
-              content: [
-                {
-                  value: 'Availability & Payment Spesification',
-                  colspan: 6,
-                  align: { x: 'center', y: 'bottom' },
-                },
-              ],
-              styles: {
-                fontSize: fontSizeHeaderBlack,
-                backgroundColor: '#f0f2f5',
-                textColor: 'black',
-                textStroke: '0.3px',
-                align: 'center',
-              },
-            },
-            // Header
-            {
-              content: [
-                {
-                  value: 'Floor',
-                  rowspan: 2,
-                  width: 100,
-                  cellWidth: 100,
-                },
-                {
-                  value: 'Semi - Gross (sqm)',
-                  rowspan: 2,
-                },
-                {
-                  value: 'Price / sqm',
-                  colspan: 2,
-                },
-                {
-                  value: 'Price Month',
-                  rowspan: 2,
-                },
-                {
-                  value: 'Condition',
-                  rowspan: 2,
-                },
-              ],
-              styles: {
-                fontSize: fontSizeHeader,
-                backgroundColor: '#1f497d',
-                textColor: 'white',
-              },
-            },
-            // Sub-header
-            {
-              content: ['Rental Price', 'Service Charge'],
-              styles: {
-                fontSize: fontSizeHeader,
-                backgroundColor: '#1f497d',
-                textColor: 'white',
-              },
-            },
-          ];
-
-          if (getData.units.length > 0) {
-            getData.units = getData.units.slice(0, 8);
-
-            for (const unit of getData.units) {
-              const size = unit.size;
-              const rentalPrice = getData.units[0].rent_price;
-              const serviceCharge = getData.service_charge_price;
-              const priceMonth =
-                (rentalPrice + serviceCharge) * parseFloat(size);
-
-              dynamicRows.push({
-                content: [
-                  unit.floor,
-                  unit.size,
-                  formatCurrency(rentalPrice),
-                  formatCurrency(serviceCharge),
-                  formatCurrency(priceMonth),
-                  unit.condition,
-                ],
+              doc.image(logo, 25, 70, {
+                width: 138,
+                height: 188,
               });
             }
-          }
 
-          // Buat tabel dengan konfigurasi dasar
-          const table = doc.table({
-            x: 165,
-            y: positionYTable,
-            cellHeight: heightCell,
-            cellWidth: 65,
-            rows: 11,
-            border: 0.5,
-            borderColor: 'white',
-            defaultCell: {
-              fontSize: fontSize,
-              align: 'center',
-              textColor: 'black',
-              backgroundColor: '#f0f2f5',
-              border: 0.5,
-              borderColor: 'white',
-            },
-          });
+            let address: any = getData.location;
 
-          // Loop untuk row dinamis
-          dynamicRows.forEach((rowConfig) => {
-            table.row(
-              rowConfig.content,
-              rowConfig.styles || {}, // Optional styles
-            );
-          });
+            if (getData.address) {
+              // 1. Cari posisi "Jl"
+              const start = getData.address.toLowerCase().indexOf('jl');
 
-          if (dynamicRows.length < 8) {
-            for (let index = 0; index <= 10 - dynamicRows.length; index++) {
-              table.row(['', '', '', '', '', '']);
+              if (start !== -1) {
+                // 2. Cari koma pertama setelah posisi tersebut
+                const end = getData.address.indexOf(',', start);
+
+                // 3. Ambil substring dari "Jl" hingga sebelum koma
+                address = getData.address.substring(start, end).trim();
+              }
             }
-          }
+            doc
+              .font('Helvetica-Bold')
+              .fontSize(13)
+              .text('OFFICE FOR LEASE', 210, 35)
+              .fillColor('black');
 
-          doc.moveDown(moveDown);
+            doc
+              .font('Helvetica-Bold')
+              .fontSize(13)
+              .text(getData.name, 35, 15)
+              .fillColor('black');
 
-          doc
-            .table({
-              x: positionXTable,
-              width: widthTable,
+            doc
+              .font('Helvetica')
+              .fontSize(10)
+              .text(address, 35, 40)
+              .fillColor('black');
+
+            const positionXTable = 25;
+            const positionYTable = 70;
+            const widthTable = 530;
+            const fontSize = 7;
+            const fontSizeHeader = 8;
+            const fontSizeHeaderBlack = 9;
+            const heightCell = 17;
+            const moveDown = 0.3;
+            // Data dinamis (contoh: array of rows)
+            let dynamicRows: any = [
+              // Header 1
+              {
+                content: [
+                  {
+                    value: 'Availability & Payment Spesification',
+                    colspan: 6,
+                    align: { x: 'center', y: 'bottom' },
+                  },
+                ],
+                styles: {
+                  fontSize: fontSizeHeaderBlack,
+                  backgroundColor: '#f0f2f5',
+                  textColor: 'black',
+                  textStroke: '0.3px',
+                  align: 'center',
+                },
+              },
+              // Header
+              {
+                content: [
+                  {
+                    value: 'Floor',
+                    rowspan: 2,
+                    width: 100,
+                    cellWidth: 100,
+                  },
+                  {
+                    value: 'Semi - Gross (sqm)',
+                    rowspan: 2,
+                  },
+                  {
+                    value: 'Price / sqm',
+                    colspan: 2,
+                  },
+                  {
+                    value: 'Price Month',
+                    rowspan: 2,
+                  },
+                  {
+                    value: 'Condition',
+                    rowspan: 2,
+                  },
+                ],
+                styles: {
+                  fontSize: fontSizeHeader,
+                  backgroundColor: '#1f497d',
+                  textColor: 'white',
+                },
+              },
+              // Sub-header
+              {
+                content: ['Rental Price', 'Service Charge'],
+                styles: {
+                  fontSize: fontSizeHeader,
+                  backgroundColor: '#1f497d',
+                  textColor: 'white',
+                },
+              },
+            ];
+
+            if (getData.units.length > 0) {
+              getData.units = getData.units.slice(0, 8);
+
+              for (const unit of getData.units) {
+                const size = unit.size;
+                const rentalPrice = getData.units[0].rent_price;
+                const serviceCharge = getData.service_charge_price;
+
+                const priceMonth =
+                  (parseFloat(rentalPrice.toString()) +
+                    parseFloat(serviceCharge.toString())) *
+                  parseFloat(size);
+
+                dynamicRows.push({
+                  content: [
+                    unit.floor,
+                    unit.size,
+                    formatCurrency(rentalPrice),
+                    formatCurrency(serviceCharge),
+                    formatCurrency(priceMonth),
+                    unit.condition,
+                  ],
+                });
+              }
+            }
+
+            // Buat tabel dengan konfigurasi dasar
+            const table = doc.table({
+              x: 165,
+              y: positionYTable,
               cellHeight: heightCell,
-              //   cellWidth: widthCell,
-              rows: 5,
+              cellWidth: 65,
+              rows: 11,
               border: 0.5,
               borderColor: 'white',
               defaultCell: {
@@ -1075,359 +1044,395 @@ export class DashboardPropertiesGenerateFileService {
                 border: 0.5,
                 borderColor: 'white',
               },
-            })
-            .row(
-              [
+            });
+
+            // Loop untuk row dinamis
+            dynamicRows.forEach((rowConfig) => {
+              table.row(
+                rowConfig.content,
+                rowConfig.styles || {}, // Optional styles
+              );
+            });
+
+            if (dynamicRows.length < 8) {
+              for (let index = 0; index <= 10 - dynamicRows.length; index++) {
+                table.row(['', '', '', '', '', '']);
+              }
+            }
+
+            doc.moveDown(moveDown);
+
+            doc
+              .table({
+                x: positionXTable,
+                width: widthTable,
+                cellHeight: heightCell,
+                //   cellWidth: widthCell,
+                rows: 5,
+                border: 0.5,
+                borderColor: 'white',
+                defaultCell: {
+                  fontSize: fontSize,
+                  align: 'center',
+                  textColor: 'black',
+                  backgroundColor: '#f0f2f5',
+                  border: 0.5,
+                  borderColor: 'white',
+                },
+              })
+              .row(
+                [
+                  {
+                    value: 'Deposit',
+                    colspan: 3,
+                  },
+                  {
+                    value: 'Overtime Charges',
+                    rowspan: 2,
+                    colspan: 2,
+                  },
+                ],
                 {
-                  value: 'Deposit',
-                  colspan: 3,
+                  fontSize: fontSizeHeader,
+                  backgroundColor: '#1f497d',
+                  textColor: 'white',
+                },
+              )
+              .row(['Type', 'Amount', { value: 'Refund', width: 30 }], {
+                fontSize: fontSizeHeader,
+                backgroundColor: '#1f497d',
+                textColor: 'white',
+              })
+              .row([
+                'Booking Deposit',
+                getData.booking_deposit,
+                'No',
+                'Electricity',
+                getData.price_overtime_electricity,
+              ])
+              .row([
+                'Security Deposit',
+                { value: getData.security_deposit, fontSize: 6 },
+                'Yes',
+                'Air Conditioning',
+                getData.price_overtime_ac,
+              ])
+              .row([
+                'Telephone Deposit',
+                getData.phone_deposit,
+                'Yes',
+                'Lightning',
+                getData.price_overtime_lighting,
+              ]);
+
+            doc.moveDown(moveDown);
+
+            doc
+              .table({
+                x: positionXTable,
+                width: widthTable,
+                //   height: 80,
+                cellHeight: heightCell,
+                //   cellWidth: widthCell,
+                rows: 5,
+                border: 0.5,
+                borderColor: 'white',
+                defaultCell: {
+                  fontSize: fontSize,
+                  align: 'center',
+                  textColor: 'black',
+                  backgroundColor: '#f0f2f5',
+                  border: 0.5,
+                  borderColor: 'white',
+                },
+              })
+              .row(
+                [
+                  {
+                    value: 'Parking Charges',
+                    colspan: 4,
+                  },
+                  {
+                    value: 'Minimum Lease Term',
+                    rowspan: 2,
+                  },
+                  {
+                    value: 'Payment Term',
+                    rowspan: 2,
+                  },
+                ],
+                {
+                  fontSize: fontSizeHeader,
+                  backgroundColor: '#1f497d',
+                  textColor: 'white',
+                },
+              )
+              .row(['Type', 'Payment Term', 'Cost (IDR)', 'Cost (USD)'], {
+                fontSize: fontSizeHeader,
+                backgroundColor: '#1f497d',
+                textColor: 'white',
+              })
+              .row([
+                'Reserved (car)',
+                'yearly',
+                getData.parking_charge_reserved_car,
+                '',
+                {
+                  value: getData.minimum_lease_term ?? 'tba',
+                  rowspan: 3,
                 },
                 {
-                  value: 'Overtime Charges',
+                  value: getData.payment_term ?? 'tba',
+                  rowspan: 3,
+                },
+              ])
+              .row([
+                'Unreserved (car)',
+                'yearly',
+                getData.parking_charge_unreserved_car,
+                '',
+              ])
+              .row([
+                'Motorcycle',
+                'yearly',
+                getData.parking_charge_unreserved_car,
+                '',
+              ]);
+
+            doc.moveDown(moveDown);
+
+            doc
+              .table({
+                x: positionXTable,
+                width: widthTable,
+                //   height: 60,
+                cellHeight: heightCell,
+                //   cellWidth: widthCell,
+                rows: 4,
+                border: 0.5,
+                borderColor: 'white',
+                defaultCell: {
+                  fontSize: 7,
+                  align: 'center',
+                  textColor: 'black',
+                  backgroundColor: '#f0f2f5',
+                  border: 0.5,
+                  borderColor: 'white',
+                },
+              })
+              .row(
+                [
+                  {
+                    value: 'Building Spesification',
+                    colspan: 6,
+                    align: { x: 'center', y: 'bottom' },
+                  },
+                ],
+                {
+                  fontSize: fontSizeHeaderBlack,
+                  backgroundColor: '#f0f2f5',
+                  textColor: 'black',
+                  textStroke: '0.5px',
+                },
+              )
+              .row(
+                [
+                  'Number of Floor',
+                  'Lift',
+                  'Celling Height',
+                  'Typical Floor Size',
+                  'Total Semi Gross Area',
+                  'Power Back Up',
+                ],
+                {
+                  fontSize: fontSizeHeader,
+                  backgroundColor: '#1f497d',
+                  textColor: 'white',
+                },
+              )
+              .row([
+                'Level of Tenancy Floor',
+                'Passenger',
+                'Ground Floor 6 m',
+                { value: '  sqm', rowspan: 2 },
+                { value: '13.000', rowspan: 2 },
+                { value: '100%', rowspan: 2 },
+              ])
+              .row(['Level of Basements', 'Service Lift', 'Typical 2.75 m']);
+
+            doc.moveDown(moveDown);
+
+            doc
+              .table({
+                x: positionXTable,
+                width: widthTable,
+                //   height: 40,
+                cellHeight: 30,
+                //   widthCell: widthCell,
+                rows: 2,
+                border: 0.5,
+                borderColor: 'white',
+                defaultCell: {
+                  fontSize: fontSize,
+                  align: 'center',
+                  textColor: 'black',
+                  backgroundColor: '#f0f2f5',
+                  border: 0.5,
+                  borderColor: 'white',
+                },
+              })
+              .row(
+                [
+                  'Loading Capacity (typical)',
+                  {
+                    value: 'Telecommunication',
+                    colspan: 3,
+                  },
+                  {
+                    value: 'Fire Safety',
+                    colspan: 3,
+                  },
+                ],
+                {
+                  fontSize: fontSizeHeader,
+                  backgroundColor: '#1f497d',
+                  textColor: 'white',
+                },
+              )
+              .row([
+                getData.other_info_loading_capacity ?? 'tba',
+                getData.telecommunication_isp ? 'ISP : Y' : 'ISP : N',
+                getData.telecommunication_fiber_optic
+                  ? 'Fiber Optic : Y'
+                  : 'Fiber Optic : N',
+                getData.telecommunication_wifi ? 'Wifi : Y' : 'Wifi : N',
+                getData.fire_safety_sprinkle ? 'Sprinkle : Y' : 'Sprinkle : N',
+                getData.fire_safety_heat_detector
+                  ? 'Heat Detector : Y'
+                  : 'Heat Detector : N',
+                getData.fire_safety_smoke_detector
+                  ? 'Smoke Detector : Y'
+                  : 'Smoke Detector : N',
+              ]);
+
+            doc.moveDown(moveDown);
+
+            doc
+              .table({
+                x: positionXTable,
+                width: widthTable,
+                //   height: 40,
+                cellHeight: heightCell,
+                //   cellWidth: widthCell,
+                rows: 2,
+                border: 0.5,
+                borderColor: 'white',
+                defaultCell: {
+                  fontSize: fontSize,
+                  align: 'center',
+                  textColor: 'black',
+                  backgroundColor: '#f0f2f5',
+                  border: 0.5,
+                  borderColor: 'white',
+                },
+              })
+              .row(['Ac System', 'AC Zoning', ' Electricty', 'Power (KVA)'], {
+                fontSize: fontSizeHeader,
+                backgroundColor: '#1f497d',
+                textColor: 'white',
+              })
+              .row([
+                getData.other_info_ac_system == null || ''
+                  ? 'tba'
+                  : getData.other_info_ac_system,
+                getData.other_info_ac_zoning ?? 'tba',
+                getData.other_info_electricity ?? 'tba',
+                getData.other_info_power_unit ?? 'tba',
+              ]);
+
+            doc.moveDown(moveDown);
+
+            doc
+              .table({
+                x: positionXTable,
+                width: widthTable,
+                //   height: 50,
+                cellHeight: heightCell,
+                //   cellWidth: widthCell,
+                rows: 3,
+                border: 0.5,
+                borderColor: 'white',
+                defaultCell: {
+                  fontSize: fontSize,
+                  align: 'center',
+                  textColor: 'black',
+                  backgroundColor: '#f0f2f5',
+                  border: 0.5,
+                  borderColor: 'white',
+                },
+              })
+              .row(
+                [
+                  {
+                    value: 'General Information',
+                    colspan: 7,
+                    align: { x: 'center', y: 'bottom' },
+                  },
+                ],
+                {
+                  fontSize: fontSizeHeaderBlack,
+                  backgroundColor: '#f0f2f5',
+                  textColor: 'black',
+                  textStroke: '0.5px',
+                },
+              )
+              .row(
+                [
+                  'Office Hour',
+                  'Time',
+                  'Building Complition',
+                  'Occupancy rate',
+                  {
+                    value: 'Amenities',
+                    colspan: 3,
+                  },
+                ],
+                {
+                  fontSize: fontSizeHeader,
+                  backgroundColor: '#1f497d',
+                  textColor: 'white',
+                },
+              )
+              .row([
+                'Monday - Friday',
+                getData.office_hours_weekday,
+                {
+                  value: getData.completion,
                   rowspan: 2,
-                  colspan: 2,
-                },
-              ],
-              {
-                fontSize: fontSizeHeader,
-                backgroundColor: '#1f497d',
-                textColor: 'white',
-              },
-            )
-            .row(['Type', 'Amount', { value: 'Refund', width: 30 }], {
-              fontSize: fontSizeHeader,
-              backgroundColor: '#1f497d',
-              textColor: 'white',
-            })
-            .row([
-              'Booking Deposit',
-              getData.booking_deposit,
-              'No',
-              'Electricity',
-              getData.price_overtime_electricity,
-            ])
-            .row([
-              'Security Deposit',
-              { value: getData.security_deposit, fontSize: 6 },
-              'Yes',
-              'Air Conditioning',
-              getData.price_overtime_ac,
-            ])
-            .row([
-              'Telephone Deposit',
-              getData.phone_deposit,
-              'Yes',
-              'Lightning',
-              getData.price_overtime_lighting,
-            ]);
-
-          doc.moveDown(moveDown);
-
-          doc
-            .table({
-              x: positionXTable,
-              width: widthTable,
-              //   height: 80,
-              cellHeight: heightCell,
-              //   cellWidth: widthCell,
-              rows: 5,
-              border: 0.5,
-              borderColor: 'white',
-              defaultCell: {
-                fontSize: fontSize,
-                align: 'center',
-                textColor: 'black',
-                backgroundColor: '#f0f2f5',
-                border: 0.5,
-                borderColor: 'white',
-              },
-            })
-            .row(
-              [
-                {
-                  value: 'Parking Charges',
-                  colspan: 4,
                 },
                 {
-                  value: 'Minimum Lease Term',
+                  value: '',
                   rowspan: 2,
                 },
-                {
-                  value: 'Payment Term',
-                  rowspan: 2,
-                },
-              ],
-              {
-                fontSize: fontSizeHeader,
-                backgroundColor: '#1f497d',
-                textColor: 'white',
-              },
-            )
-            .row(['Type', 'Payment Term', 'Cost (IDR)', 'Cost (USD)'], {
-              fontSize: fontSizeHeader,
-              backgroundColor: '#1f497d',
-              textColor: 'white',
-            })
-            .row([
-              'Reserved (car)',
-              'yearly',
-              getData.parking_charge_reserved_car,
-              '',
-              {
-                value: getData.minimum_lease_term ?? 'tba',
-                rowspan: 3,
-              },
-              {
-                value: getData.payment_term ?? 'tba',
-                rowspan: 3,
-              },
-            ])
-            .row([
-              'Unreserved (car)',
-              'yearly',
-              getData.parking_charge_unreserved_car,
-              '',
-            ])
-            .row([
-              'Motorcycle',
-              'yearly',
-              getData.parking_charge_unreserved_car,
-              '',
-            ]);
 
-          doc.moveDown(moveDown);
+                getData.amenities[0],
+                getData.amenities[1],
+                getData.amenities[2],
+              ])
+              .row([
+                'Saturday',
+                getData.office_hours_weekend,
+                getData.amenities[3],
+                getData.amenities[4],
+                '',
+              ]);
 
-          doc
-            .table({
-              x: positionXTable,
-              width: widthTable,
-              //   height: 60,
-              cellHeight: heightCell,
-              //   cellWidth: widthCell,
-              rows: 4,
-              border: 0.5,
-              borderColor: 'white',
-              defaultCell: {
-                fontSize: 7,
-                align: 'center',
-                textColor: 'black',
-                backgroundColor: '#f0f2f5',
-                border: 0.5,
-                borderColor: 'white',
-              },
-            })
-            .row(
-              [
-                {
-                  value: 'Building Spesification',
-                  colspan: 6,
-                  align: { x: 'center', y: 'bottom' },
-                },
-              ],
-              {
-                fontSize: fontSizeHeaderBlack,
-                backgroundColor: '#f0f2f5',
-                textColor: 'black',
-                textStroke: '0.5px',
-              },
-            )
-            .row(
-              [
-                'Number of Floor',
-                'Lift',
-                'Celling Height',
-                'Typical Floor Size',
-                'Total Semi Gross Area',
-                'Power Back Up',
-              ],
-              {
-                fontSize: fontSizeHeader,
-                backgroundColor: '#1f497d',
-                textColor: 'white',
-              },
-            )
-            .row([
-              'Level of Tenancy Floor',
-              'Passenger',
-              'Ground Floor 6 m',
-              { value: '  sqm', rowspan: 2 },
-              { value: '13.000', rowspan: 2 },
-              { value: '100%', rowspan: 2 },
-            ])
-            .row(['Level of Basements', 'Service Lift', 'Typical 2.75 m']);
+            console.log('index', index);
+            console.log('asas', propertiesData.properties_download.length);
 
-          doc.moveDown(moveDown);
-
-          doc
-            .table({
-              x: positionXTable,
-              width: widthTable,
-              //   height: 40,
-              cellHeight: 30,
-              //   widthCell: widthCell,
-              rows: 2,
-              border: 0.5,
-              borderColor: 'white',
-              defaultCell: {
-                fontSize: fontSize,
-                align: 'center',
-                textColor: 'black',
-                backgroundColor: '#f0f2f5',
-                border: 0.5,
-                borderColor: 'white',
-              },
-            })
-            .row(
-              [
-                'Loading Capacity (typical)',
-                {
-                  value: 'Telecommunication',
-                  colspan: 3,
-                },
-                {
-                  value: 'Fire Safety',
-                  colspan: 3,
-                },
-              ],
-              {
-                fontSize: fontSizeHeader,
-                backgroundColor: '#1f497d',
-                textColor: 'white',
-              },
-            )
-            .row([
-              getData.other_info_loading_capacity ?? 'tba',
-              getData.telecommunication_isp ? 'ISP : Y' : 'ISP : N',
-              getData.telecommunication_fiber_optic
-                ? 'Fiber Optic : Y'
-                : 'Fiber Optic : N',
-              getData.telecommunication_wifi ? 'Wifi : Y' : 'Wifi : N',
-              getData.fire_safety_sprinkle ? 'Sprinkle : Y' : 'Sprinkle : N',
-              getData.fire_safety_heat_detector
-                ? 'Heat Detector : Y'
-                : 'Heat Detector : N',
-              getData.fire_safety_smoke_detector
-                ? 'Smoke Detector : Y'
-                : 'Smoke Detector : N',
-            ]);
-
-          doc.moveDown(moveDown);
-
-          doc
-            .table({
-              x: positionXTable,
-              width: widthTable,
-              //   height: 40,
-              cellHeight: heightCell,
-              //   cellWidth: widthCell,
-              rows: 2,
-              border: 0.5,
-              borderColor: 'white',
-              defaultCell: {
-                fontSize: fontSize,
-                align: 'center',
-                textColor: 'black',
-                backgroundColor: '#f0f2f5',
-                border: 0.5,
-                borderColor: 'white',
-              },
-            })
-            .row(['Ac System', 'AC Zoning', ' Electricty', 'Power (KVA)'], {
-              fontSize: fontSizeHeader,
-              backgroundColor: '#1f497d',
-              textColor: 'white',
-            })
-            .row([
-              getData.other_info_ac_system == null || ''
-                ? 'tba'
-                : getData.other_info_ac_system,
-              getData.other_info_ac_zoning ?? 'tba',
-              getData.other_info_electricity ?? 'tba',
-              getData.other_info_power_unit ?? 'tba',
-            ]);
-
-          doc.moveDown(moveDown);
-
-          doc
-            .table({
-              x: positionXTable,
-              width: widthTable,
-              //   height: 50,
-              cellHeight: heightCell,
-              //   cellWidth: widthCell,
-              rows: 3,
-              border: 0.5,
-              borderColor: 'white',
-              defaultCell: {
-                fontSize: fontSize,
-                align: 'center',
-                textColor: 'black',
-                backgroundColor: '#f0f2f5',
-                border: 0.5,
-                borderColor: 'white',
-              },
-            })
-            .row(
-              [
-                {
-                  value: 'General Information',
-                  colspan: 7,
-                  align: { x: 'center', y: 'bottom' },
-                },
-              ],
-              {
-                fontSize: fontSizeHeaderBlack,
-                backgroundColor: '#f0f2f5',
-                textColor: 'black',
-                textStroke: '0.5px',
-              },
-            )
-            .row(
-              [
-                'Office Hour',
-                'Time',
-                'Building Complition',
-                'Occupancy rate',
-                {
-                  value: 'Amenities',
-                  colspan: 3,
-                },
-              ],
-              {
-                fontSize: fontSizeHeader,
-                backgroundColor: '#1f497d',
-                textColor: 'white',
-              },
-            )
-            .row([
-              'Monday - Friday',
-              getData.office_hours_weekday,
-              {
-                value: getData.completion,
-                rowspan: 2,
-              },
-              {
-                value: '',
-                rowspan: 2,
-              },
-
-              getData.amenities[0],
-              getData.amenities[1],
-              getData.amenities[2],
-            ])
-            .row([
-              'Saturday',
-              getData.office_hours_weekend,
-              getData.amenities[3],
-              getData.amenities[4],
-              '',
-            ]);
-
-          console.log('index', index);
-          console.log('asas', propertiesData.properties_download.length);
-
-          if (index + 1 !== propertiesData.properties_download.length) {
-            doc.addPage();
+            if (index + 1 !== propertiesData.properties_download.length) {
+              doc.addPage();
+            }
           }
         }
 
