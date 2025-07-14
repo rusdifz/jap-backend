@@ -688,7 +688,7 @@ export class DashboardPropertiesService {
 
     for (const sheetName of workbook.SheetNames) {
       // const sheetName = workbook.SheetNames[1];
-      if (sheetName == 'Sudirman') {
+      if (sheetName == 'Thamrin' || sheetName == 'scbd') {
         console.log('sheet name', sheetName);
         const worksheet = workbook.Sheets[sheetName];
         // // Konversi data sheet ke JSON

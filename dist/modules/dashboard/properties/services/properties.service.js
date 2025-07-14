@@ -443,7 +443,7 @@ let DashboardPropertiesService = class DashboardPropertiesService {
         console.log('work', workbook.SheetNames);
         const arr = [];
         for (const sheetName of workbook.SheetNames) {
-            if (sheetName == 'Sudirman') {
+            if (sheetName == 'Thamrin' || sheetName == 'scbd') {
                 console.log('sheet name', sheetName);
                 const worksheet = workbook.Sheets[sheetName];
                 const jsonData = XLSX.utils.sheet_to_json(worksheet);

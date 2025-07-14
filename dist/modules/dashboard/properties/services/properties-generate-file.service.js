@@ -73,12 +73,11 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                 });
                 const propertiesNew = getData.map((dt) => {
                     let size = parseFloat(dt.size) ?? dt.property.property_size ?? 0;
-                    const priceRent = dt.rent_price ?? 0;
-                    const serviceCharge = dt.property.service_charge_price ?? 0;
+                    const priceRent = parseFloat(dt.rent_price.toString()) ?? 0;
+                    const serviceCharge = parseFloat(dt.property.service_charge_price.toString()) ?? 0;
                     const costTotal = priceRent > 0 ? size * (priceRent + serviceCharge) : 0;
                     const negoRent = priceRent > 0 ? priceRent - 10000 : 0;
                     const totalCostBargain = negoRent > 0 ? size * (negoRent + serviceCharge) : 0;
-                    console.log('dada', dt);
                     return {
                         unit_id: dt.unit_id,
                         name: dt.property.name,
@@ -95,12 +94,12 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         service_charge: (0, currency_helper_1.formatCurrency)(serviceCharge),
                         cost_total: (0, currency_helper_1.formatCurrency)(costTotal),
                         cost_total_tax: costTotal > 0
-                            ? (0, currency_helper_1.formatCurrency)(0.11 * costTotal + costTotal)
+                            ? (0, currency_helper_1.formatCurrency)(costTotal * 1.1)
                             : (0, currency_helper_1.formatCurrency)(0),
                         nego_rent: (0, currency_helper_1.formatCurrency)(negoRent),
                         total_cost_bargain: (0, currency_helper_1.formatCurrency)(totalCostBargain),
                         bargain_tax: totalCostBargain > 0
-                            ? (0, currency_helper_1.formatCurrency)(totalCostBargain * 0.11 + totalCostBargain)
+                            ? (0, currency_helper_1.formatCurrency)(totalCostBargain * 1.1)
                             : (0, currency_helper_1.formatCurrency)(0),
                     };
                 });

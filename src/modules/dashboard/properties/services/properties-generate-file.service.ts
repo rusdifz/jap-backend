@@ -86,8 +86,9 @@ export class DashboardPropertiesGenerateFileService {
         const propertiesNew: any = getData.map((dt) => {
           let size = parseFloat(dt.size) ?? dt.property.property_size ?? 0;
 
-          const priceRent = dt.rent_price ?? 0;
-          const serviceCharge = dt.property.service_charge_price ?? 0;
+          const priceRent = parseFloat(dt.rent_price.toString()) ?? 0;
+          const serviceCharge =
+            parseFloat(dt.property.service_charge_price.toString()) ?? 0;
 
           const costTotal =
             priceRent > 0 ? size * (priceRent + serviceCharge) : 0;
@@ -95,8 +96,6 @@ export class DashboardPropertiesGenerateFileService {
           const negoRent = priceRent > 0 ? priceRent - 10000 : 0;
           const totalCostBargain =
             negoRent > 0 ? size * (negoRent + serviceCharge) : 0;
-
-          console.log('dada', dt);
 
           return {
             unit_id: dt.unit_id,
@@ -116,13 +115,13 @@ export class DashboardPropertiesGenerateFileService {
             cost_total: formatCurrency(costTotal),
             cost_total_tax:
               costTotal > 0
-                ? formatCurrency(0.11 * costTotal + costTotal)
+                ? formatCurrency(costTotal * 1.1)
                 : formatCurrency(0),
             nego_rent: formatCurrency(negoRent),
             total_cost_bargain: formatCurrency(totalCostBargain),
             bargain_tax:
               totalCostBargain > 0
-                ? formatCurrency(totalCostBargain * 0.11 + totalCostBargain)
+                ? formatCurrency(totalCostBargain * 1.1)
                 : formatCurrency(0),
           };
         });
