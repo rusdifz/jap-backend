@@ -51,11 +51,12 @@ export class DashboardPropertiesGenerateFileService {
                 full_url: true,
               },
               thumbnail: true,
-              // price_rent_sqm: true,
               service_charge_price: true,
               ac_info: true,
               electricity_info: true,
               lighting_info: true,
+              parking_charge_reserved_car: true,
+              parking_charge_unreserved_car: true,
             },
           },
           where: {
@@ -87,13 +88,8 @@ export class DashboardPropertiesGenerateFileService {
           const priceRent = parseFloat(dt.rent_price.toString()) ?? 0;
           const serviceCharge =
             parseFloat(dt.property.service_charge_price.toString()) ?? 0;
-
           const costTotal =
             priceRent > 0 ? size * (priceRent + serviceCharge) : 0;
-
-          const negoRent = priceRent > 0 ? priceRent - 10000 : 0;
-          const totalCostBargain =
-            negoRent > 0 ? size * (negoRent + serviceCharge) : 0;
 
           return {
             unit_id: dt.unit_id,
@@ -116,12 +112,12 @@ export class DashboardPropertiesGenerateFileService {
               costTotal > 0
                 ? formatCurrency(costTotal * 1.1)
                 : formatCurrency(0),
-            nego_rent: formatCurrency(negoRent),
-            total_cost_bargain: formatCurrency(totalCostBargain),
-            bargain_tax:
-              totalCostBargain > 0
-                ? formatCurrency(totalCostBargain * 1.1)
-                : formatCurrency(0),
+            parking_reserved_car:
+              formatCurrency(dt.property.parking_charge_reserved_car) +
+              ' Per Year',
+            parking_unreserved_car:
+              formatCurrency(dt.property.parking_charge_reserved_car) +
+              ' Per Year',
           };
         });
 
@@ -165,19 +161,12 @@ export class DashboardPropertiesGenerateFileService {
           this.fetchImage(
             'https://res.cloudinary.com/servicebizimage/image/upload/v1748412838/footer_yzecvl.png',
           ),
-          // this.fetchImage(propertiesNew.image),
         ]);
 
-        doc.image(
-          // this.rootPathImageJAP + '/cover.png',
-          coverImage,
-          coverImageX,
-          coverImageY,
-          {
-            width: coverImageWidth,
-            height: coverImageHeight,
-          },
-        );
+        doc.image(coverImage, coverImageX, coverImageY, {
+          width: coverImageWidth,
+          height: coverImageHeight,
+        });
 
         doc.image(whiteImage, 575, 450, {
           width: 200,
@@ -349,40 +338,10 @@ export class DashboardPropertiesGenerateFileService {
                   const xPos = rectCell.x + (rectCell.width - imgWidth) / 2;
                   const yPos = rectCell.y + (rectCell.height - imgHeight) / 2;
 
-                  //pengecekan image exist or not
-                  // if (existsSync(value)) {
-                  //   // console.log('Directory Image Not Exist.');
-                  //   // mkdirSync(dirname, { recursive: true });
-                  //   // callback(null, dirname);
-                  //   // Gambar image menggunakan instance doc (gunakan variabel global 'doc')
-                  //   doc.image(value, xPos, yPos, {
-                  //     width: imgWidth,
-                  //     height: imgHeight,
-                  //   });
-                  // } else {
-                  //   //
                   doc.image(image, xPos, yPos, {
                     width: imgWidth,
                     height: imgHeight,
                   });
-                  // }
-
-                  // if (value) {
-                  //   // const imageUp =  await this.fetchImage()
-                  //   // console.log('Directory Image Not Exist.');
-                  //   // mkdirSync(dirname, { recursive: true });
-                  //   // callback(null, dirname);
-                  //   // Gambar image menggunakan instance doc (gunakan variabel global 'doc')
-                  //   doc.image(value, xPos, yPos, {
-                  //     width: imgWidth,
-                  //     height: imgHeight,
-                  //   });
-                  // } else {
-                  //   //
-                  //   doc.image(noImage, xPos, yPos, {
-                  //     width: imgWidth,
-                  //     height: imgHeight,
-                  //   });
                   // }
                 } else {
                   const cellHeight = rectCell.height;
@@ -434,11 +393,12 @@ export class DashboardPropertiesGenerateFileService {
             'bold:Cost Per month',
             'bold:Cost Per Month After Tax',
             'MERGE CELL',
-            'bold:Estimation For Negotiation Price',
-            'bold:Rental',
-            'bold:Service Charge',
-            'bold:Total Cost Bargain',
-            'bold:Bargain After Tax',
+            'bold:Parking',
+            'bold:Reserved',
+            'bold:Unreserved',
+            'bold:Comment',
+            // 'bold:Total Cost Bargain',
+            // 'bold:Bargain After Tax',
           ];
 
           const datas = [];
@@ -495,7 +455,6 @@ export class DashboardPropertiesGenerateFileService {
 
           //row 12 cost per month after tax
           const row12 = databuilding.map((dt) => {
-            // return 'bold:IDR ' + dt['cost_total_tax'];
             return 'bold:' + dt['cost_total_tax'];
           });
 
@@ -505,25 +464,18 @@ export class DashboardPropertiesGenerateFileService {
           //row 14 judul estimation
           const row14 = '';
 
-          //row 15 rental nego
+          //row 15 parking reserved car
           const row15 = databuilding.map((dt) => {
-            return dt['nego_rent'];
+            return dt.parking_reserved_car;
           });
 
-          //row 16 service charge nego
+          //row 16 parking unreserved car
           const row16 = databuilding.map((dt) => {
-            return dt.service_charge;
+            return dt.parking_unreserved_car;
           });
 
-          //row 17 total cost bargain
-          const row17 = databuilding.map((dt) => {
-            return dt['total_cost_bargain'];
-          });
-
-          //row 18 bargain after tax
-          const row18 = databuilding.map((dt) => {
-            return 'bold:' + dt['bargain_tax'];
-          });
+          //row 17 comment
+          const row17 = '';
 
           const rows = [
             row2,
@@ -542,13 +494,11 @@ export class DashboardPropertiesGenerateFileService {
             row15,
             row16,
             row17,
-            row18,
           ];
-          // console.log('rows', rows);
 
-          let textPositionYEstimateNego: number = 390;
-
-          for (let iRow = 0; iRow < 17; iRow++) {
+          let textPositionYParking: number = 385;
+          let textPositionYComment: number = 437;
+          for (let iRow = 0; iRow < 16; iRow++) {
             // const element = array[index];
 
             const data = {
@@ -563,7 +513,7 @@ export class DashboardPropertiesGenerateFileService {
               if (iHeader !== 0) {
                 if (iRow === 4 || iRow === 5) {
                   if (rows[iRow][iHeader - 1].length > 25) {
-                    textPositionYEstimateNego = 400;
+                    textPositionYParking = 390;
                   }
                 }
 
@@ -572,14 +522,6 @@ export class DashboardPropertiesGenerateFileService {
                     [header.property]: rows[iRow][iHeader - 1],
                     options: {
                       backgroundColor: '#ff0066',
-                      backgroundOpacity: 1,
-                    },
-                  });
-                } else if (iRow === 16) {
-                  Object.assign(data, {
-                    [header.property]: rows[iRow][iHeader - 1],
-                    options: {
-                      backgroundColor: '#1f497d',
                       backgroundOpacity: 1,
                     },
                   });
@@ -654,12 +596,12 @@ export class DashboardPropertiesGenerateFileService {
               if (indexRow === 11) {
                 doc.addBackground(rectRow, '#fff', 1);
               }
-              if (indexRow === 12) {
+              if (indexRow === 12 || indexRow === 15) {
                 doc.addBackground(rectRow, '#7f7f7f', 1);
               }
-              if (indexRow === 16) {
-                doc.font('Helvetica').fontSize(9).fillColor('white');
-              }
+              // if (indexRow === 16) {
+              //   doc.font('Helvetica').fontSize(9).fillColor('white');
+              // }
             },
             divider: {
               header: { width: 1, opacity: 1, color: 'white' },
@@ -673,30 +615,43 @@ export class DashboardPropertiesGenerateFileService {
 
           const imageFooterX = (doc.page.width - 720) / 2;
           const imageFooterY = doc.page.height - doc.page.margins.bottom - 70;
+
           doc.image(footerImage, imageFooterX, imageFooterY, {
             width: 700,
             height: 70,
           });
 
+          doc.image(
+            whiteImage,
+            180,
+            doc.page.height - doc.page.margins.bottom - 70,
+            {
+              width: 120,
+              height: 30,
+            },
+          );
+
           const lengthHeaders = headers.length;
           const positionX =
             lengthHeaders == 6
-              ? 300
+              ? 380
               : lengthHeaders == 5
-                ? 240
+                ? 320
                 : lengthHeaders == 4
-                  ? 170
-                  : 100;
+                  ? 250
+                  : 180;
 
           doc
             .font('Helvetica-Bold')
             .fontSize(15)
             .fillColor('white')
-            .text(
-              'Estimation For Negotiation Price',
-              positionX,
-              textPositionYEstimateNego,
-            );
+            .text('Parking', positionX, textPositionYParking);
+
+          doc
+            .font('Helvetica-Bold')
+            .fontSize(15)
+            .fillColor('white')
+            .text('Comment', positionX, textPositionYComment);
         }
 
         doc.addPage();
@@ -720,7 +675,6 @@ export class DashboardPropertiesGenerateFileService {
         const firstName = admin.user.first_name ?? '';
         const lastName = admin.user.last_name ?? '';
         const adminName = firstName + lastName;
-        console.log('admin', adminName);
 
         doc
           .font('Helvetica-Bold')

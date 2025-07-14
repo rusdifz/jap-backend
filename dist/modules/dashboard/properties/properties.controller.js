@@ -53,8 +53,6 @@ let DashboardPropertiesController = class DashboardPropertiesController {
         return await this.service.editBulkFromExcel();
     }
     async generatePdfComparissonNew(res, body, user) {
-        console.log('body pdf', body);
-        console.log('user', user);
         const pdfBuffer = await this.serviceGenerateFile.generatePDFComparisson(body, user);
         const namePdf = 'Building Comparisson - ' + body.location;
         res.set({

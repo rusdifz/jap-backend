@@ -49,6 +49,8 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                             ac_info: true,
                             electricity_info: true,
                             lighting_info: true,
+                            parking_charge_reserved_car: true,
+                            parking_charge_unreserved_car: true,
                         },
                     },
                     where: {
@@ -76,8 +78,6 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     const priceRent = parseFloat(dt.rent_price.toString()) ?? 0;
                     const serviceCharge = parseFloat(dt.property.service_charge_price.toString()) ?? 0;
                     const costTotal = priceRent > 0 ? size * (priceRent + serviceCharge) : 0;
-                    const negoRent = priceRent > 0 ? priceRent - 10000 : 0;
-                    const totalCostBargain = negoRent > 0 ? size * (negoRent + serviceCharge) : 0;
                     return {
                         unit_id: dt.unit_id,
                         name: dt.property.name,
@@ -96,11 +96,10 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         cost_total_tax: costTotal > 0
                             ? (0, currency_helper_1.formatCurrency)(costTotal * 1.1)
                             : (0, currency_helper_1.formatCurrency)(0),
-                        nego_rent: (0, currency_helper_1.formatCurrency)(negoRent),
-                        total_cost_bargain: (0, currency_helper_1.formatCurrency)(totalCostBargain),
-                        bargain_tax: totalCostBargain > 0
-                            ? (0, currency_helper_1.formatCurrency)(totalCostBargain * 1.1)
-                            : (0, currency_helper_1.formatCurrency)(0),
+                        parking_reserved_car: (0, currency_helper_1.formatCurrency)(dt.property.parking_charge_reserved_car) +
+                            ' Per Year',
+                        parking_unreserved_car: (0, currency_helper_1.formatCurrency)(dt.property.parking_charge_reserved_car) +
+                            ' Per Year',
                     };
                 });
                 const dataPerPage = 5;
@@ -295,11 +294,10 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         'bold:Cost Per month',
                         'bold:Cost Per Month After Tax',
                         'MERGE CELL',
-                        'bold:Estimation For Negotiation Price',
-                        'bold:Rental',
-                        'bold:Service Charge',
-                        'bold:Total Cost Bargain',
-                        'bold:Bargain After Tax',
+                        'bold:Parking',
+                        'bold:Reserved',
+                        'bold:Unreserved',
+                        'bold:Comment',
                     ];
                     const datas = [];
                     const row2 = databuilding.map((dt) => {
@@ -338,17 +336,12 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     const row13 = 'merge row';
                     const row14 = '';
                     const row15 = databuilding.map((dt) => {
-                        return dt['nego_rent'];
+                        return dt.parking_reserved_car;
                     });
                     const row16 = databuilding.map((dt) => {
-                        return dt.service_charge;
+                        return dt.parking_unreserved_car;
                     });
-                    const row17 = databuilding.map((dt) => {
-                        return dt['total_cost_bargain'];
-                    });
-                    const row18 = databuilding.map((dt) => {
-                        return 'bold:' + dt['bargain_tax'];
-                    });
+                    const row17 = '';
                     const rows = [
                         row2,
                         row3,
@@ -366,10 +359,10 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         row15,
                         row16,
                         row17,
-                        row18,
                     ];
-                    let textPositionYEstimateNego = 390;
-                    for (let iRow = 0; iRow < 17; iRow++) {
+                    let textPositionYParking = 385;
+                    let textPositionYComment = 437;
+                    for (let iRow = 0; iRow < 16; iRow++) {
                         const data = {
                             building: {
                                 label: rowCell1[iRow],
@@ -381,7 +374,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                             if (iHeader !== 0) {
                                 if (iRow === 4 || iRow === 5) {
                                     if (rows[iRow][iHeader - 1].length > 25) {
-                                        textPositionYEstimateNego = 400;
+                                        textPositionYParking = 390;
                                     }
                                 }
                                 if (iRow === 10) {
@@ -389,15 +382,6 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                                         [header.property]: rows[iRow][iHeader - 1],
                                         options: {
                                             backgroundColor: '#ff0066',
-                                            backgroundOpacity: 1,
-                                        },
-                                    });
-                                }
-                                else if (iRow === 16) {
-                                    Object.assign(data, {
-                                        [header.property]: rows[iRow][iHeader - 1],
-                                        options: {
-                                            backgroundColor: '#1f497d',
                                             backgroundOpacity: 1,
                                         },
                                     });
@@ -455,11 +439,8 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                             if (indexRow === 11) {
                                 doc.addBackground(rectRow, '#fff', 1);
                             }
-                            if (indexRow === 12) {
+                            if (indexRow === 12 || indexRow === 15) {
                                 doc.addBackground(rectRow, '#7f7f7f', 1);
-                            }
-                            if (indexRow === 16) {
-                                doc.font('Helvetica').fontSize(9).fillColor('white');
                             }
                         },
                         divider: {
@@ -477,19 +458,28 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         width: 700,
                         height: 70,
                     });
+                    doc.image(whiteImage, 180, doc.page.height - doc.page.margins.bottom - 70, {
+                        width: 120,
+                        height: 30,
+                    });
                     const lengthHeaders = headers.length;
                     const positionX = lengthHeaders == 6
-                        ? 300
+                        ? 380
                         : lengthHeaders == 5
-                            ? 240
+                            ? 320
                             : lengthHeaders == 4
-                                ? 170
-                                : 100;
+                                ? 250
+                                : 180;
                     doc
                         .font('Helvetica-Bold')
                         .fontSize(15)
                         .fillColor('white')
-                        .text('Estimation For Negotiation Price', positionX, textPositionYEstimateNego);
+                        .text('Parking', positionX, textPositionYParking);
+                    doc
+                        .font('Helvetica-Bold')
+                        .fontSize(15)
+                        .fillColor('white')
+                        .text('Comment', positionX, textPositionYComment);
                 }
                 doc.addPage();
                 const coverBackImageWidth = 800;
@@ -507,7 +497,6 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                 const firstName = admin.user.first_name ?? '';
                 const lastName = admin.user.last_name ?? '';
                 const adminName = firstName + lastName;
-                console.log('admin', adminName);
                 doc
                     .font('Helvetica-Bold')
                     .fontSize(10)
