@@ -26,7 +26,6 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
     async generatePDFComparisson(propertiesData, admin) {
         return new Promise(async (resolve, reject) => {
             try {
-                console.log('admin', admin);
                 const queryUnit = {
                     select: {
                         unit_id: true,
@@ -45,6 +44,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                             images: {
                                 full_url: true,
                             },
+                            thumbnail: true,
                             service_charge_price: true,
                             ac_info: true,
                             electricity_info: true,
@@ -81,7 +81,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     return {
                         unit_id: dt.unit_id,
                         name: dt.property.name,
-                        image: dt.property.images.length > 0
+                        image: (dt.property.thumbnail ?? dt.property.images.length > 0)
                             ? dt.property.images[0].full_url
                             : '',
                         location: dt.property.location,
@@ -196,7 +196,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                     }
                     else {
                         const start = iTable * dataPerPage;
-                        const end = start * dataPerPage;
+                        const end = start + dataPerPage;
                         databuilding = propertiesNew.slice(start, end);
                     }
                     const headers = [
@@ -231,8 +231,6 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                         if (dt.image) {
                             image = await this.fetchImage(dt.image);
                         }
-                        console.log('dt', dt.image);
-                        console.log('image', image);
                         headers.push({
                             label: dt.name,
                             property: dt.name + '-' + dt.unit_id,

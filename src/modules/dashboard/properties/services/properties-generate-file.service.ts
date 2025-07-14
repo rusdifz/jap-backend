@@ -32,8 +32,6 @@ export class DashboardPropertiesGenerateFileService {
   ): Promise<Buffer> {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log('admin', admin);
-
         const queryUnit: FindManyOptions<UnitsDB> = {
           select: {
             unit_id: true,
@@ -41,7 +39,6 @@ export class DashboardPropertiesGenerateFileService {
             condition: true,
             floor: true,
             rent_price: true,
-
             property: {
               property_id: true,
               name: true,
@@ -53,6 +50,7 @@ export class DashboardPropertiesGenerateFileService {
               images: {
                 full_url: true,
               },
+              thumbnail: true,
               // price_rent_sqm: true,
               service_charge_price: true,
               ac_info: true,
@@ -100,8 +98,9 @@ export class DashboardPropertiesGenerateFileService {
           return {
             unit_id: dt.unit_id,
             name: dt.property.name,
+
             image:
-              dt.property.images.length > 0
+              (dt.property.thumbnail ?? dt.property.images.length > 0)
                 ? dt.property.images[0].full_url
                 : '',
             location: dt.property.location,
@@ -253,6 +252,7 @@ export class DashboardPropertiesGenerateFileService {
           });
 
         //tambah table
+
         for (let iTable = 0; iTable < page; iTable++) {
           doc.addPage();
 
@@ -271,7 +271,8 @@ export class DashboardPropertiesGenerateFileService {
           } else {
             //pagination after page 1
             const start = iTable * dataPerPage;
-            const end = start * dataPerPage;
+            const end = start + dataPerPage;
+
             databuilding = propertiesNew.slice(start, end);
           }
 
@@ -322,8 +323,6 @@ export class DashboardPropertiesGenerateFileService {
             if (dt.image) {
               image = await this.fetchImage(dt.image);
             }
-            console.log('dt', dt.image);
-            console.log('image', image);
 
             headers.push({
               label: dt.name,
