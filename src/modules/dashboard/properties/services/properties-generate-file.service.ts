@@ -94,11 +94,11 @@ export class DashboardPropertiesGenerateFileService {
           return {
             unit_id: dt.unit_id,
             name: dt.property.name,
-
-            image:
-              (dt.property.thumbnail ?? dt.property.images.length > 0)
-                ? dt.property.images[0].full_url
-                : '',
+            image: dt.property.thumbnail ?? '',
+            // image:
+            //   (dt.property.thumbnail ?? dt.property.images.length > 0)
+            //     ? dt.property.images[0].full_url
+            //     : '',
             location: dt.property.location,
             property_size: size === 0 ? 'TBA' : size,
             total_floor: dt.floor ?? 'TBA',
