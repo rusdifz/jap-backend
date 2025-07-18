@@ -134,9 +134,21 @@ let ChartsService = class ChartsService {
             this.propertiesService.CountData({
                 updated_at: (0, typeorm_1.MoreThanOrEqual)(common_2.monthAgo),
             }),
-            this.unitsService.countData({ condition: common_2.ConditionUnitEnum.FURNISHED }),
+            this.unitsService.countData({
+                condition: (0, typeorm_1.In)([
+                    common_2.ConditionUnitEnum.FURNISHED,
+                    common_2.ConditionUnitEnum.SEMI_FURNISHED,
+                    common_2.ConditionUnitEnum.SEMI_FURNISHED,
+                    common_2.ConditionUnitEnum.FITTED_FURNISHED,
+                ]),
+            }),
             this.unitsService.countData({ condition: common_2.ConditionUnitEnum.BARE }),
-            this.unitsService.countData({ condition: common_2.ConditionUnitEnum.PARTITION }),
+            this.unitsService.countData({
+                condition: (0, typeorm_1.In)([
+                    common_2.ConditionUnitEnum.PARTITION,
+                    common_2.ConditionUnitEnum.PARTITION_FLOOR,
+                ]),
+            }),
             this.countSumPropertyBySize('a'),
             this.countSumPropertyBySize('b'),
             this.countSumPropertyBySize('c'),

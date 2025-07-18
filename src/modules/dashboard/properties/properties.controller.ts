@@ -216,7 +216,12 @@ export class DashboardPropertiesController {
   @Version('1')
   @Get('excel/convert')
   async convertFileExcelToDB() {
-    // return await this.service.inputBulkFromExcel();
+    return await this.service.inputBulkFromExcel();
+  }
+
+  @Version('1')
+  @Get('excel/units')
+  async insertUnitBulkFromExcel() {
     return await this.service.editBulkFromExcel();
   }
 

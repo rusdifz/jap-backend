@@ -443,7 +443,9 @@ let DashboardPropertiesService = class DashboardPropertiesService {
         console.log('work', workbook.SheetNames);
         const arr = [];
         for (const sheetName of workbook.SheetNames) {
-            if (sheetName == 'Thamrin' || sheetName == 'scbd') {
+            if (sheetName == 'Thamrin' ||
+                sheetName == 'Mega Kuningan' ||
+                sheetName == 'scbd') {
                 console.log('sheet name', sheetName);
                 const worksheet = workbook.Sheets[sheetName];
                 const jsonData = XLSX.utils.sheet_to_json(worksheet);
@@ -455,8 +457,9 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                         key = dt.no;
                         propertyName = dt.nama_gedung;
                     }
-                    console.log('por', propertyName);
+                    console.log('property name', propertyName);
                     if (propertyName !== '') {
+                        console.log('property ini ada datanya');
                         let unitSize = 0;
                         let rentPrice = 0;
                         if (dt.unit_size) {
@@ -479,16 +482,17 @@ let DashboardPropertiesService = class DashboardPropertiesService {
                                 size: unitSize.toString(),
                                 floor: dt.unit_floor,
                                 condition: dt.unit_condition
-                                    ? Object.values(dt.unit_condition).includes(common_2.ConditionUnitEnum)
+                                    ? Object.values(common_2.ConditionUnitEnum).includes(dt.unit_condition)
                                         ? dt.unit_condition
                                         : common_2.ConditionUnitEnum.BARE
                                     : common_2.ConditionUnitEnum.BARE,
                                 rent_price: rentPrice,
                                 available: true,
                                 pic_name: dt.pic_name,
-                                pic_phone: dt.phone_pic,
+                                pic_phone: dt.pic_phone,
                                 status: common_2.PropertyStatusEnum.LEASE,
                             };
+                            console.log('data unit', unit);
                             await this.unitService.create(unit, null);
                         }
                     }

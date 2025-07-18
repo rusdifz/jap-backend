@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   Between,
   FindManyOptions,
+  In,
   LessThan,
   LessThanOrEqual,
   MoreThanOrEqual,
@@ -170,9 +171,21 @@ export class ChartsService {
       this.propertiesService.CountData({
         updated_at: MoreThanOrEqual(monthAgo),
       }),
-      this.unitsService.countData({ condition: ConditionUnitEnum.FURNISHED }),
+      this.unitsService.countData({
+        condition: In([
+          ConditionUnitEnum.FURNISHED,
+          ConditionUnitEnum.SEMI_FURNISHED,
+          ConditionUnitEnum.SEMI_FURNISHED,
+          ConditionUnitEnum.FITTED_FURNISHED,
+        ]),
+      }),
       this.unitsService.countData({ condition: ConditionUnitEnum.BARE }),
-      this.unitsService.countData({ condition: ConditionUnitEnum.PARTITION }),
+      this.unitsService.countData({
+        condition: In([
+          ConditionUnitEnum.PARTITION,
+          ConditionUnitEnum.PARTITION_FLOOR,
+        ]),
+      }),
       this.countSumPropertyBySize('a'),
       this.countSumPropertyBySize('b'),
       this.countSumPropertyBySize('c'),

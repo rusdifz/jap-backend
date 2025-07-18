@@ -18,6 +18,7 @@ export declare class DashboardPropertiesController {
     deleteOne(id: number, user: IJwtUser): Promise<Object>;
     checkForStaleDataOlderThanOneMonth(): Promise<any[]>;
     convertFileExcelToDB(): Promise<any[]>;
+    insertUnitBulkFromExcel(): Promise<any[]>;
     generatePdfComparissonNew(res: any, body: PdfComparisonDTO, user: IJwtUser): Promise<void>;
     generatePdfPropertyDetailNew(res: any, body: PdfDetailDTO): Promise<void>;
     bulkImage(query: BulkImageDTO): Promise<any[]>;

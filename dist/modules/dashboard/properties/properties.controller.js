@@ -50,6 +50,9 @@ let DashboardPropertiesController = class DashboardPropertiesController {
         return await this.service.checkForStaleDataOlderThanOneMonth();
     }
     async convertFileExcelToDB() {
+        return await this.service.inputBulkFromExcel();
+    }
+    async insertUnitBulkFromExcel() {
         return await this.service.editBulkFromExcel();
     }
     async generatePdfComparissonNew(res, body, user) {
@@ -183,6 +186,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], DashboardPropertiesController.prototype, "convertFileExcelToDB", null);
+__decorate([
+    (0, common_1.Version)('1'),
+    (0, common_1.Get)('excel/units'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], DashboardPropertiesController.prototype, "insertUnitBulkFromExcel", null);
 __decorate([
     (0, common_1.Version)('1'),
     (0, common_1.Post)('pdf/comparison'),

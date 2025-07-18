@@ -687,8 +687,11 @@ export class DashboardPropertiesService {
     const arr = [];
 
     for (const sheetName of workbook.SheetNames) {
-      // const sheetName = workbook.SheetNames[1];
-      if (sheetName == 'Thamrin' || sheetName == 'scbd') {
+      if (
+        sheetName == 'Thamrin' ||
+        sheetName == 'Mega Kuningan' ||
+        sheetName == 'scbd'
+      ) {
         console.log('sheet name', sheetName);
         const worksheet = workbook.Sheets[sheetName];
         // // Konversi data sheet ke JSON
@@ -704,9 +707,11 @@ export class DashboardPropertiesService {
             propertyName = dt.nama_gedung;
           }
 
-          console.log('por', propertyName);
+          console.log('property name', propertyName);
 
           if (propertyName !== '') {
+            console.log('property ini ada datanya');
+
             let unitSize = 0;
             let rentPrice = 0;
 
@@ -738,17 +743,17 @@ export class DashboardPropertiesService {
                 size: unitSize.toString(),
                 floor: dt.unit_floor,
                 condition: dt.unit_condition
-                  ? Object.values(dt.unit_condition).includes(ConditionUnitEnum)
+                  ? Object.values(ConditionUnitEnum).includes(dt.unit_condition)
                     ? dt.unit_condition
                     : ConditionUnitEnum.BARE
                   : ConditionUnitEnum.BARE,
                 rent_price: rentPrice,
-
                 available: true,
                 pic_name: dt.pic_name,
-                pic_phone: dt.phone_pic,
+                pic_phone: dt.pic_phone,
                 status: PropertyStatusEnum.LEASE,
               };
+              console.log('data unit', unit);
 
               await this.unitService.create(unit, null);
             }
@@ -760,30 +765,3 @@ export class DashboardPropertiesService {
     return arr;
   }
 }
-
-// work [
-//   'inputdb1',
-//   'Thamrin(DONE)',
-//   'Sudirman',
-//   'Mega Kuningan',
-//   'SCBD',
-//   'Gatot Subroto',
-//   'Kuningan(DONE)',
-//   'Satrio(DONE)',
-//   'MT Haryono(DONE)',
-//   'Senayan(DONE)',
-//   'Pondok Indah & Blok M, Kebayora',
-//   'Mampang(DONE)',
-//   'Pasar Minggu(DONE)',
-//   'Tb Simatupang(DONE)',
-//   'Jakarta Pusat(DONE)',
-//   'Kemang & Ampera(DONE)',
-//   'Slipi & Grogol(DONE)',
-//   'Puri Kembangan & Kebon Jeruk(DO',
-//   'PIK & Pluit(DONE)',
-//   'Kelapa Gading & Sunter(DONE)',
-//   'Jakarta Timur',
-//   'Detabek(DONE)',
-//   'Bali(DONE)',
-//   'Bandung(DONE)',
-//   'Surabaya(DONE)'

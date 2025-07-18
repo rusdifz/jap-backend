@@ -47,6 +47,7 @@ export declare enum ConditionUnitEnum {
     FURNISHED = "Furnished",
     SEMI_FURNISHED = "Semi Furnished",
     UNFURNISHED = "Unfurnished",
+    FITTED_FURNISHED = "Fitted/Furnished",
     PARTITION = "Partition",
     PARTITION_FLOOR = "Partition (Lantai Keramik/Karpet)",
     GOOD = "Good",
@@ -54,7 +55,6 @@ export declare enum ConditionUnitEnum {
     LANTAI_KARPET = "Lantai Karpet",
     GUDANG_BM = "Gudang BM",
     RETAIL = "Retail",
-    FITTED_FURNISHED = "Fitted/Furnished",
     COMBINED = "Combined",
     INDOOR = "Indoor"
 }
