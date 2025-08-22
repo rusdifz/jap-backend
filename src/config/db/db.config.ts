@@ -14,7 +14,7 @@ import {
 
 export const dbConfig = (): DbConfigInterface => ({
   db: {
-    type: 'mysql',
+    type: 'postgres',
     host: process.env.DB_HOST,
     port: parseInt(process.env.DB_PORT),
     username: process.env.DB_USERNAME,
@@ -34,9 +34,9 @@ export const dbConfig = (): DbConfigInterface => ({
       MasterLocationDB,
       // PropertyPicDB,
     ],
-    // ssl: {
-    //   rejectUnauthorized: false,
-    // },
-    charset: 'utf8mb4_unicode_ci',
+    ssl: {
+      rejectUnauthorized: false,
+    },
+    // charset: 'utf8mb4_unicode_ci',
   },
 });

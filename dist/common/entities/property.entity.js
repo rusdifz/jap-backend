@@ -34,7 +34,7 @@ __decorate([
     __metadata("design:type", String)
 ], PropertiesDB.prototype, "slug", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'longtext', nullable: true }),
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
     __metadata("design:type", String)
 ], PropertiesDB.prototype, "description", void 0);
 __decorate([
@@ -296,6 +296,6 @@ __decorate([
     __metadata("design:type", Array)
 ], PropertiesDB.prototype, "images", void 0);
 exports.PropertiesDB = PropertiesDB = __decorate([
-    (0, typeorm_1.Entity)({ name: 'properties' })
+    (0, typeorm_1.Entity)({ name: 'properties', schema: 'public' })
 ], PropertiesDB);
 //# sourceMappingURL=property.entity.js.map

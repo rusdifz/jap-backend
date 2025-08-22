@@ -103,7 +103,8 @@ export class DashboardPropertiesService {
 
     if (props.location) {
       Object.assign(query.where, {
-        location: Like(`%${props.location.toLowerCase()}%`),
+        // location: Like(`%${props.location.toLowerCase()}%`),
+        location: props.location
       });
     }
 

@@ -4,7 +4,7 @@ exports.dbConfig = void 0;
 const common_1 = require("../../common");
 const dbConfig = () => ({
     db: {
-        type: 'mysql',
+        type: 'postgres',
         host: process.env.DB_HOST,
         port: parseInt(process.env.DB_PORT),
         username: process.env.DB_USERNAME,
@@ -23,7 +23,9 @@ const dbConfig = () => ({
             common_1.MasterAmenitiesDB,
             common_1.MasterLocationDB,
         ],
-        charset: 'utf8mb4_unicode_ci',
+        ssl: {
+            rejectUnauthorized: false,
+        },
     },
 });
 exports.dbConfig = dbConfig;

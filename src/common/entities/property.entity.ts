@@ -22,8 +22,7 @@ import { UnitsDB } from './unit.entity';
 import { MediaDB } from './media.entity';
 // import { PropertyPicDB } from './property-pic.entity';
 
-@Entity({ name: 'properties' })
-// @Entity({ name: 'properties_dummy' })
+@Entity({ name: 'properties', schema: 'public' })
 export class PropertiesDB implements PropertyAbstract {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   property_id: number;
@@ -37,7 +36,7 @@ export class PropertiesDB implements PropertyAbstract {
   @Column({ type: 'varchar', length: 150 })
   slug: string;
 
-  @Column({ type: 'longtext', nullable: true })
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   @Column({

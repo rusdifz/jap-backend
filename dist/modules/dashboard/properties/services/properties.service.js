@@ -52,7 +52,7 @@ let DashboardPropertiesService = class DashboardPropertiesService {
         }
         if (props.location) {
             Object.assign(query.where, {
-                location: (0, typeorm_1.Like)(`%${props.location.toLowerCase()}%`),
+                location: props.location
             });
         }
         if (props.property_type) {
