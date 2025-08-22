@@ -7,6 +7,8 @@ import { DbModule } from 'src/config/db/db.module';
 // import { ServeStaticModule } from '@nestjs/serve-static';
 // import { join } from 'path';
 
+import { AppController } from './app.controler';
+
 import { ClientArticleModule } from './modules/client/article/article.module';
 import { ClientFeedbackModule } from './modules/client/feedback/feedback.module';
 import { ClientPropertiesModule } from './modules/client/properties/properties.module';
@@ -21,6 +23,7 @@ import { DashboardUnitsModule } from './modules/dashboard/units/units.module';
 import { DashboardFeedbackModule } from './modules/dashboard/feedback/feedback.module';
 import { DashboardImagesModule } from './modules/dashboard/images/images.module';
 import { IsUniqueConstraint } from './common';
+
 @Module({
   imports: [
     // ServeStaticModule.forRoot({
@@ -45,5 +48,6 @@ import { IsUniqueConstraint } from './common';
     DashboardImagesModule,
   ],
   providers: [IsUniqueConstraint],
+  controllers: [AppController]
 })
 export class AppModule {}

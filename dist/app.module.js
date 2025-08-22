@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const config_2 = require("./config");
 const db_module_1 = require("./config/db/db.module");
+const app_controler_1 = require("./app.controler");
 const article_module_1 = require("./modules/client/article/article.module");
 const feedback_module_1 = require("./modules/client/feedback/feedback.module");
 const properties_module_1 = require("./modules/client/properties/properties.module");
@@ -48,6 +49,7 @@ exports.AppModule = AppModule = __decorate([
             images_module_1.DashboardImagesModule,
         ],
         providers: [common_2.IsUniqueConstraint],
+        controllers: [app_controler_1.AppController]
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
