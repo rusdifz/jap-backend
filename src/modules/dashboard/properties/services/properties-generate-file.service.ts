@@ -958,7 +958,7 @@ export class DashboardPropertiesGenerateFileService {
 
               for (const unit of getData.units) {
                 const size = unit.size;
-                const rentalPrice = getData.units[0].rent_price;
+                const rentalPrice = unit.rent_price;
                 const serviceCharge = getData.service_charge_price;
 
                 const priceMonth =

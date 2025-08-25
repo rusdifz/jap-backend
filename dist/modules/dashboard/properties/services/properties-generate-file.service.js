@@ -727,7 +727,7 @@ let DashboardPropertiesGenerateFileService = class DashboardPropertiesGenerateFi
                             getData.units = getData.units.slice(0, 8);
                             for (const unit of getData.units) {
                                 const size = unit.size;
-                                const rentalPrice = getData.units[0].rent_price;
+                                const rentalPrice = unit.rent_price;
                                 const serviceCharge = getData.service_charge_price;
                                 const priceMonth = (parseFloat(rentalPrice.toString()) +
                                     parseFloat(serviceCharge.toString())) *
