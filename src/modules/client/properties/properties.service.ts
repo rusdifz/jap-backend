@@ -79,7 +79,6 @@ export class ClientPropertiesService {
       if (props.location == 'PIM, Kebayoran & Blok M') {
         props.location = LocationEnum.PBK;
       }
-
       // Object.assign(query.where, { location: props.location.toLowerCase() });
       Object.assign(query.where, { location: props.location });
     }
