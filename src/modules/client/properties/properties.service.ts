@@ -80,7 +80,8 @@ export class ClientPropertiesService {
         props.location = LocationEnum.PBK;
       }
 
-      Object.assign(query.where, { location: props.location.toLowerCase() });
+      // Object.assign(query.where, { location: props.location.toLowerCase() });
+      Object.assign(query.where, { location: props.location });
     }
 
     if (props.property_type) {
