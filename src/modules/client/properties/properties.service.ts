@@ -86,7 +86,7 @@ export class ClientPropertiesService {
     if (props.property_type) {
       // Object.assign(query.where, { property_type: props.property_type });
       Object.assign(query.where, {
-        property_type: Like(`%${props.property_type.toLowerCase()}%`),
+        property_type: Like(`%${props.property_type}%`),
       });
     }
 
