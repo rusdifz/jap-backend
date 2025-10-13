@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   FindManyOptions,
   FindOneOptions,
+  ILike,
   In,
   Like,
   Not,
@@ -95,7 +96,7 @@ export class ClientPropertiesService {
     }
 
     if (props.search_keyword) {
-      Object.assign(query.where, { name: Like(`%${props.search_keyword}%`) });
+      Object.assign(query.where, { name: ILike(`%${props.search_keyword}%`) });
     }
 
     if (props.id_except) {
