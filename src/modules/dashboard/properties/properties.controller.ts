@@ -110,8 +110,10 @@ export class DashboardPropertiesController {
     @UserAuth() user: IJwtUser, // use this to get user data from header
     @BodyParam() bodyparam: ReqUpdatePropertyDTO,
   ) {
-    console.log('Log Data Update Properties By User Admin : ', user);
-    console.log('Log Body Update Properties in Dashboard : ', bodyparam);
+    console.info('Log Data Update Properties By User Admin : ', user);
+    console.info('Log Body Update Properties in Dashboard : ', {
+      ...bodyparam,
+    });
     return await this.service.update(bodyparam, user);
   }
 

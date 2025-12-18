@@ -102,7 +102,7 @@ export class DashboardPropertiesService {
     if (props.location) {
       Object.assign(query.where, {
         // location: Like(`%${props.location.toLowerCase()}%`),
-        location: props.location
+        location: props.location,
       });
     }
 
@@ -175,27 +175,37 @@ export class DashboardPropertiesService {
     body: ReqCreatePropertyDTO,
     admin: IJwtUser,
   ): Promise<ReqCreatePropertyDTO> {
-    const mapProperty = await mapReqCreateToDb(body, admin);
+    try {
+      const mapProperty = await mapReqCreateToDb(body, admin);
 
-    const saveData = await this.repository.save(mapProperty);
+      const saveData = await this.repository.save(mapProperty);
 
-    body['property_id'] = saveData.property_id;
-    body['slug'] = saveData.slug;
-    return body;
+      body['property_id'] = saveData.property_id;
+      body['slug'] = saveData.slug;
+      return body;
+    } catch (error) {
+      console.error('Error Create Data : ', error);
+      throw new Error(error);
+    }
   }
 
   async update(
     body: ReqUpdatePropertyDTO,
     admin: IJwtUser,
   ): Promise<ReqUpdatePropertyDTO> {
-    const mapProperty = await mapReqUpdateToDB(body, admin);
-    body['slug'] = mapProperty.slug;
+    try {
+      const mapProperty = await mapReqUpdateToDB(body, admin);
+      body['slug'] = mapProperty.slug;
 
-    await this.repository.update(
-      { property_id: mapProperty.property_id },
-      mapProperty,
-    );
-    return body;
+      await this.repository.update(
+        { property_id: mapProperty.property_id },
+        mapProperty,
+      );
+      return body;
+    } catch (error) {
+      console.error('Error Update Data : ', error);
+      throw new Error(error);
+    }
   }
 
   async delete(property_id: number, admin: IJwtUser): Promise<Object> {
