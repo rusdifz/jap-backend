@@ -52,7 +52,7 @@ export class DashboardImagesService {
     const checkDataExist = await this.repository.find({
       where: queryDataExist,
     });
-    console.log('after check');
+    console.log('after check', checkDataExist.length);
 
     if (checkDataExist.length > 0) {
       for (const exist of checkDataExist) {

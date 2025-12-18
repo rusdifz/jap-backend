@@ -67,8 +67,6 @@ export class DashboardPropertiesService {
       where: queryWhere,
       relations: {
         units: true,
-        // pic: true,
-        // images: true,
       },
     };
 

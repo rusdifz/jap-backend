@@ -96,6 +96,9 @@ export class DashboardArticleService {
   }
 
   async updateImage(article_id: number, thumbnail: string) {
+    console.log('article id', article_id);
+    console.log('thumbnail', thumbnail);
+    
     return await this.repository.update({ article_id }, { thumbnail });
   }
 }

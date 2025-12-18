@@ -74,6 +74,7 @@ export class DashboardPropertiesController {
   @Version('1')
   @Get('')
   async getList(@Query() query: PropertiesDTO) {
+    console.log('Log Query Get List Properties in Dashboard : ', query);
     return await this.service.getList(query);
   }
 
@@ -90,6 +91,9 @@ export class DashboardPropertiesController {
     @UserAuth() user: IJwtUser, // use this to get user data from header
     @Body() body: ReqCreatePropertyDTO,
   ) {
+    console.log('Log Data Create Properties By User Admin : ', user);
+    console.log('Log Body Create Properties in Dashboard : ', body);
+
     return await this.service.create(body, user);
   }
 
@@ -106,24 +110,26 @@ export class DashboardPropertiesController {
     @UserAuth() user: IJwtUser, // use this to get user data from header
     @BodyParam() bodyparam: ReqUpdatePropertyDTO,
   ) {
+    console.log('Log Data Update Properties By User Admin : ', user);
+    console.log('Log Body Update Properties in Dashboard : ', bodyparam);
     return await this.service.update(bodyparam, user);
   }
 
-  @ApiOperation({
-    summary: 'endpoint update office',
-    description: '',
-  })
-  @ApiHeader(AuthorizationHeader(true))
-  @ApiCreatedResponse(swgCreateOK)
-  @Version('1')
-  @Throttle({ default: { limit: 10, ttl: 60000 } })
-  @Put(':id')
-  async updateThumbnail(
-    @UserAuth() user: IJwtUser, // use this to get user data from header
-    @BodyParam() bodyparam: ReqUpdatePropertyDTO,
-  ) {
-    return await this.service.update(bodyparam, user);
-  }
+  // @ApiOperation({
+  //   summary: 'endpoint update office',
+  //   description: '',
+  // })
+  // @ApiHeader(AuthorizationHeader(true))
+  // @ApiCreatedResponse(swgCreateOK)
+  // @Version('1')
+  // @Throttle({ default: { limit: 10, ttl: 60000 } })
+  // @Put(':id')
+  // async updateThumbnail(
+  //   @UserAuth() user: IJwtUser, // use this to get user data from header
+  //   @BodyParam() bodyparam: ReqUpdatePropertyDTO,
+  // ) {
+  //   return await this.service.update(bodyparam, user);
+  // }
 
   @ApiOperation({
     summary: 'endpoint delete office',
@@ -137,63 +143,6 @@ export class DashboardPropertiesController {
   async deleteOne(@Param('id') id: number, @UserAuth() user: IJwtUser) {
     return await this.service.delete(id, user);
   }
-
-  // @ApiOperation({
-  //   summary: 'endpoint get office list',
-  //   description: '',
-  // })
-  // @ApiHeader(AuthorizationHeader(true))
-  // // @ApiOkResponse(swgGetListOK)
-  // @Version('1')
-  // @Get('prop/pic')
-  // async getListPic(@Query() query: ReqGetPicListDTO) {
-  //   return await this.service.getListPic(query);
-  // }
-
-  // @ApiOperation({
-  //   summary: 'endpoint create pic property',
-  //   description: '',
-  // })
-  // @ApiHeader(AuthorizationHeader(true))
-  // // @ApiCreatedResponse(swgCreateOK)
-  // @Version('1')
-  // @Throttle({ default: { limit: 10, ttl: 60000 } })
-  // @Post('prop/pic')
-  // async createPic(
-  //   @UserAuth() user: IJwtUser, // use this to get user data from header
-  //   @Body() body: ReqCreatePropertyPicDTO,
-  // ) {
-  //   return await this.service.createPic(body, user);
-  // }
-
-  // @ApiOperation({
-  //   summary: 'endpoint update property pic',
-  //   description: '',
-  // })
-  // @ApiHeader(AuthorizationHeader(true))
-  // // @ApiCreatedResponse(swgCreateOK)
-  // @Version('1')
-  // @Throttle({ default: { limit: 10, ttl: 60000 } })
-  // @Put('prop/pic/:id')
-  // async updatePic(
-  //   @UserAuth() user: IJwtUser, // use this to get user data from header
-  //   @BodyParam() bodyparam: ReqUpdatePropertyPicDTO,
-  // ) {
-  //   return await this.service.updatePic(bodyparam, user);
-  // }
-
-  // @ApiOperation({
-  //   summary: 'endpoint delete office',
-  //   description: '',
-  // })
-  // @ApiHeader(AuthorizationHeader(true))
-  // //   @ApiOkResponse(swgDeleteOK)
-  // @Version('1')
-  // @Throttle({ default: { limit: 5, ttl: 60000 } })
-  // @Delete('prop/pic/:id')
-  // async deleteOnePic(@Param('id') id: string, @UserAuth() user: IJwtUser) {
-  //   return await this.service.deletePic(id, user);
-  // }
 
   // @ApiOperation({
   //   summary: 'endpoint get office list',
