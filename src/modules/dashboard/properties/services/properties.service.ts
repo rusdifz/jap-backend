@@ -7,6 +7,7 @@ import {
   FindManyOptions,
   FindOneOptions,
   FindOptionsWhere,
+  ILike,
   In,
   LessThan,
   LessThanOrEqual,
@@ -27,9 +28,6 @@ import {
   dayjs,
   MediaReferenceType,
   monthAgo,
-  PropertyPicDB,
-  UnitsDB,
-  Unit,
 } from 'src/common';
 
 import {
@@ -115,7 +113,7 @@ export class DashboardPropertiesService {
     }
 
     if (props.search_keyword) {
-      Object.assign(query.where, { name: Like(`%${props.search_keyword}%`) });
+      Object.assign(query.where, { name: ILike(`%${props.search_keyword}%`) });
     }
 
     if (props.condition) {
