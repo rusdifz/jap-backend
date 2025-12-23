@@ -32,6 +32,7 @@ export enum PropertyStatusEnum {
   SALE = 'Sale',
   LEASED_OUT = 'Leased Out',
   RENT = 'Rent',
+  BUY = 'Buy'
 }
 
 export enum PropertyTypeEnum {
